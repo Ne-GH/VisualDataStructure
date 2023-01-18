@@ -29,10 +29,8 @@ public:
 
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-    void ShowLog();
-    void AddLog(std::string message);
-    void AddWringLog(std::string message);
-    void AddErrorLog(std::string);
+    Log &GetLog();
+
     StructureType GetCurStructureType();
     void SetCurStructureType(StructureType structure_type);
     AlgorithmType GetCurAlgorithmType();
