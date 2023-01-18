@@ -2,6 +2,8 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QPainter>
+#include <QPixmap>
 #include "Logs/log.h"
 
 QT_BEGIN_NAMESPACE
@@ -14,19 +16,28 @@ enum class StructureType{
 enum class AlgorithmType{
     None = 0
 };
-class MainWindow : public QMainWindow
-{
+class MainWindow : public QMainWindow {
     Q_OBJECT
-
+private:
+    Log logs;
+    StructureType cur_structure_type;
+    AlgorithmType cur_algorithm_type;
+    Ui::MainWindow *ui;
+    QPainter painter;
+    QPixmap pixmap;
 public:
+
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+    void ShowLog();
+    void AddLog(std::string message);
+    void AddWringLog(std::string message);
+    void AddErrorLog(std::string);
+    StructureType GetCurStructureType();
+    void SetCurStructureType(StructureType structure_type);
+    AlgorithmType GetCurAlgorithmType();
+    void SetCurAlgorithmType(AlgorithmType algorithm_type);
 
-    Log logs;
-    StructureType cur_structure_type ;
-    AlgorithmType cur_algorithm_type ;
 
-private:
-    Ui::MainWindow *ui;
 };
 #endif // MAINWINDOW_H

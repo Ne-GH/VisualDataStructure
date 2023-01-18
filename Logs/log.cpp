@@ -30,9 +30,9 @@ static string GetData(){
     std::stringstream ss;
     ss << std::put_time(std::localtime(&time),"%Y/%m/%d %X");
     string ret = ss.str();
-//    ret.erase(std::remove(ret.begin(),ret.end(),'\n'),ret.end());
     return ret;
 }
+
 void Log::AddLog(string message,string log_type) {
     string log = GetData() + log_type + " : " + message + "\n";
     logs += log;
@@ -45,9 +45,6 @@ void Log::Hide() {
     hide();
 }
 
-std::string Log::GetLogString() {
-    return logs;
-}
 
 static void HighLight_(QTextEdit *text_edit,string word,HighLightType highlight_type) {
     QTextDocument *document = text_edit->document();
