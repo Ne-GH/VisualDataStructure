@@ -5,6 +5,7 @@
 #include <iostream>
 #include <sstream>
 #include <iomanip>
+#include <utility>
 
 using std::cout,std::endl;
 using std::string;
@@ -37,7 +38,6 @@ void Log::AddLog(string message,string log_type) {
     string log = GetData() + log_type + " : " + message + "\n";
     logs += log;
     ui->log_edit->setText(logs.c_str());
-    return;
 }
 
 
@@ -45,85 +45,55 @@ void Log::Hide() {
     hide();
 }
 
+// TODO：高亮问题基本解决，但是无法高亮"[]"
+static void HighLight_(QTextEdit *text_edit,const string& search_word,HighLightType highlight_type) {
 
-static void HighLight_(QTextEdit *text_edit,string word,HighLightType highlight_type) {
     QTextDocument *document = text_edit->document();
+    bool found = false;
+    QTextCursor highlight_cursor(document);
     QTextCursor cursor(document);
-    QTextCharFormat format;
+    //开始
+    cursor.beginEditBlock();
+    QTextCharFormat color_format(highlight_cursor.charFormat());
     switch (highlight_type) {
-
-        case HighLightType::Wring:
-
-            format.setBackground(Qt::yellow);
+        case HighLightType::Wring :
+            color_format.setForeground(Qt::black);   //字体颜色
+            color_format.setBackground(Qt::yellow);  //背景颜色
             break;
-        case HighLightType::Error:
-            format.setBackground(Qt::red);
+
+        case HighLightType::Error :
+            color_format.setForeground(Qt::black);   //字体颜色
+            color_format.setBackground(Qt::red);  //背景颜色
             break;
+
         default:
             break;
     }
-    while (!cursor.isNull() && !cursor.atEnd()) {
-        cursor = document->find(word.c_str(), cursor);
-        if (!cursor.isNull()) {
-            cursor.movePosition(QTextCursor::WordRight, QTextCursor::KeepAnchor);
-            cursor.mergeCharFormat(format);
+    while (!highlight_cursor.isNull() && !highlight_cursor.atEnd()) {
+        //查找指定的文本，匹配整个单词
+        highlight_cursor = document->find(search_word.c_str(), highlight_cursor, QTextDocument::FindWholeWords);
+        if (!highlight_cursor.isNull()) {
+            if (!found)
+                found = true;
+            highlight_cursor.mergeCharFormat(color_format);
         }
     }
+    cursor.endEditBlock();
 
+    return;
 }
 void HighLight(QTextEdit *text_edit){
-    // TODO : 高亮未能正常显示
-    QString search_text = "Wring";
-    if (search_text.trimmed().isEmpty())
-    {
-        return;
-    }
-    else
-    {
-        QTextDocument *document = text_edit->document();
-        bool found = false;
-        QTextCursor highlight_cursor(document);
-        QTextCursor cursor(document);
-        //开始
-        cursor.beginEditBlock();
-        QTextCharFormat color_format(highlight_cursor.charFormat());
-        color_format.setForeground(Qt::red);   //字体颜色
-        color_format.setBackground(Qt::blue);  //背景颜色
-        while (!highlight_cursor.isNull() && !highlight_cursor.atEnd())
-        {
-            //查找指定的文本，匹配整个单词
-            highlight_cursor = document->find(search_text, highlight_cursor, QTextDocument::FindWholeWords);
-            if (!highlight_cursor.isNull())
-            {
-                if (!found)
-                    found = true;
-                highlight_cursor.mergeCharFormat(color_format);
-            }
-        }
-        cursor.endEditBlock();
-    }
-//    HighLight_(text_edit,"[Wring]",HighLightType::Wring);
-//    HighLight_(text_edit,"[Error]",HighLightType::Error);
-//    QTextDocument *doc = text_edit->document();
-//    QTextCursor highlight_cursor(doc);
-//    QTextCharFormat plainFormat = highlight_cursor.charFormat();
-//    QTextCharFormat colorFormat = plainFormat;
-//    colorFormat.setForeground(Qt::red);
-//
-//    while (!highlight_cursor.isNull() && !highlight_cursor.atEnd()) {
-//        highlight_cursor = doc->find("Wring", highlight_cursor);
-//        if (!highlight_cursor.isNull()) {
-//            highlight_cursor.mergeCharFormat(colorFormat);
-//        }
-//    }
+    HighLight_(text_edit,"Wring",HighLightType::Wring);
+    HighLight_(text_edit,"Error",HighLightType::Error);
+
     return;
 }
 
 void Log::AddErrorLog(std::string error_message) {
-    AddLog(error_message,"[Error]");
+    AddLog(std::move(error_message),"[Error]");
 }
 void Log::AddWringLog(std::string wring_message) {
-    AddLog(wring_message,"[Wring]");
+    AddLog(std::move(wring_message),"[Wring]");
 }
 
 
@@ -131,5 +101,12 @@ void Log::Show() {
     show();
     activateWindow();
     HighLight(ui->log_edit);
+}
+// 重写虚函数resizeEvent
+// 作用：使得日志窗口大小改变的时候，QTextEdit大小一起改变，始终铺满窗口
+void Log::resizeEvent(QResizeEvent *event) {
+    auto window_width = QWidget::width();
+    auto window_height = QWidget::height();
+    ui->log_edit->setFixedSize(window_width,window_height);
 }
 

@@ -26,6 +26,9 @@ static void Connect(MainWindow *window,Ui::MainWindow *ui) {
     log.AddLog("开始绑定信号和槽");
 
     QObject::connect(ui->show_log_action,&QAction::triggered,window,[=]{
+
+        window->GetLog().AddWringLog("Test");
+        window->GetLog().AddErrorLog("Test");
         window->GetLog().Show();
     });
 

@@ -14,6 +14,8 @@ enum class HighLightType{
 class Log : public QDialog {
     Q_OBJECT
 
+private slots:
+    void resizeEvent(QResizeEvent *event);
 public:
     explicit Log(QWidget *parent = nullptr);
     ~Log();
