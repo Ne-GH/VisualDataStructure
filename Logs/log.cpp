@@ -1,13 +1,9 @@
 #include "log.h"
 #include "ui_log.h"
 
-
-#include <iostream>
-#include <sstream>
 #include <iomanip>
-#include <utility>
+#include <chrono>
 
-using std::cout,std::endl;
 using std::string;
 
 
@@ -58,6 +54,7 @@ static void HighLight_(QTextEdit *text_edit,const string& search_word,HighLightT
     switch (highlight_type) {
         case HighLightType::Wring :
             color_format.setForeground(Qt::black);   //字体颜色
+
             color_format.setBackground(Qt::yellow);  //背景颜色
             break;
 

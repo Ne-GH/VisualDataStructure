@@ -3,7 +3,7 @@
 
 #include <QDialog>
 #include <string>
-#include <chrono>
+
 
 namespace Ui {
     class Log;
