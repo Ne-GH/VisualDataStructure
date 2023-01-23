@@ -2,6 +2,8 @@
 #include "./ui_mainwindow.h"
 #include <iostream>
 #include <QPainterPath>
+#include "Array/Array.h"
+
 using std::cout,std::endl;
 
 static void Init(MainWindow *window,Ui::MainWindow *ui) {
@@ -91,6 +93,11 @@ void MainWindow::resizeEvent(QResizeEvent *event) {
 }
 
 void MainWindow::paintEvent(QPaintEvent *event) {
+
+    Array arr;
+    arr.Draw(this);
+
+
 /*    QPainter painter(this);
     QPixmap pix(QWidget::width(),QWidget::height());
     pix.fill(Qt::yellow);
