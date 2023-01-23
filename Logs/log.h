@@ -1,5 +1,5 @@
-#ifndef LOG_H
-#define LOG_H
+#ifndef LOGS_LOG_H
+#define LOGS_LOG_H
 
 #include <QDialog>
 #include <string>

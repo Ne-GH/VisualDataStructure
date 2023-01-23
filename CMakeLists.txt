@@ -21,7 +21,7 @@ set(PROJECT_SOURCES
         Logs/log.h
         Logs/log.cpp
         Logs/log.ui
-        )
+        Arrary/Array.cpp Arrary/Array.h)
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(DataStructureVisualization
