@@ -2,7 +2,7 @@
 #include "./ui_mainwindow.h"
 #include <iostream>
 #include <QPainterPath>
-#include "Array/Array.h"
+#include "Array/Array.hpp"
 
 using std::cout,std::endl;
 
@@ -95,25 +95,11 @@ void MainWindow::resizeEvent(QResizeEvent *event) {
 void MainWindow::paintEvent(QPaintEvent *event) {
 
     Array arr;
+    arr.PushBack(10);
+    arr.PushBack(20);
+    arr.PushBack(30);
+
     arr.Draw(this);
-
-
-/*    QPainter painter(this);
-    QPixmap pix(QWidget::width(),QWidget::height());
-    pix.fill(Qt::yellow);
-    QPainter pp(&pix);
-    QPainterPath path;
-    pp.setRenderHint(QPainter::Antialiasing);
-    pp.setRenderHint(QPainter::SmoothPixmapTransform);
-    path.lineTo(390,390);
-    path.moveTo(0,ui->menu_bar->height());
-    path.addEllipse(100,200,50,50);
-    path.lineTo(390,390);
-
-    pp.drawPath(path);
-//    painter.setRenderHint(QPainter::Antialiasing);
-//    painter.setRenderHint(QPainter::SmoothPixmapTransform);
-    painter.drawPixmap(0,0,pix);*/
 
 }
 

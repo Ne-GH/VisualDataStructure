@@ -22,8 +22,7 @@ set(PROJECT_SOURCES
         Logs/log.cpp
         Logs/log.ui
 
-        Array/Array.h
-        Array/Array.cpp
+        Array/Array.hpp
         )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
