@@ -1,7 +1,10 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
 #include <iostream>
-#include <QPainterPath>
+#include <QHBoxLayout>
+#include <QListWidget>
+#include <QStackedLayout>
+
 #include "Array/Array.hpp"
 
 using std::cout,std::endl;
@@ -18,17 +21,8 @@ static void Init(MainWindow *window,Ui::MainWindow *ui) {
     window->SetCurAlgorithmType(AlgorithmType::None);
     log.AddLog("初始化MainWindow成员变量结束");
 
-    log.AddLog("设置菜单可选信息");
-    ui->arrary_action->setCheckable(true);
 
-    log.AddLog("设置菜单可选信息结束");
 
-    log.AddLog("初始化Pixmap");
-    auto &pixmap = window->GetPixmap();
-    pixmap = *new QPixmap(1920,1080);
-    pixmap.fill(Qt::white);
-
-    log.AddLog("初始化Pixmap结束");
 
 }
 
@@ -36,10 +30,21 @@ static void Connect(MainWindow *window,Ui::MainWindow *ui) {
     Log &log = window->GetLog();
     log.AddLog("开始绑定信号和槽");
 
-    QObject::connect(ui->show_log_action,&QAction::triggered,window,[=]{
+    auto log_menu = new QAction("日志");
+    auto setting_menu = new QAction("设置");
+    ui->menu_bar->addAction(log_menu);
+    ui->menu_bar->addAction(setting_menu);
+
+
+    QObject::connect(log_menu,&QAction::triggered,window,[=](){
         window->GetLog().Show();
     });
 
+
+    auto stacked_layout = new QStackedLayout();
+    stacked_layout->addWidget(ui->array_widget);
+    stacked_layout->addWidget(ui->list_widget);
+    QObject::connect(ui->structure_list,&QListWidget::currentRowChanged,stacked_layout,&QStackedLayout::setCurrentIndex);;
     log.AddLog("绑定信号和槽结束");
 }
 
@@ -94,12 +99,15 @@ void MainWindow::resizeEvent(QResizeEvent *event) {
 
 void MainWindow::paintEvent(QPaintEvent *event) {
 
-    Array arr;
-    arr.PushBack(10);
-    arr.PushBack(20);
-    arr.PushBack(30);
-
-    arr.Draw(this);
+//    Array arr;
+//    arr.PushBack(10);
+//    arr.PushBack(20);
+//    arr.PushBack(30);
+//    arr.PushBack(40);
+//    arr.PushBack(50);
+//    arr.PushBack(60);
+//
+//    arr.Draw(this);
 
 }
 

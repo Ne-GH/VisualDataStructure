@@ -29,8 +29,6 @@ private:
 private:
 
     std::vector<ArrayNode> array_{};
-    QPainterPath path_;
-
 
 public:
     Array() = default;
@@ -111,7 +109,7 @@ void Array<T>::Draw(MainWindow *window) {
 
     for(auto node : array_) {
         node.SetWH(single_width,single_width);
-        node.SetXY(x,0);
+        node.SetXY(x+window_width*0.1,window_height *0.4);
         x += static_cast<int>(single_width);
 
         node.Draw(&pixmap);

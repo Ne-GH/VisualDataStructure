@@ -6,112 +6,89 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>600</height>
+    <width>798</width>
+    <height>611</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
-  <widget class="QWidget" name="centralwidget"/>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QHBoxLayout" name="horizontalLayout">
+    <item>
+     <widget class="QListWidget" name="structure_list">
+      <property name="maximumSize">
+       <size>
+        <width>100</width>
+        <height>16777215</height>
+       </size>
+      </property>
+      <item>
+       <property name="text">
+        <string>数组</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>链表</string>
+       </property>
+      </item>
+     </widget>
+    </item>
+    <item>
+     <widget class="QStackedWidget" name="opeator_widget">
+      <widget class="QWidget" name="array_widget">
+       <widget class="QLabel" name="label">
+        <property name="geometry">
+         <rect>
+          <x>160</x>
+          <y>220</y>
+          <width>71</width>
+          <height>17</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>TextLabel</string>
+        </property>
+       </widget>
+      </widget>
+      <widget class="QWidget" name="list_widget">
+       <widget class="QLabel" name="label_2">
+        <property name="geometry">
+         <rect>
+          <x>200</x>
+          <y>240</y>
+          <width>71</width>
+          <height>17</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>2</string>
+        </property>
+       </widget>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
   <widget class="QMenuBar" name="menu_bar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
+     <width>798</width>
      <height>32</height>
     </rect>
    </property>
-   <widget class="QMenu" name="structure_menu">
-    <property name="title">
-     <string>数据结构</string>
-    </property>
-    <addaction name="arrary_action"/>
-    <addaction name="list_action"/>
-    <addaction name="queue_action"/>
-    <addaction name="stack_action"/>
-    <addaction name="string_action"/>
-    <addaction name="tree_action"/>
-    <addaction name="picture_action"/>
-   </widget>
-   <widget class="QMenu" name="opeator_menu">
-    <property name="title">
-     <string>操作</string>
-    </property>
-    <addaction name="install_action"/>
-    <addaction name="delete_action"/>
-    <addaction name="sort_action"/>
-    <addaction name="update_action"/>
-   </widget>
-   <widget class="QMenu" name="log_menu">
-    <property name="title">
-     <string>日志</string>
-    </property>
-    <addaction name="show_log_action"/>
-   </widget>
-   <addaction name="structure_menu"/>
-   <addaction name="opeator_menu"/>
-   <addaction name="log_menu"/>
   </widget>
-  <action name="show_log_action">
+  <action name="action">
+   <property name="text">
+    <string>修改设置</string>
+   </property>
+  </action>
+  <action name="action_2">
    <property name="text">
     <string>显示日志</string>
-   </property>
-  </action>
-  <action name="arrary_action">
-   <property name="text">
-    <string>数组</string>
-   </property>
-  </action>
-  <action name="list_action">
-   <property name="text">
-    <string>链表</string>
-   </property>
-  </action>
-  <action name="queue_action">
-   <property name="text">
-    <string>队列</string>
-   </property>
-  </action>
-  <action name="stack_action">
-   <property name="text">
-    <string>栈</string>
-   </property>
-  </action>
-  <action name="string_action">
-   <property name="text">
-    <string>字符串</string>
-   </property>
-  </action>
-  <action name="tree_action">
-   <property name="text">
-    <string>树</string>
-   </property>
-  </action>
-  <action name="picture_action">
-   <property name="text">
-    <string>图</string>
-   </property>
-  </action>
-  <action name="install_action">
-   <property name="text">
-    <string>插入</string>
-   </property>
-  </action>
-  <action name="delete_action">
-   <property name="text">
-    <string>删除</string>
-   </property>
-  </action>
-  <action name="sort_action">
-   <property name="text">
-    <string>排序</string>
-   </property>
-  </action>
-  <action name="update_action">
-   <property name="text">
-    <string>修改</string>
    </property>
   </action>
  </widget>
