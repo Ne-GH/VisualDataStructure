@@ -13,10 +13,17 @@ find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
 
 set(PROJECT_SOURCES
+        mainwindow.h
+        showwidget.h
+
         main.cpp
         mainwindow.cpp
-        mainwindow.h
+        showwidget.cpp
+
         mainwindow.ui
+        showwidget.ui
+
+
 
         Logs/log.h
         Logs/log.cpp

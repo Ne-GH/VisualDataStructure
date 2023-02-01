@@ -37,7 +37,7 @@ public:
 
 
 
-    void Draw(MainWindow *window);
+    void Draw(QWidget *window);
     void PushBack(T val);
 };
 
@@ -89,11 +89,14 @@ void Array<T>::PushBack(T val) {
 *******************************************************************************/
 
 template<typename T>
-void Array<T>::Draw(MainWindow *window) {
+void Array<T>::Draw(QWidget *window) {
 
-    int window_width = window->centralWidget()->width();
-    int window_height = window->centralWidget()->height();
+//    int window_width = window->centralWidget()->width();
+//    int window_height = window->centralWidget()->height();
 
+    int window_width = window->width();
+    int window_height = window->height();
+    std::cout << window_width << " " << window_height << std::endl;
     size_t count_node = array_.size();
     double available_width = window_width * 0.8;
     double center_height = window_height*0.4;
@@ -102,22 +105,32 @@ void Array<T>::Draw(MainWindow *window) {
     // 将开始绘制的位置定位到窗口的特定位置
     // width * 0.4?1
 
-    auto pixmap = QPixmap(window_width,window_height);
-    pixmap.fill(Qt::yellow);
+//    auto pixmap = new QPixmap(window_width,window_height);
+//    pixmap->fill(Qt::yellow);
+//
+//    int x = 0;
+//
+//    for(auto node : array_) {
+//        node.SetWH(single_width,single_width);
+//        node.SetXY(x+window_width*0.1,window_height *0.4);
+//        x += static_cast<int>(single_width);
+//
+//        node.Draw(pixmap);
+//    }
+//
+//    QPainter painter(window);
+//    // painter.translate(0,window->menuBar()->height());
+//    painter.drawPixmap(0,0,*pixmap);
 
-    int x = 0;
-
-    for(auto node : array_) {
-        node.SetWH(single_width,single_width);
-        node.SetXY(x+window_width*0.1,window_height *0.4);
-        x += static_cast<int>(single_width);
-
-        node.Draw(&pixmap);
-    }
 
     QPainter painter(window);
-    painter.translate(0,window->menuBar()->height());
-    painter.drawPixmap(0,0,pixmap);
+    auto pixmap = new QPixmap(window_width,window_height);
+    QPainter pp(pixmap);
+    pp.drawLine(0,0,100,100);
+    painter.drawPixmap(0,0,*pixmap);
+
+
+
 
 }
 

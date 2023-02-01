@@ -3,6 +3,7 @@
 #include <iostream>
 #include <QHBoxLayout>
 #include <QListWidget>
+#include <QLabel>
 #include <QStackedLayout>
 
 #include "Array/Array.hpp"
@@ -14,7 +15,8 @@ static void Init(MainWindow *window,Ui::MainWindow *ui) {
     Log &log = window->GetLog();
 
     log.AddLog("设置标题");
-    window->setWindowTitle("DataStructureVisualization");
+    // TODO
+//    window->setWindowTitle("DataStructureVisualization");
 
     log.AddLog("初始化MainWindow成员变量");
     window->SetCurStructureType(StructureType::None);
@@ -34,17 +36,21 @@ static void Connect(MainWindow *window,Ui::MainWindow *ui) {
     auto setting_menu = new QAction("设置");
     ui->menu_bar->addAction(log_menu);
     ui->menu_bar->addAction(setting_menu);
-
-
-    QObject::connect(log_menu,&QAction::triggered,window,[=](){
+    QObject::connect(log_menu,
+                     &QAction::triggered,
+                     window,[=](){
         window->GetLog().Show();
     });
 
 
     auto stacked_layout = new QStackedLayout();
-    stacked_layout->addWidget(ui->array_widget);
-    stacked_layout->addWidget(ui->list_widget);
-    QObject::connect(ui->structure_list,&QListWidget::currentRowChanged,stacked_layout,&QStackedLayout::setCurrentIndex);;
+//    stacked_layout->addWidget(ui->array_widget);
+//    stacked_layout->addWidget(ui->list_widget);
+    QObject::connect(
+            ui->structure_list,
+            &QListWidget::currentRowChanged,
+            stacked_layout,
+            &QStackedLayout::setCurrentIndex);;
     log.AddLog("绑定信号和槽结束");
 }
 
@@ -59,10 +65,6 @@ MainWindow::MainWindow(QWidget *parent)
     Init(this,ui);
     Connect(this,ui);
 
-
-    resize(600,600);
-    pixmap = QPixmap(500,500);
-    pixmap.fill(Qt::yellow);
 
 
     logs.AddLog("启动完成");
@@ -94,20 +96,24 @@ Log &MainWindow::GetLog() {
 
 
 void MainWindow::resizeEvent(QResizeEvent *event) {
+//    cout << ui->opeator_widget->currentWidget()->size().width() << endl;
+//    cout << ui->opeator_widget->currentWidget()->size().height() << endl;
+//    auto width = ui->opeator_widget->currentWidget()->size().width();
+//    auto height = ui->opeator_widget->currentWidget()->size().height();
+//    QPixmap pixmap(width,height);
+//    pixmap.fill(Qt::yellow);
+//    QPainter painter(&pixmap);
+//    painter.drawLine(0,0,width,height);
+//    QLabel* array_lab = static_cast<QLabel *>(ui->opeator_widget->currentWidget());
+//    array_lab->setPixmap(pixmap);
+//    ui->opeator_widget->setCurrentWidget(array_lab);
+
 
 }
 
 void MainWindow::paintEvent(QPaintEvent *event) {
-
-//    Array arr;
-//    arr.PushBack(10);
-//    arr.PushBack(20);
-//    arr.PushBack(30);
-//    arr.PushBack(40);
-//    arr.PushBack(50);
-//    arr.PushBack(60);
-//
-//    arr.Draw(this);
+//    QPainter painter(ui->array_widget);
+//    painter.drawLine(0,0,100,100);
 
 }
 
