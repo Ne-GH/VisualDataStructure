@@ -9,20 +9,16 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+include_directories(./ShowWidget)
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
 
 set(PROJECT_SOURCES
-        mainwindow.h
-        showwidget.h
-
         main.cpp
+
+        mainwindow.h
         mainwindow.cpp
-        showwidget.cpp
-
         mainwindow.ui
-        showwidget.ui
-
 
 
         Logs/log.h
@@ -30,6 +26,10 @@ set(PROJECT_SOURCES
         Logs/log.ui
 
         Array/Array.hpp
+
+        ShowWidget/showwidget.h
+        ShowWidget/showwidget.cpp
+        ShowWidget/showwidget.ui
         )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

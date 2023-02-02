@@ -23,9 +23,6 @@ static void Init(MainWindow *window,Ui::MainWindow *ui) {
     window->SetCurAlgorithmType(AlgorithmType::None);
     log.AddLog("初始化MainWindow成员变量结束");
 
-
-
-
 }
 
 static void Connect(MainWindow *window,Ui::MainWindow *ui) {
