@@ -6,6 +6,7 @@
 #define DATASTRUCTUREVISUALIZATION_BASEDATASTRUCTURE_HPP
 
 #include <QPixmap>
+#include <QPainterPath>
 template <typename T>
 class BaseDataStructure {
 protected:

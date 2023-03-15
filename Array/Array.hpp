@@ -11,7 +11,9 @@
 #include "BaseDataStructure.hpp"
 
 template <typename T>
-class Arr : public BaseDataStructure<T> {
+class Arr : BaseDataStructure<T> {
+    using BaseDataStructure<T>::_x;
+    using BaseDataStructure<T>::_y;
     std::vector<T> _arr;
 public:
     Arr();
@@ -27,7 +29,8 @@ public:
 };
 
 template <typename T>
-Arr<T>::Arr() {}
+Arr<T>::Arr() {
+}
 template <typename T>
 Arr<T>::~Arr() {}
 template <typename T>
