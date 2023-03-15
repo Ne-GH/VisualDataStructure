@@ -12,6 +12,12 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 include_directories(./ShowWidget)
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
+file(GLOB SOURCES "BaseDataStructure/*.hpp")
+
+include_directories(${CMAKE_SOURCE_DIR}/BaseDataStructure)
+include_directories(${CMAKE_SOURCE_DIR}/ShowWidget)
+include_directories(${CMAKE_SOURCE_DIR}/Array)
+include_directories(${CMAKE_SOURCE_DIR}/Log)
 
 set(PROJECT_SOURCES
         main.cpp
@@ -19,6 +25,7 @@ set(PROJECT_SOURCES
         mainwindow.h
         mainwindow.cpp
         mainwindow.ui
+
 
 
         Logs/log.h
@@ -30,6 +37,8 @@ set(PROJECT_SOURCES
         ShowWidget/showwidget.h
         ShowWidget/showwidget.cpp
         ShowWidget/showwidget.ui
+
+        BaseDataStructure/BaseDataStructure.hpp
         )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
