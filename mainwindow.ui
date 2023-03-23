@@ -25,12 +25,12 @@
       </property>
       <item>
        <property name="text">
-        <string>a</string>
+        <string>数组</string>
        </property>
       </item>
       <item>
        <property name="text">
-        <string>b</string>
+        <string>链表</string>
        </property>
       </item>
      </widget>
@@ -87,7 +87,7 @@
      <x>0</x>
      <y>0</y>
      <width>798</width>
-     <height>32</height>
+     <height>23</height>
     </rect>
    </property>
   </widget>

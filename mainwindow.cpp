@@ -35,19 +35,19 @@ static void Connect(MainWindow *window,Ui::MainWindow *ui) {
     ui->menu_bar->addAction(setting_menu);
     QObject::connect(log_menu,
                      &QAction::triggered,
-                     window,[=](){
+                    [=](){
         window->GetLog().Show();
     });
 
 
-    auto stacked_layout = new QStackedLayout();
-//    stacked_layout->addWidget(ui->array_widget);
-//    stacked_layout->addWidget(ui->list_widget);
-    QObject::connect(
-            ui->structure_list,
-            &QListWidget::currentRowChanged,
-            stacked_layout,
-            &QStackedLayout::setCurrentIndex);;
+//    auto stacked_layout = new QStackedLayout();
+////    stacked_layout->addWidget(ui->array_widget);
+////    stacked_layout->addWidget(ui->list_widget);
+//    QObject::connect(
+//            ui->structure_list,
+//            &QListWidget::currentRowChanged,
+//            stacked_layout,
+//            &QStackedLayout::setCurrentIndex);;
     log.AddLog("绑定信号和槽结束");
 }
 

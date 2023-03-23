@@ -22,7 +22,7 @@ public:
     void Insert(T insert) override;
     void Delete(T old,T need_delete) override;
     void Update(T old,T updated) override;
-    T& Search(T search) override;
+    std::optional<T&> Search(T search) override;
 
     void Draw(QPixmap &window) override;
     void Erase() override;
@@ -36,15 +36,44 @@ Arr<T>::~Arr() {}
 template <typename T>
 void Arr<T>::Create() {}
 template <typename T>
-void Arr<T>::Insert(T insert) {}
+void Arr<T>::Insert(T insert) {
+    _arr.push_back(insert);
+}
 template <typename T>
-void Arr<T>::Delete(T old, T need_delete) {}
+void Arr<T>::Delete(T old, T need_delete) {
+    for (auto it = _arr.begin(); it != _arr.end(); ) {
+        if (*it == old) {
+            it = _arr.erase(it);
+        }
+        else {
+            it ++;
+        }
+    }
+}
 template <typename T>
-void Arr<T>::Update(T old, T updated) {}
+void Arr<T>::Update(T old, T updated) {
+    for (auto& num : _arr) {
+        if (num == old) {
+            num = updated;
+        }
+    }
+}
 template <typename T>
-T &Arr<T>::Search(T search) {}
+std::optional<T&> Arr<T>::Search(T search) {
+    for (auto& num : _arr) {
+        if (num == search) {
+            return num;
+        }
+    }
+    return std::nullopt;
+}
 template <typename T>
-void Arr<T>::Draw(QPixmap &window) {}
+void Arr<T>::Draw(QPixmap &pixmap) {
+    QPainter painter(&pixmap);
+
+}
+
+
 template <typename T>
 void Arr<T>::Erase() {}
 

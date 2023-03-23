@@ -5,6 +5,7 @@
 #ifndef DATASTRUCTUREVISUALIZATION_BASEDATASTRUCTURE_HPP
 #define DATASTRUCTUREVISUALIZATION_BASEDATASTRUCTURE_HPP
 
+#include <optional>
 #include <QPixmap>
 #include <QPainterPath>
 template <typename T>
@@ -20,9 +21,9 @@ public:
     virtual void Insert(T insert) = 0;
     virtual void Delete(T old,T need_delete) = 0;
     virtual void Update(T old,T updated) = 0;
-    virtual T& Search(T search) = 0;
+    virtual std::optional<T&> Search(T search) = 0;
 
-    virtual void Draw(QPixmap &window) = 0;
+    virtual void Draw(QPixmap &pixmap) = 0;
     virtual void Erase() = 0;
 };
 
