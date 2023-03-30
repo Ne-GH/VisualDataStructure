@@ -11,14 +11,14 @@
 #include "BaseDataStructure.hpp"
 
 template <typename T>
-class Arr : BaseDataStructure<T> {
-    using BaseDataStructure<T>::_x;
-    using BaseDataStructure<T>::_y;
+class Array : BaseDataStructure<T,Array<T>> {
+    using BaseDataStructure<T,Array<T>>::_x;
+    using BaseDataStructure<T,Array<T>>::_y;
     std::vector<T> _arr;
 public:
-    Arr();
-    ~Arr();
-    void Create() override;
+    Array() = default;
+    ~Array() = default;
+    Array<T>& Create() override;
     void Insert(T insert) override;
     void Delete(T old,T need_delete) override;
     void Update(T old,T updated) override;
@@ -29,18 +29,15 @@ public:
 };
 
 template <typename T>
-Arr<T>::Arr() {
+Array<T>& Array<T>::Create() {
+    return new Array<T>;
 }
 template <typename T>
-Arr<T>::~Arr() {}
-template <typename T>
-void Arr<T>::Create() {}
-template <typename T>
-void Arr<T>::Insert(T insert) {
+void Array<T>::Insert(T insert) {
     _arr.push_back(insert);
 }
 template <typename T>
-void Arr<T>::Delete(T old, T need_delete) {
+void Array<T>::Delete(T old, T need_delete) {
     for (auto it = _arr.begin(); it != _arr.end(); ) {
         if (*it == old) {
             it = _arr.erase(it);
@@ -51,7 +48,7 @@ void Arr<T>::Delete(T old, T need_delete) {
     }
 }
 template <typename T>
-void Arr<T>::Update(T old, T updated) {
+void Array<T>::Update(T old, T updated) {
     for (auto& num : _arr) {
         if (num == old) {
             num = updated;
@@ -59,7 +56,7 @@ void Arr<T>::Update(T old, T updated) {
     }
 }
 template <typename T>
-std::optional<T&> Arr<T>::Search(T search) {
+std::optional<T&> Array<T>::Search(T search) {
     for (auto& num : _arr) {
         if (num == search) {
             return num;
@@ -68,14 +65,14 @@ std::optional<T&> Arr<T>::Search(T search) {
     return std::nullopt;
 }
 template <typename T>
-void Arr<T>::Draw(QPixmap &pixmap) {
+void Array<T>::Draw(QPixmap &pixmap) {
     QPainter painter(&pixmap);
 
 }
 
 
 template <typename T>
-void Arr<T>::Erase() {}
+void Array<T>::Erase() {}
 
 //template<typename T = int>
 //class Array {

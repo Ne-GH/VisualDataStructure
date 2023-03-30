@@ -8,7 +8,7 @@
 #include <optional>
 #include <QPixmap>
 #include <QPainterPath>
-template <typename T>
+template <typename T,typename Derived>
 class BaseDataStructure {
 protected:
     int _x = 0,_y = 0;
@@ -17,7 +17,7 @@ public:
     ~BaseDataStructure() = default;
 
     virtual void SetDrawPos(int x,int y) final;
-    virtual void Create() = 0;
+    virtual Derived& Create() = 0;
     virtual void Insert(T insert) = 0;
     virtual void Delete(T old,T need_delete) = 0;
     virtual void Update(T old,T updated) = 0;
@@ -27,8 +27,8 @@ public:
     virtual void Erase() = 0;
 };
 
-template <typename T>
-void BaseDataStructure<T>::SetDrawPos(int x, int y) {
+template <typename T,typename Derived>
+void BaseDataStructure<T,Derived>::SetDrawPos(int x, int y) {
     _x = x;
     _y = y;
 }
