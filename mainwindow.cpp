@@ -2,9 +2,12 @@
 #include "./ui_mainwindow.h"
 #include <iostream>
 #include <QHBoxLayout>
+#include <QVBoxLayout>
 #include <QListWidget>
 #include <QLabel>
+#include <QWidget>
 #include <QStackedLayout>
+#include <QPushButton>
 
 #include "Array/Array.hpp"
 
@@ -23,6 +26,10 @@ static void Init(MainWindow *window,Ui::MainWindow *ui) {
     window->SetCurAlgorithmType(AlgorithmType::None);
     log.AddLog("初始化MainWindow成员变量结束");
 
+    auto layout = ui->centralwidget->layout();
+//    layout->setContentsMargins(0,10,0,10);
+    layout->setSpacing(0);
+
 }
 
 static void Connect(MainWindow *window,Ui::MainWindow *ui) {
@@ -40,14 +47,47 @@ static void Connect(MainWindow *window,Ui::MainWindow *ui) {
     });
 
 
-//    auto stacked_layout = new QStackedLayout();
-////    stacked_layout->addWidget(ui->array_widget);
-////    stacked_layout->addWidget(ui->list_widget);
-//    QObject::connect(
-//            ui->structure_list,
-//            &QListWidget::currentRowChanged,
-//            stacked_layout,
-//            &QStackedLayout::setCurrentIndex);;
+    ui->show_hide_structure->setText("<");
+    auto structure_list_layout = ui->centralwidget->layout();
+    QObject::connect(ui->show_hide_structure,&QPushButton::clicked,[=]{
+        if (ui->structure_list->isVisible() == true) {
+            ui->structure_list->hide();
+            ui->show_hide_structure->setText(">");
+//            structure_list_layout->setContentsMargins(0,6,6,6);
+        }
+        else {
+            ui->structure_list->show();
+            ui->show_hide_structure->setText("<");
+//            structure_list_layout->setContentsMargins(6,6,6,6);
+        }
+    });
+
+    ui->show_hide_operator->setText("v");
+    QVBoxLayout *operator_layout = static_cast<QVBoxLayout *>(ui->operator_widget->layout());
+    operator_layout->setSpacing(0);
+    ui->right_layout->setContentsMargins(6,6,6,0);
+    QObject::connect(ui->show_hide_operator,&QPushButton::clicked,[=]{
+        for (int i = 0; i < ui->operator_layout->count(); ++i) {
+            QWidget* w = ui->operator_layout->itemAt(i)->widget();
+            if (w != NULL) {
+                if (w->isVisible() == true) {
+                    w->hide();
+                    ui->show_hide_operator->setText("^");
+//                    ui->right_layout->setContentsMargins(6,6,6,0);
+                }
+                else {
+                    w->show();
+                    ui->show_hide_operator->setText("v");
+                }
+
+            }
+        }
+
+    });
+
+
+
+
     log.AddLog("绑定信号和槽结束");
 }
 

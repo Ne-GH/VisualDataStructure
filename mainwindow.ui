@@ -15,6 +15,21 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QHBoxLayout" name="horizontalLayout_2">
+    <property name="spacing">
+     <number>0</number>
+    </property>
+    <property name="leftMargin">
+     <number>0</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
+     <number>0</number>
+    </property>
     <item>
      <widget class="QListWidget" name="structure_list">
       <property name="maximumSize">
@@ -25,18 +40,34 @@
       </property>
       <item>
        <property name="text">
-        <string>数组</string>
+        <string>1</string>
        </property>
       </item>
       <item>
        <property name="text">
-        <string>链表</string>
+        <string>2</string>
        </property>
       </item>
      </widget>
     </item>
     <item>
-     <layout class="QVBoxLayout" name="left_layout">
+     <widget class="QPushButton" name="show_hide_structure">
+      <property name="maximumSize">
+       <size>
+        <width>6</width>
+        <height>25</height>
+       </size>
+      </property>
+      <property name="text">
+       <string>&lt;</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <layout class="QVBoxLayout" name="right_layout">
+      <property name="spacing">
+       <number>0</number>
+      </property>
       <item>
        <widget class="ShowWidget" name="show_widget" native="true">
         <property name="sizePolicy">
@@ -54,28 +85,64 @@
        </widget>
       </item>
       <item>
-       <layout class="QFormLayout" name="operator_layout">
-        <item row="0" column="0">
-         <widget class="QLabel" name="insert_label">
-          <property name="text">
-           <string>插入:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="1">
-         <widget class="QLineEdit" name="insert_edit"/>
-        </item>
-        <item row="1" column="0">
-         <widget class="QLabel" name="delete_label">
-          <property name="text">
-           <string>删除:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="1">
-         <widget class="QLineEdit" name="delete_edit"/>
-        </item>
-       </layout>
+       <widget class="QWidget" name="operator_widget" native="true">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>0</height>
+         </size>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout_2">
+         <property name="spacing">
+          <number>0</number>
+         </property>
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+         <item alignment="Qt::AlignHCenter">
+          <widget class="QPushButton" name="show_hide_operator">
+           <property name="maximumSize">
+            <size>
+             <width>25</width>
+             <height>6</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>PushButton</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <layout class="QFormLayout" name="operator_layout">
+           <item row="0" column="0">
+            <widget class="QLabel" name="addtion_label">
+             <property name="text">
+              <string>1</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QLineEdit" name="addtion_edit"/>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </widget>
       </item>
      </layout>
     </item>
@@ -87,10 +154,20 @@
      <x>0</x>
      <y>0</y>
      <width>798</width>
-     <height>23</height>
+     <height>32</height>
     </rect>
    </property>
   </widget>
+  <action name="action">
+   <property name="text">
+    <string>隐藏</string>
+   </property>
+  </action>
+  <action name="action_2">
+   <property name="text">
+    <string>显示</string>
+   </property>
+  </action>
  </widget>
  <customwidgets>
   <customwidget>
