@@ -11,6 +11,7 @@ find_package(Qt6 COMPONENTS
         Core
         Gui
         Widgets
+        Charts
         REQUIRED)
 
 add_executable(VisualDataStructure main.cpp
@@ -29,5 +30,6 @@ target_link_libraries(VisualDataStructure
         Qt::Core
         Qt::Gui
         Qt::Widgets
+        Qt::Charts
         )
 
