@@ -17,7 +17,7 @@ add_executable(VisualDataStructure main.cpp
         MainWindow.cpp MainWindow.h
         Logs/Log.h Logs/Log.cpp Logs/Log.ui
 
-        CustomGraphics/CustomGraphics.cpp CustomGraphics/CustomGraphics.h)
+        CustomGraphics/CustomGraphics.cpp CustomGraphics/CustomGraphics.h Structure/Arrary.hpp Structure/StructureBase.hpp)
 target_link_libraries(VisualDataStructure
         Qt::Core
         Qt::Gui

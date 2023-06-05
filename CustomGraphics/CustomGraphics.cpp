@@ -84,32 +84,32 @@ int CustomItem::type() const
 }
 
 // 自定义 Scene
-void CustomScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
-{
-    qDebug() << "Custom scene clicked.";
-    QGraphicsScene::mousePressEvent(event);
-    if (!event->isAccepted()) {
-        if (event->button() == Qt::LeftButton) {
-            // 在 Scene 上添加一个自定义 item
-            QPointF point = event->scenePos();
-            CustomItem *item = new CustomItem();
-            item->setRect(point.x()-25, point.y()-25, 60, 60);
-            addItem(item);
-        } else if (event->button() == Qt::RightButton) {
-            // 检测光标下是否有 item
-            QGraphicsItem *itemToRemove = NULL;
-                    foreach (QGraphicsItem *item, items(event->scenePos())) {
-                    if (item->type() == QGraphicsItem::UserType+1) {
-                        itemToRemove = item;
-                        break;
-                    }
-                }
-            // 从 Scene 上移除 item
-            if (itemToRemove != NULL)
-                removeItem(itemToRemove);
-        }
-    }
-}
+//void CustomScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
+//{
+//    qDebug() << "Custom scene clicked.";
+//    QGraphicsScene::mousePressEvent(event);
+//    if (!event->isAccepted()) {
+//        if (event->button() == Qt::LeftButton) {
+//            // 在 Scene 上添加一个自定义 item
+//            QPointF point = event->scenePos();
+//            CustomItem *item = new CustomItem();
+//            item->setRect(point.x()-25, point.y()-25, 60, 60);
+//            addItem(item);
+//        } else if (event->button() == Qt::RightButton) {
+//            // 检测光标下是否有 item
+//            QGraphicsItem *itemToRemove = NULL;
+//                    foreach (QGraphicsItem *item, items(event->scenePos())) {
+//                    if (item->type() == QGraphicsItem::UserType+1) {
+//                        itemToRemove = item;
+//                        break;
+//                    }
+//                }
+//            // 从 Scene 上移除 item
+//            if (itemToRemove != NULL)
+//                removeItem(itemToRemove);
+//        }
+//    }
+//}
 void CustomScene::contextMenuEvent(QGraphicsSceneContextMenuEvent *event) {
     QMenu menu;
     // 在菜单中添加所需的操作项
