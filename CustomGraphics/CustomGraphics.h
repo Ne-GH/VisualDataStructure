@@ -19,6 +19,7 @@
 #include <QMenu>
 #include <QContextMenuEvent>
 #include <QGraphicsSceneContextMenuEvent>
+#include <tuple>
 
 //QGraphicsScene管理QGraphicsItem（单击/选择/移动/缩放/删除）
 // 自定义 Item
@@ -26,6 +27,17 @@ class CustomItem : public QGraphicsRectItem {
     QList<QGraphicsLineItem *> connectedLines;
 public:
     explicit CustomItem(QGraphicsItem *parent = 0);
+
+    CustomItem(int pos_x,int pos_y,int item_w,int item_h) {
+        setRect(QRectF(pos_x-item_w/2,pos_y-item_h/2,item_w,item_h));
+
+        setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable);
+        setFlag(QGraphicsItem::ItemSendsScenePositionChanges, true);
+    }
+
+    void SetPos(int pos_x,int pos_y,int item_w,int item_h) {
+        setRect(pos_x-item_w/2,pos_y-item_h/2,item_w,item_h);
+    }
 
     void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = nullptr) override {
         // 自定义选中时的边框样式
@@ -100,6 +112,10 @@ protected:
     // 重写contextMenuEvent函数处理右键菜单事件
     void contextMenuEvent(QGraphicsSceneContextMenuEvent *event) override ;
 
+public:
+    CustomScene() {
+        setSceneRect(0,0,800,600);
+    }
 };
 
 #endif // CUSTOM_ITEM_H

@@ -98,7 +98,7 @@ int CustomItem::type() const
 //        } else if (event->button() == Qt::RightButton) {
 //            // 检测光标下是否有 item
 //            QGraphicsItem *itemToRemove = NULL;
-//                    foreach (QGraphicsItem *item, items(event->scenePos())) {
+//                foreach (QGraphicsItem *item, items(event->scenePos())) {
 //                    if (item->type() == QGraphicsItem::UserType+1) {
 //                        itemToRemove = item;
 //                        break;

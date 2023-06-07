@@ -8,35 +8,43 @@
 
 #include "StructureBase.hpp"
 #include <vector>
+#include <tuple>
 
-
-template <typename T>
-class Arrary : public StructureBase<std::vector,T>{
+class Arrary : public StructureBase<std::vector>{
+    CustomScene *_scene;
+    int _x = 0;
+    int _y = 0;
 
 public:
     Arrary() = default;
     ~Arrary() = default;
+    Arrary(CustomScene *scene) : _scene(scene) {  }
 
-    void Draw(CustomScene* scene) {
-        for (auto& item : this->_val) {
-            scene->addItem(item);
-        }
-    }
-    void Clear(CustomScene*) {
 
+    void Clear(CustomScene* scene) {
+        scene->clear();
     }
-    void Install(T item) {
+
+    void Install(CustomItem* item) {
+
+        _scene->addItem(item);
         this->_val.push_back(item);
     }
-    void Delete(T*) {
 
+    void Delete(CustomItem* item) {
+        for (auto it = _val.begin();it != _val.end(); ) {
+            if (*it == item) {
+                it = _val.erase(it);
+            }
+            else {
+                it ++;
+            }
+        }
     }
-    void Updata(T*) {
 
-    }
-    void Search(T*) {
-
-    }
+    void Draw(CustomScene* scene) {  }
+    void Updata(CustomItem*) {  }
+    CustomItem* Search(CustomItem* item) {  }
 };
 
 

@@ -7,18 +7,20 @@
 #define _StructureBase_H_
 #include "../CustomGraphics/CustomGraphics.h"
 
-template <template<typename> class U, typename T>
+template <template<typename> class U>
 class StructureBase {
 protected:
-    U<T> _val;
+    U<CustomItem *> _val;
 public:
     virtual void Draw(CustomScene*) = 0;
     virtual void Clear(CustomScene*) = 0;
-    virtual void Install(T) = 0;
-    virtual void Delete(T*) = 0;
-    virtual void Updata(T*) = 0;
-    virtual void Search(T*) = 0;
+    virtual void Install(CustomItem*) = 0;
+    virtual void Delete(CustomItem*) = 0;
+    virtual void Updata(CustomItem*) = 0;
+    virtual CustomItem* Search(CustomItem*) = 0;
 
+    StructureBase() = default;
+    virtual ~StructureBase() = default;
 };
 
 
