@@ -9,11 +9,18 @@
 #include "./StructureBase.hpp"
 #include "../Graphics/GraphicsItem.h"
 #include "../Graphics/GraphicsScene.h"
+#include "../Logs/Log.h"
 
 #include <array>
 #include <vector>
 
-class Array : public StructureBase<std::vector>{
+#include <QMetaType>
+
+
+
+class Array : public QObject, public StructureBase<std::vector>{
+    Q_OBJECT
+
 
 private:
     GraphicsScene *_scene;
@@ -21,6 +28,7 @@ private:
     int _y = 0;
 
 public:
+
     Array() = default;
     ~Array() = default;
     Array(GraphicsScene *scene) : _scene(scene) {  }
@@ -31,6 +39,9 @@ public:
     }
 
     void Install(GraphicsItem* item) {
+        QObject::connect(item,&GraphicsItem::Move,[=](auto pitem){
+            LOG.AddLog("调用Install,将当前Item绑定至Array中");
+        });
         _scene->addItem(item);
         this->_val.push_back(item);
     }

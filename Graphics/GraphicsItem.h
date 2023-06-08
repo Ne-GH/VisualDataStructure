@@ -5,6 +5,7 @@
 
 #ifndef _GRAPHICSITEM_H_
 #define _GRAPHICSITEM_H_
+#include "../Logs/Log.h"
 
 #include <QGraphicsItem>
 #include <QPainter>
@@ -13,8 +14,12 @@
 #include <QGraphicsSceneContextMenuEvent>
 #include <vector>
 
-class GraphicsItem : public QGraphicsItem {
+class GraphicsItem :public QObject ,public QGraphicsItem {
+    Q_OBJECT
+signals:
+    void Move(GraphicsItem *item);
 public:
+
     enum ItemType {
         Rect,
         Ellipse
@@ -103,12 +108,11 @@ protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event) {
         QGraphicsItem::mousePressEvent(event);
         event->accept();
+        emit Move(this);
     }
 
 private:
     ItemType _item_type;
     std::vector<int> _points;
 };
-
-;
 #endif // _GRAPHICSITEM_H_

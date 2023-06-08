@@ -69,7 +69,6 @@ protected:
             // 比较 item 的当前位置与之前的位置
             if (item->pos() != item->scenePos()) {
                 // item 移动了
-                std::cout << "move" << std::endl;
             }
         }
         QGraphicsScene::mouseMoveEvent(event);
