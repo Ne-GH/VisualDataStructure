@@ -14,7 +14,6 @@
 #include <vector>
 
 class Array : public StructureBase<std::vector>{
-    Q_OBJECT
 
 private:
     GraphicsScene *_scene;
@@ -32,12 +31,6 @@ public:
     }
 
     void Install(GraphicsItem* item) {
-        QObject::connect(item,
-                         &GraphicsItem::MoveItem
-                         ,[=](GraphicsItem * ret_item) {
-
-        });
-
         _scene->addItem(item);
         this->_val.push_back(item);
     }

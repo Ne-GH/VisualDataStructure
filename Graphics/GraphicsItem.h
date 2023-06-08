@@ -14,7 +14,6 @@
 #include <vector>
 
 class GraphicsItem : public QGraphicsItem {
-    Q_OBJECT
 public:
     enum ItemType {
         Rect,
@@ -102,12 +101,10 @@ protected:
         }
     }
     void mousePressEvent(QGraphicsSceneMouseEvent *event) {
-        emit MoveItem(this);
         QGraphicsItem::mousePressEvent(event);
         event->accept();
     }
-signals:
-    void MoveItem(GraphicsItem *ret_item);
+
 private:
     ItemType _item_type;
     std::vector<int> _points;
