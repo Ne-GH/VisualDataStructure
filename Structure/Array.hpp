@@ -26,12 +26,20 @@ private:
     GraphicsScene *_scene;
     int _x = 0;
     int _y = 0;
-
+    using StructureBase<std::vector>::_val;
 public:
-
+    int x = 0;
     Array() = default;
     ~Array() = default;
-    Array(GraphicsScene *scene) : _scene(scene) {  }
+    Array(GraphicsScene *scene) : _scene(scene) {
+        int scene_width = _scene->width();
+        int scene_height = _scene->height();
+
+        x = 10;
+
+        _y = scene_height * 0.3;
+        _x = scene_width / 2;
+    }
 
 
     void Clear(GraphicsScene* scene) {
@@ -39,11 +47,29 @@ public:
     }
 
     void Install(GraphicsItem* item) {
-        QObject::connect(item,&GraphicsItem::Move,[=](auto pitem){
-            LOG.AddLog("调用Install,将当前Item绑定至Array中");
+        QObject::connect(item,&GraphicsItem::Selected,[&](auto pitem){
+            std::cout << x << std::endl;
         });
         _scene->addItem(item);
         this->_val.push_back(item);
+    }
+    // TODO int => T
+    void Install(int val) {
+        auto p = new GraphicsItem(0,0,100,100);
+        int install_x,install_y;
+        if (_val.size() == 0) {
+            install_x = _x;
+            install_y = _y;
+        }
+        else {
+            std::tie(install_x,install_y) = _val[_val.size()-1]->GetPos();
+            auto [w,h] = _val[_val.size()-1]->GetWH();
+            install_x += w;
+        }
+
+        p->SetPos(install_x,install_y);
+        p->SetVal(val);
+        Install(p);
     }
 
     void Delete(GraphicsItem* item) {

@@ -35,13 +35,9 @@ MainWindow::MainWindow(QWidget *parent) :
     graphicsView->setScene(scene);
 
     Array a(scene);
-    auto p = new GraphicsItem(100,100,100,100);
-    p->SetPos(scene->width()/2,scene->height()/2);
-    a.Install(p);
+    a.Install(10);
+    a.Install(100);
 
-    auto p2 = new GraphicsItem(100,100,100,100,GraphicsItem::Ellipse);
-    p2->SetPos(100,100);
-    a.Install(p2);
 
     LOG.AddLog("MainWindow构造完成");
     LOG.AddLog("启动完成");
