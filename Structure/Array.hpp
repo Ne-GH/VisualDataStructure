@@ -46,9 +46,16 @@ public:
         scene->clear();
     }
 
+    void Push_back(int val) {
+        Install(val);
+    }
     void Install(GraphicsItem* item) {
         QObject::connect(item,&GraphicsItem::Selected,[&](auto pitem){
-            std::cout << x << std::endl;
+            for (auto it : _val) {
+                it->setSelected(true);
+            }
+//            std::cout << _val.size() << std::endl;
+//            std::cout << x << std::endl;
         });
         _scene->addItem(item);
         this->_val.push_back(item);

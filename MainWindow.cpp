@@ -34,10 +34,14 @@ MainWindow::MainWindow(QWidget *parent) :
     auto scene = new GraphicsScene();
     graphicsView->setScene(scene);
 
-    Array a(scene);
-    a.Install(10);
-    a.Install(100);
 
+    auto a = new Array(scene);
+    auto p = new GraphicsItem(0,0,100,100);
+    a->Install(p);
+
+    QObject::connect(scene,&GraphicsScene::MenuAdd,[=]{
+        a->Install(10);
+    });
 
     LOG.AddLog("MainWindow构造完成");
     LOG.AddLog("启动完成");

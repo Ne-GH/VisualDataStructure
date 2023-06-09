@@ -38,6 +38,7 @@ public:
     }
 
     GraphicsItem(int pos_x,int pos_y,int item_w,int item_h,ItemType item_type = Rect) : GraphicsItem(){
+        _points.resize(4);
         _points[0] = pos_x;
         _points[1] = pos_y;
         _points[2] = item_w;
@@ -87,15 +88,20 @@ public:
         _val = val;
     }
 
-    // 返回Item的中心坐标,TODO 对于圆形来说该位置是正确的，但是对于矩形来说，该位置是左上角
+    // 返回Item的中心坐标
     std::tuple<int,int> GetPos() {
         if (_item_type == Rect) {
-            return {_points[0]+_points[2]/2,_points[1]+_points[3]/2};
+//            return {_points[0]+_points[2]/2,_points[1]+_points[3]/2};
+            QPointF scene_pos = this->scenePos() + boundingRect().center();
+            int x =  scene_pos.x();
+            int y =  scene_pos.y();
+            return {x,y};
         }
         else if (_item_type == Ellipse) {
             return {_points[0],_points[1]};
         }
     }
+    // 返回Item的宽高
     std::tuple<int,int> GetWH() {
         return {_points[2],_points[3]};
     }
@@ -109,6 +115,7 @@ protected:
         }
     }
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override {
+        std::cout << "paint" << std::endl;
         painter->setRenderHint(QPainter::Antialiasing);
         painter->setBrush(Qt::transparent);
 
@@ -126,7 +133,8 @@ protected:
         painter->setPen(pen);
         painter->setBrush(QColorConstants::Svg::orange);
         if (_item_type == Rect) {
-            painter->drawRect(QRect{_points[0],_points[1],_points[2],_points[3]});
+            painter->drawRect(QRectF(_points[0],_points[1],_points[2],_points[3]));
+            std::cout << _points[0] << " " << _points[1] << std::endl;
         }
         else if (_item_type == Ellipse){
             painter->drawEllipse(boundingRect());
@@ -134,16 +142,26 @@ protected:
         painter->drawText(boundingRect(), Qt::AlignCenter, std::to_string(_val).c_str());
     }
     void mousePressEvent(QGraphicsSceneMouseEvent *event) {
+        emit Selected(this);
         QGraphicsItem::mousePressEvent(event);
         event->accept();
-        emit Selected(this);
+    }
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
+//        QPointF scene_pos = this->scenePos() + boundingRect().center();
+//        int x =  scene_pos.x();
+//        int y =  scene_pos.y();
+//        SetPos(x,y);
+//        auto [cur_x,cur_y] = GetPos();
+//
+//        std::cout << x << " " << y << " " << cur_x << " " << cur_y << std::endl;
+
+        QGraphicsItem::mouseReleaseEvent(event);
+        event->accept();
     }
     void mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
+        emit Move(this);
         QGraphicsItem::mouseMoveEvent(event);
         event->accept();
-
-        std::cout << "移动" << std::endl;
-        emit Move(this);
     }
     void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) {
         std::cout << "双击" << std::endl;

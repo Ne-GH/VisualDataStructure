@@ -15,11 +15,15 @@
 #include <QGraphicsSceneContextMenuEvent>
 
 class GraphicsScene : public QGraphicsScene {
+    Q_OBJECT
+signals:
+    void MenuAdd();
+private:
     QRectF selectionRect_;
     bool _showRect = true;
     GraphicsItem *_move_item = nullptr;
 protected:
-    // 重写contextMenuEvent函数处理右键菜单事件
+//     重写contextMenuEvent函数处理右键菜单事件
     void contextMenuEvent(QGraphicsSceneContextMenuEvent *event) override {
         QMenu menu;
         // 在菜单中添加所需的操作项
@@ -29,7 +33,7 @@ protected:
         QAction* selectedItem = menu.exec(event->screenPos());
         // 处理所选操作项的逻辑
         if (selectedItem == action1) {
-            // 菜单1
+            emit MenuAdd();
         }
         else if (selectedItem == action2) {
             // 菜单2
@@ -74,6 +78,8 @@ protected:
         QGraphicsScene::mouseMoveEvent(event);
 
     }
+
+
 
     void mouseReleaseEvent(QGraphicsSceneMouseEvent* event) override {
         if (event->button() == Qt::LeftButton) {
