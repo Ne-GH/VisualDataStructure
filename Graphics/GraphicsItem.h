@@ -87,7 +87,29 @@ public:
     void SetVal(int val) {
         _val = val;
     }
+    void InputVal() {
+        // 创建一个QLineEdit小部件
+        QLineEdit *lineEdit = new QLineEdit(nullptr);
+        lineEdit->setGeometry(QRect(0, 0, 100, 20));  // 设置小部件的位置和大小
 
+        // 设置小部件的属性，例如字体、对齐方式等
+
+        // 将小部件添加到场景中
+        scene()->addWidget(lineEdit);
+
+        // 将小部件放置在图形项的中心位置
+        QPointF centerPos = mapToScene(boundingRect().center());
+        lineEdit->move(centerPos.x() - lineEdit->width() / 2, centerPos.y() - lineEdit->height() / 2);
+
+        // 将光标设置为小部件的焦点
+        lineEdit->setFocus();
+
+        QObject::connect(lineEdit,&QLineEdit::editingFinished,[=]{
+            int val = std::stoi(lineEdit->text().toStdString());
+            SetVal(val);
+            lineEdit->deleteLater();
+        });
+    }
     // 返回Item的中心坐标
     std::tuple<int,int> GetPos() {
         if (_item_type == Rect) {
@@ -115,7 +137,6 @@ protected:
         }
     }
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override {
-        std::cout << "paint" << std::endl;
         painter->setRenderHint(QPainter::Antialiasing);
         painter->setBrush(Qt::transparent);
 
@@ -134,7 +155,6 @@ protected:
         painter->setBrush(QColorConstants::Svg::orange);
         if (_item_type == Rect) {
             painter->drawRect(QRectF(_points[0],_points[1],_points[2],_points[3]));
-            std::cout << _points[0] << " " << _points[1] << std::endl;
         }
         else if (_item_type == Ellipse){
             painter->drawEllipse(boundingRect());
@@ -163,32 +183,9 @@ protected:
         QGraphicsItem::mouseMoveEvent(event);
         event->accept();
     }
+
     void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) {
-        std::cout << "双击" << std::endl;
-
-
-        // 创建一个QLineEdit小部件
-        QLineEdit *lineEdit = new QLineEdit(nullptr);
-        lineEdit->setGeometry(QRect(0, 0, 100, 20));  // 设置小部件的位置和大小
-
-        // 设置小部件的属性，例如字体、对齐方式等
-
-        // 将小部件添加到场景中
-        scene()->addWidget(lineEdit);
-
-        // 将小部件放置在图形项的中心位置
-        QPointF centerPos = mapToScene(boundingRect().center());
-        lineEdit->move(centerPos.x() - lineEdit->width() / 2, centerPos.y() - lineEdit->height() / 2);
-
-        // 将光标设置为小部件的焦点
-        lineEdit->setFocus();
-
-        QObject::connect(lineEdit,&QLineEdit::editingFinished,[=]{
-            int val = std::stoi(lineEdit->text().toStdString());
-            SetVal(val);
-            lineEdit->deleteLater();
-        });
-
+        InputVal();
         QGraphicsItem::mouseDoubleClickEvent(event);
     }
 

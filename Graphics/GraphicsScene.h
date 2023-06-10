@@ -39,8 +39,7 @@ protected:
             // 菜单2
         }
     }
-
-    void mousePressEvent(QGraphicsSceneMouseEvent* event) override {
+    void mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event) override {
         if (event->button() == Qt::LeftButton) {
             selectionRect_.setTopLeft(event->scenePos());
             selectionRect_.setSize(QSizeF());
@@ -54,7 +53,8 @@ protected:
             }
         }
     }
-
+//    void mousePressEvent(QGraphicsSceneMouseEvent* event) override {
+//    }
     void mouseMoveEvent(QGraphicsSceneMouseEvent* event) override {
         if (event->buttons() & Qt::LeftButton) {
             if (_showRect == true) {

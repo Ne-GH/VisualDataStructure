@@ -59,6 +59,7 @@ public:
         });
         _scene->addItem(item);
         this->_val.push_back(item);
+        item->InputVal();
     }
     // TODO int => T
     void Insert(int val) {

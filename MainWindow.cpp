@@ -12,7 +12,7 @@
 
 #include "Graphics/GraphicsScene.h"
 #include "Graphics/GraphicsItem.h"
-
+#include "Graphics/GraphicsView.h"
 #include "Structure/Array.hpp"
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -28,19 +28,18 @@ MainWindow::MainWindow(QWidget *parent) :
     });
 
     // 创建 QGraphicsView 和 QGraphicsScene 对象
-    QGraphicsView *graphicsView = new QGraphicsView(this);
+    GraphicsView *graphicsView = new GraphicsView(this);
     graphicsView->setAlignment(Qt::AlignCenter);
     setCentralWidget(graphicsView);
     auto scene = new GraphicsScene();
     graphicsView->setScene(scene);
-
+//    graphicsView->fitInView(scene->sceneRect(),Qt::KeepAspectRatioByExpanding);
+//    view->scale(scaleFactor, scaleFactor);
 
     auto a = new Array(scene);
-    auto p = new GraphicsItem(0,0,100,100);
-    a->Insert(p);
 
     QObject::connect(scene,&GraphicsScene::MenuAdd,[=]{
-        a->Insert(10);
+        a->Insert(0);
     });
 
     LOG.AddLog("MainWindow构造完成");
