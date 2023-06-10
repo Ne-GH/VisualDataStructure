@@ -47,9 +47,9 @@ public:
     }
 
     void Push_back(int val) {
-        Install(val);
+        Insert(val);
     }
-    void Install(GraphicsItem* item) {
+    void Insert(GraphicsItem* item) {
         QObject::connect(item,&GraphicsItem::Selected,[&](auto pitem){
             for (auto it : _val) {
                 it->setSelected(true);
@@ -61,7 +61,7 @@ public:
         this->_val.push_back(item);
     }
     // TODO int => T
-    void Install(int val) {
+    void Insert(int val) {
         auto p = new GraphicsItem(0,0,100,100);
         int install_x,install_y;
         if (_val.size() == 0) {
@@ -76,7 +76,7 @@ public:
 
         p->SetPos(install_x,install_y);
         p->SetVal(val);
-        Install(p);
+        Insert(p);
     }
 
     void Delete(GraphicsItem* item) {

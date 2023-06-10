@@ -37,10 +37,10 @@ MainWindow::MainWindow(QWidget *parent) :
 
     auto a = new Array(scene);
     auto p = new GraphicsItem(0,0,100,100);
-    a->Install(p);
+    a->Insert(p);
 
     QObject::connect(scene,&GraphicsScene::MenuAdd,[=]{
-        a->Install(10);
+        a->Insert(10);
     });
 
     LOG.AddLog("MainWindow构造完成");

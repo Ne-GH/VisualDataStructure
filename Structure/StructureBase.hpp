@@ -16,7 +16,7 @@ protected:
 public:
     virtual void Draw(GraphicsScene*) = 0;
     virtual void Clear(GraphicsScene*) = 0;
-    virtual void Install(GraphicsItem*) = 0;
+    virtual void Insert(GraphicsItem*) = 0;
     virtual void Delete(GraphicsItem*) = 0;
     virtual void Updata(GraphicsItem*) = 0;
     virtual GraphicsItem* Search(GraphicsItem*) = 0;
