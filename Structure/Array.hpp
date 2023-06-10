@@ -49,13 +49,53 @@ public:
     void Push_back(int val) {
         Insert(val);
     }
+    // pos是删除元素的下标
+    void ReMove() {
+        for (int i = 1;i < _val.size(); ++i) {
+            auto [x,y] = _val[i-1]->GetPos();
+            std::cout << x << " " << y << std::endl;
+            auto [w,h] = _val[i-1]->GetWH();
+            std::cout << x+w << " " << y << std::endl;
+            _val[i]->SetPos(x+w,y);
+        }
+
+        _scene->update();
+    }
     void Insert(GraphicsItem* item) {
-        QObject::connect(item,&GraphicsItem::Selected,[&](auto pitem){
+        QObject::connect(item,&GraphicsItem::LeftSelected,[&](auto pitem){
             for (auto it : _val) {
                 it->setSelected(true);
             }
 //            std::cout << _val.size() << std::endl;
 //            std::cout << x << std::endl;
+        });
+        QObject::connect(item,&GraphicsItem::RightSelected,[&](auto pitem){
+            for (auto it = _val.begin();it != _val.end(); ++it) {
+                if (*it == pitem) {
+                    _val.erase(it);
+                    break;
+                }
+            }
+            _scene->removeItem(pitem);
+            delete pitem;
+            ReMove();
+//            int pos = 0;
+//            while (pos < _val.size()) {
+//                if (_val[pos] == pitem) {
+//                    break;
+//                }
+//                pos ++;
+//            }
+//            if (pos == 0) {
+//                ;
+//            }
+//            else if (pos >= _val.size()) {
+//                ;
+//            }
+//            else {
+//                ReMove(pos);
+//            }
+//
         });
         _scene->addItem(item);
         this->_val.push_back(item);

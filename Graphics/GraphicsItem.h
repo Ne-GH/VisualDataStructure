@@ -162,7 +162,12 @@ protected:
         painter->drawText(boundingRect(), Qt::AlignCenter, std::to_string(_val).c_str());
     }
     void mousePressEvent(QGraphicsSceneMouseEvent *event) {
-        emit Selected(this);
+        if (event->button() == Qt::LeftButton) {
+            emit LeftSelected(this);
+        }
+        else if (event->button() == Qt::RightButton) {
+            emit RightSelected(this);
+        }
         QGraphicsItem::mousePressEvent(event);
         event->accept();
     }
@@ -191,7 +196,8 @@ protected:
 
 signals:
     void Move(GraphicsItem *item);
-    void Selected(GraphicsItem *item);
+    void LeftSelected(GraphicsItem *item);
+    void RightSelected(GraphicsItem *item);
 
 private:
     ItemType _item_type;
