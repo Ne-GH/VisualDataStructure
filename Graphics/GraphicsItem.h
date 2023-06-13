@@ -75,8 +75,7 @@ public:
     // 修改坐标后，以新坐标为中心，原有宽高进行绘制
     void SetPos(int pos_x,int pos_y) {
         if (_item_type == Rect) {
-            _points[0] = pos_x - _points[2]/2;
-            _points[1] = pos_y - _points[3]/2;
+            setPos(QPointF(pos_x - _points[2]/2,pos_y - _points[3]/2));
         }
         else if (_item_type == Ellipse) {
             _points[0] = pos_x;

@@ -50,15 +50,21 @@ public:
         Insert(val);
     }
     // pos是删除元素的下标
+    // TODO 坐标存在问题
     void ReMove() {
         for (int i = 1;i < _val.size(); ++i) {
             auto [x,y] = _val[i-1]->GetPos();
-            std::cout << x << " " << y << std::endl;
             auto [w,h] = _val[i-1]->GetWH();
-            std::cout << x+w << " " << y << std::endl;
             _val[i]->SetPos(x+w,y);
+            std::cout << x+w << " " << y << std::endl;
         }
+        std::cout << std::endl;
 
+        for (auto p : _val) {
+            auto [x,y] = p->GetPos();
+            std::cout << x << " " << y << std::endl;
+        }
+        std::cout << std::endl;
         _scene->update();
     }
     void Insert(GraphicsItem* item) {
@@ -78,6 +84,12 @@ public:
             }
             _scene->removeItem(pitem);
             delete pitem;
+
+            for (auto p : _val) {
+                auto [x,y] = p->GetPos();
+                std::cout << x << " " << y << std::endl;
+            }
+            std::cout << std::endl;
             ReMove();
 //            int pos = 0;
 //            while (pos < _val.size()) {
