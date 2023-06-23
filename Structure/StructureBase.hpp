@@ -6,8 +6,8 @@
 #ifndef _STRUCTUREBASE_H_
 #define _STRUCTUREBASE_H_
 
-#include "../Graphics/GraphicsScene.h"
-#include "../Graphics/GraphicsItem.h"
+#include "GraphicsScene.h"
+#include "GraphicsItem.h"
 
 template <template<typename> class U>
 class StructureBase {

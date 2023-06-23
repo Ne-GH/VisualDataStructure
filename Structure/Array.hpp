@@ -7,8 +7,8 @@
 #define _ARRAY_H_
 
 #include "./StructureBase.hpp"
-#include "../Graphics/GraphicsItem.h"
-#include "../Graphics/GraphicsScene.h"
+#include "GraphicsItem.h"
+#include "GraphicsScene.h"
 #include "../Logs/Log.h"
 
 #include <array>

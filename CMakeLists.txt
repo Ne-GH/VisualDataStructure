@@ -14,6 +14,8 @@ find_package(Qt6 COMPONENTS
         Charts
         REQUIRED)
 
+INCLUDE_DIRECTORIES(Graphics)
+INCLUDE_DIRECTORIES(Structure)
 add_executable(VisualDataStructure main.cpp
         MainWindow.cpp MainWindow.h
         Logs/Log.h Logs/Log.cpp Logs/Log.ui
@@ -24,7 +26,7 @@ add_executable(VisualDataStructure main.cpp
 
         Structure/StructureBase.hpp
         Structure/Array.hpp
-        )
+        Structure/Sort.hpp)
 
 target_link_libraries(VisualDataStructure
         Qt::Core
