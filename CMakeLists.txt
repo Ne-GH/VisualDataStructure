@@ -26,7 +26,7 @@ add_executable(VisualDataStructure main.cpp
 
         Structure/StructureBase.hpp
         Structure/Array.hpp
-        Structure/Sort.hpp)
+        Structure/Sort.h)
 
 target_link_libraries(VisualDataStructure
         Qt::Core
