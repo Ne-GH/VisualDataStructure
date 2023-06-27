@@ -6,15 +6,14 @@
 #ifndef _ARRAY_H_
 #define _ARRAY_H_
 
-#include "./StructureBase.hpp"
+#include "StructureBase.hpp"
 #include "GraphicsItem.h"
 #include "GraphicsScene.h"
-#include "../Logs/Log.h"
+#include "Log.h"
 
 #include <array>
 #include <vector>
 
-#include <QMetaType>
 
 
 

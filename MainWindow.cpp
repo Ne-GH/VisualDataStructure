@@ -26,69 +26,80 @@
 #include "Array.hpp"
 #include "Sort.h"
 
-MainWindow::MainWindow(QWidget *parent) :
-                        QMainWindow(parent), ui(new Ui::MainWindow){
+enum class StructType {
+    Array,
+    Stack,
+    Queue
+};
+void CreateMenuAndConnect(MainWindow *window, Ui::MainWindow *ui){
 
-    ui->setupUi(this);
-    auto log_action = new QAction("日志");
-    ui->menu_bar->addAction(log_action);
-    connect(log_action,&QAction::triggered,[=]{
-        LOG.Show();
+    auto struct_menu = new QMenu("数据结构");
+    auto array_action = new QAction("数组");
+    auto stack_action = new QAction("栈");
+    auto queue_action = new QAction("队列");
+    struct_menu->addAction(array_action);
+    struct_menu->addAction(stack_action);
+    struct_menu->addAction(queue_action);
+    ui->menu_bar->addMenu(struct_menu);
+
+    QObject::connect(array_action,&QAction::triggered,[=]{
+        GraphicsView *graphicsView = new GraphicsView(window);
+        graphicsView->setAlignment(Qt::AlignCenter);
+        window->setCentralWidget(graphicsView);
+        auto scene = new GraphicsScene();
+        graphicsView->setScene(scene);
+        auto a = new Array(scene);
+        QObject::connect(scene,&GraphicsScene::MenuAdd,[=]{
+            a->Insert(0);
+        });
     });
+    QObject::connect(stack_action,&QAction::triggered,[=]{
+        GraphicsView *graphicsView = new GraphicsView(window);
+        graphicsView->setAlignment(Qt::AlignCenter);
+        window->setCentralWidget(graphicsView);
+        auto scene = new GraphicsScene();
+        graphicsView->setScene(scene);
+        auto a = new Array(scene);
+        QObject::connect(scene,&GraphicsScene::MenuAdd,[=]{
+            a->Insert(0);
+        });
+    });
+
+
     auto sort_action = new QAction("排序");
     ui->menu_bar->addAction(sort_action);
-
     auto s = new Sort();
     QObject::connect(sort_action,&QAction::triggered,[=]{
         std::thread run(&Sort::begin,s);
         run.detach();
     });
-
-
     QObject::connect(s, &Sort::UPUI, [=]() {
         static int i = 0;
         i ++;
-        statusBar()->showMessage(std::to_string(i).c_str());
-
+        window->statusBar()->showMessage(std::to_string(i).c_str());
     });
 
-//    auto chart = new QChart();
-//    auto series = new QBarSeries();
-//    auto view = new QChartView();
-//
-//    QBarSet* barSet = new QBarSet("");
-//    series->append(barSet);
-//    chart->addSeries(series);
-//    view->setChart(chart);
-//    setCentralWidget(view);
-//    QObject::connect(s, &Sort::UPUI, [=]() {
-//        std::cout << "upui" << std::endl;
-//        *barSet << 50 << 60 << 70 << 80 << 90;
-//
-//        view->repaint();
-//        chart->update();
-//    });
+
+    auto log_action = new QAction("日志");
+    ui->menu_bar->addAction(log_action);
+    QObject::connect(log_action,&QAction::triggered,[=]{
+        LOG.Show();
+    });
+}
+MainWindow::MainWindow(QWidget *parent) :
+                        QMainWindow(parent), ui(new Ui::MainWindow){
+
+    ui->setupUi(this);
+
+    CreateMenuAndConnect(this,ui);
+
+
+
+    LOG.AddLog("MainWindow构造函数");
 
 
 
 
-
-//    LOG.AddLog("MainWindow构造函数");
-
-    // 创建 QGraphicsView 和 QGraphicsScene 对象
-//    GraphicsView *graphicsView = new GraphicsView(this);
-//    graphicsView->setAlignment(Qt::AlignCenter);
-//    setCentralWidget(graphicsView);
-//    auto scene = new GraphicsScene();
-//    graphicsView->setScene(scene);
-////    graphicsView->fitInView(scene->sceneRect(),Qt::KeepAspectRatioByExpanding);
-////    view->scale(scaleFactor, scaleFactor);
-//
-//    auto a = new Array(scene);
-//
-//    QObject::connect(scene,&GraphicsScene::MenuAdd,[=]{
-//        a->Insert(0);
-//    });
 
     LOG.AddLog("MainWindow构造完成");
     LOG.AddLog("启动完成");
