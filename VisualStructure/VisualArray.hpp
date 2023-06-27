@@ -6,7 +6,7 @@
 #ifndef _ARRAY_H_
 #define _ARRAY_H_
 
-#include "StructureBase.hpp"
+#include "VisualStructureBase.hpp"
 #include "GraphicsItem.h"
 #include "GraphicsScene.h"
 #include "Log.h"
@@ -17,7 +17,7 @@
 
 
 
-class Array : public QObject, public StructureBase<std::vector>{
+class VisualArray : public QObject, public VisualStructureBase<std::vector>{
     Q_OBJECT
 
 
@@ -25,16 +25,13 @@ private:
     GraphicsScene *_scene;
     int _x = 0;
     int _y = 0;
-    using StructureBase<std::vector>::_val;
+    using VisualStructureBase<std::vector>::_val;
 public:
-    int x = 0;
-    Array() = default;
-    ~Array() = default;
-    Array(GraphicsScene *scene) : _scene(scene) {
+    VisualArray() = default;
+    ~VisualArray() = default;
+    VisualArray(GraphicsScene *scene) : _scene(scene) {
         int scene_width = _scene->width();
         int scene_height = _scene->height();
-
-        x = 10;
 
         _y = scene_height * 0.3;
         _x = scene_width / 2;
@@ -81,23 +78,6 @@ public:
             }
             std::cout << std::endl;
             ReMove();
-//            int pos = 0;
-//            while (pos < _val.size()) {
-//                if (_val[pos] == pitem) {
-//                    break;
-//                }
-//                pos ++;
-//            }
-//            if (pos == 0) {
-//                ;
-//            }
-//            else if (pos >= _val.size()) {
-//                ;
-//            }
-//            else {
-//                ReMove(pos);
-//            }
-//
         });
         _scene->addItem(item);
         this->_val.push_back(item);

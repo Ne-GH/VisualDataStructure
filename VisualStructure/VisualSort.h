@@ -4,8 +4,8 @@
 *******************************************************************************/
 //
 
-#ifndef VISUALDATASTRUCTURE_SORT_H
-#define VISUALDATASTRUCTURE_SORT_H
+#ifndef VISUALDATASTRUCTURE_VISUALSORT_H
+#define VISUALDATASTRUCTURE_VISUALSORT_H
 
 #include <vector>
 #include <map>
@@ -20,7 +20,7 @@
 #include <QtCharts/QChartView>
 #include <QtCharts/QBarSeries>
 
-class Sort : public QObject {
+class VisualSort : public QObject {
     Q_OBJECT
 
 signals:
@@ -28,7 +28,7 @@ signals:
 private:
     std::vector<int >vec;
 public:
-    Sort() {
+    VisualSort() {
         GetRandomVector(100);
     }
     void begin() {
@@ -58,4 +58,4 @@ public:
 
 
 
-#endif //VISUALDATASTRUCTURE_SORT_H
+#endif //VISUALDATASTRUCTURE_VISUALSORT_H

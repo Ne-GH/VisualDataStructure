@@ -10,7 +10,7 @@
 #include "GraphicsItem.h"
 
 template <template<typename> class U>
-class StructureBase {
+class VisualStructureBase {
 protected:
     U<GraphicsItem *> _val;
 public:
@@ -21,8 +21,8 @@ public:
     virtual void Updata(GraphicsItem*) = 0;
     virtual GraphicsItem* Search(GraphicsItem*) = 0;
 
-    StructureBase() = default;
-    virtual ~StructureBase() = default;
+    VisualStructureBase() = default;
+    virtual ~VisualStructureBase() = default;
 };
 
 

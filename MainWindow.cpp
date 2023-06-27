@@ -23,9 +23,9 @@
 #include "GraphicsScene.h"
 #include "GraphicsItem.h"
 #include "GraphicsView.h"
-#include "Array.hpp"
-#include "Sort.h"
-
+#include "VisualArray.hpp"
+#include "VisualSort.h"
+#include "MArray.hpp"
 enum class StructType {
     Array,
     Stack,
@@ -48,7 +48,7 @@ void CreateMenuAndConnect(MainWindow *window, Ui::MainWindow *ui){
         window->setCentralWidget(graphicsView);
         auto scene = new GraphicsScene();
         graphicsView->setScene(scene);
-        auto a = new Array(scene);
+        auto a = new VisualArray(scene);
         QObject::connect(scene,&GraphicsScene::MenuAdd,[=]{
             a->Insert(0);
         });
@@ -59,7 +59,7 @@ void CreateMenuAndConnect(MainWindow *window, Ui::MainWindow *ui){
         window->setCentralWidget(graphicsView);
         auto scene = new GraphicsScene();
         graphicsView->setScene(scene);
-        auto a = new Array(scene);
+        auto a = new VisualArray(scene);
         QObject::connect(scene,&GraphicsScene::MenuAdd,[=]{
             a->Insert(0);
         });
@@ -68,12 +68,12 @@ void CreateMenuAndConnect(MainWindow *window, Ui::MainWindow *ui){
 
     auto sort_action = new QAction("排序");
     ui->menu_bar->addAction(sort_action);
-    auto s = new Sort();
+    auto s = new VisualSort();
     QObject::connect(sort_action,&QAction::triggered,[=]{
-        std::thread run(&Sort::begin,s);
+        std::thread run(&VisualSort::begin, s);
         run.detach();
     });
-    QObject::connect(s, &Sort::UPUI, [=]() {
+    QObject::connect(s, &VisualSort::UPUI, [=]() {
         static int i = 0;
         i ++;
         window->statusBar()->showMessage(std::to_string(i).c_str());
@@ -93,10 +93,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     CreateMenuAndConnect(this,ui);
 
-
-
     LOG.AddLog("MainWindow构造函数");
-
 
 
 
