@@ -14,12 +14,12 @@
 #include <chrono>
 #include <thread>
 #include <algorithm>
+#include <QThread>
 
 #include <QtCharts/QChart>
 #include <QtCharts/QBarSet>
 #include <QtCharts/QChartView>
 #include <QtCharts/QBarSeries>
-
 class VisualSort : public QObject {
     Q_OBJECT
 
@@ -28,6 +28,7 @@ signals:
 private:
     std::vector<int >vec;
 public:
+
     VisualSort() {
         GetRandomVector(100);
     }

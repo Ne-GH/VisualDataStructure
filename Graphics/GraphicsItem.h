@@ -121,6 +121,7 @@ public:
         else if (_item_type == Ellipse) {
             return {_points[0],_points[1]};
         }
+        else return {0,0};
     }
     // 返回Item的宽高
     std::tuple<int,int> GetWH() {
@@ -134,6 +135,7 @@ protected:
         else if (_item_type == Ellipse){
             return QRectF(_points[0],_points[1],_points[2],_points[3]);
         }
+        return {};
     }
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override {
         painter->setRenderHint(QPainter::Antialiasing);
