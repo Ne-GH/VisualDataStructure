@@ -8,18 +8,12 @@
 #define VISUALDATASTRUCTURE_VISUALSORT_H
 
 #include <vector>
-#include <map>
 #include <random>
-#include <iostream>
 #include <chrono>
 #include <thread>
 #include <algorithm>
 #include <QThread>
 
-#include <QtCharts/QChart>
-#include <QtCharts/QBarSet>
-#include <QtCharts/QChartView>
-#include <QtCharts/QBarSeries>
 class VisualSort : public QObject {
     Q_OBJECT
 
@@ -35,15 +29,17 @@ public:
     void begin() {
         std::sort(vec.begin(),vec.end(),[=](const int val1,const int val2){
             emit UPUI();
-            std::this_thread::sleep_for(std::chrono::seconds(1));
+            std::this_thread::sleep_for(std::chrono::milliseconds(10));
             if (val1 < val2)
                 return true;
             else
                 return false;
         });
+        // qthread线程结束，否则不会结束
+        thread()->quit();
     }
     void GetRandomVector(size_t size) {
-        vec.resize(10);
+        vec.resize(size);
         std::default_random_engine rand_engine;
         for (auto &p : vec) {
             p = rand_engine() % 100;

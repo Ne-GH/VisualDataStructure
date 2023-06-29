@@ -37,4 +37,3 @@ target_link_libraries(VisualDataStructure
         Qt::Widgets
         Qt::Charts
         )
-

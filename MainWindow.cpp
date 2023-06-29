@@ -27,6 +27,9 @@
 #include "VisualSort.h"
 #include "MArray.hpp"
 #include <QThread>
+#include <QSplineSeries>
+#include <QValueAxis>
+
 enum class StructType {
     Array,
     Stack,
@@ -67,20 +70,55 @@ void CreateMenuAndConnect(MainWindow *window, Ui::MainWindow *ui){
         });
     });
 
-
-    auto sort_action = new QAction("排序");
-    ui->menu_bar->addAction(sort_action);
+    auto sort_menu = new QMenu("排序");
+    auto std_sort_action = new QAction("std::sort");
+    sort_menu->addAction(std_sort_action);
+    ui->menu_bar->addMenu(sort_menu);
     auto s = new VisualSort();
-    s->GetRandomVector(10);
+    s->GetRandomVector(100);
     auto run = new QThread();
-    QObject::connect(sort_action,&QAction::triggered,[=]{
+
+    QBarSet *set0 = new QBarSet("");
+    QBarSeries *series = new QBarSeries();
+    QChart *chart = new QChart();
+    QBarCategoryAxis *axisX = new QBarCategoryAxis();
+    QValueAxis *axisY = new QValueAxis();
+    QChartView *chartView = new QChartView(chart);
+
+    QObject::connect(std_sort_action,&QAction::triggered,[=]{
+        QStringList categories;
+        series->append(set0);
+        chart->addSeries(series);
+        chart->setTitle("");
+        // chart->setAnimationOptions(QChart::SeriesAnimations);
+        chart->setAnimationOptions(QChart::NoAnimation);
+        for (int i = 0;i < s->GetRandomVector().size(); ++i) {
+            categories << std::to_string(i).c_str();
+        }
+        axisX->append(categories);
+        axisX->setVisible(false);
+        axisY->setVisible(false);
+        chart->addAxis(axisX, Qt::AlignBottom);
+        series->attachAxis(axisX);
+        axisY->setRange(0,100);
+        chart->addAxis(axisY, Qt::AlignLeft);
+        series->attachAxis(axisY);
+        chart->legend()->setVisible(false);
+        chart->legend()->setAlignment(Qt::AlignBottom);
+        chartView->setRenderHint(QPainter::Antialiasing);
+        window->setCentralWidget(chartView);
         s->moveToThread(run);
         run->start();
     });
     QObject::connect(run,&QThread::started,s,&VisualSort::begin);
 
-    QObject::connect(s,&VisualSort::UPUI,[=]{
-        std::cout << s->GetRandomVector().size() << std::endl;
+
+    QObject::connect(s,&VisualSort::UPUI,[=]mutable  {
+        auto vec = s->GetRandomVector();
+        set0->remove(0,vec.size());
+        for (auto num : vec) {
+            *set0 << num;
+        }
     });
 
 
@@ -99,6 +137,7 @@ MainWindow::MainWindow(QWidget *parent) :
     CreateMenuAndConnect(this,ui);
 
     LOG.AddLog("MainWindow构造函数");
+
 
 
 
