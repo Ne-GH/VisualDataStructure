@@ -4,8 +4,8 @@
 *******************************************************************************/
 //
 
-#ifndef VISUALDATASTRUCTURE_VISUALSORT_H
-#define VISUALDATASTRUCTURE_VISUALSORT_H
+#ifndef _VISUALSORT_H_
+#define _VISUALSORT_H_
 
 #include <vector>
 #include <random>
@@ -55,4 +55,4 @@ public:
 
 
 
-#endif //VISUALDATASTRUCTURE_VISUALSORT_H
+#endif
