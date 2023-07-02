@@ -61,10 +61,6 @@ public:
         _points[3] = item_h;
     }
 
-    // 圆形
-    void SetPos(int pos_x,int pos_y,int r) {
-        SetPos(pos_x,pos_y,r,r);
-    }
 
     // 修改宽高之后会以原有坐标为中心进行绘制
     void SetWH(int w,int h) {
@@ -74,13 +70,7 @@ public:
     }
     // 修改坐标后，以新坐标为中心，原有宽高进行绘制
     void SetPos(int pos_x,int pos_y) {
-        if (_item_type == Rect) {
-            setPos(QPointF(pos_x - _points[2]/2,pos_y - _points[3]/2));
-        }
-        else if (_item_type == Ellipse) {
-            _points[0] = pos_x;
-            _points[1] = pos_y;
-        }
+        setPos(QPointF(pos_x - _points[2]/2,pos_y - _points[3]/2));
     }
     // TODO ,int ==> T
     void SetVal(int val) {
@@ -111,17 +101,11 @@ public:
     }
     // 返回Item的中心坐标
     std::tuple<int,int> GetPos() {
-        if (_item_type == Rect) {
-//            return {_points[0]+_points[2]/2,_points[1]+_points[3]/2};
-            QPointF scene_pos = this->scenePos() + boundingRect().center();
-            int x =  scene_pos.x();
-            int y =  scene_pos.y();
-            return {x,y};
-        }
-        else if (_item_type == Ellipse) {
-            return {_points[0],_points[1]};
-        }
-        else return {0,0};
+//      return {_points[0]+_points[2]/2,_points[1]+_points[3]/2};
+        QPointF scene_pos = this->scenePos() + boundingRect().center();
+        int x =  scene_pos.x();
+        int y =  scene_pos.y();
+        return {x,y};
     }
     // 返回Item的宽高
     std::tuple<int,int> GetWH() {
@@ -129,13 +113,7 @@ public:
     }
 protected:
     QRectF boundingRect() const override {
-        if (_item_type == Rect) {
-            return QRectF(_points[0],_points[1],_points[2],_points[3]);
-        }
-        else if (_item_type == Ellipse){
-            return QRectF(_points[0],_points[1],_points[2],_points[3]);
-        }
-        return {};
+        return QRectF(_points[0],_points[1],_points[2],_points[3]);
     }
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override {
         painter->setRenderHint(QPainter::Antialiasing);

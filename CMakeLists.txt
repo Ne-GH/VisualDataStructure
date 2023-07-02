@@ -36,7 +36,7 @@ add_executable(VisualDataStructure main.cpp
         MSTL/Queue.hpp
         MSTL/Stack.hpp
 
-        )
+        VisualStructure/VisualList.hpp)
 
 target_link_libraries(VisualDataStructure
         Qt::Core

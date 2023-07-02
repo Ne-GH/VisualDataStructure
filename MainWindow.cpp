@@ -24,6 +24,7 @@
 #include "GraphicsItem.h"
 #include "GraphicsView.h"
 #include "VisualArray.hpp"
+#include "VisualList.hpp"
 #include "VisualSort.h"
 #include "Array.hpp"
 #include <QThread>
@@ -40,12 +41,28 @@ void CreateMenuAndConnect(MainWindow *window, Ui::MainWindow *ui){
 
     auto struct_menu = new QMenu("数据结构");
     auto array_action = new QAction("数组");
+    auto list_action = new QAction("链表");
     auto stack_action = new QAction("栈");
     auto queue_action = new QAction("队列");
     struct_menu->addAction(array_action);
+    struct_menu->addAction(list_action);
     struct_menu->addAction(stack_action);
     struct_menu->addAction(queue_action);
     ui->menu_bar->addMenu(struct_menu);
+
+
+    QObject::connect(list_action,&QAction::triggered,[=]{
+        auto graphicsView = new GraphicsView(window);
+        graphicsView->setAlignment(Qt::AlignCenter);
+        window->setCentralWidget(graphicsView);
+        auto scene = new GraphicsScene();
+        graphicsView->setScene(scene);
+        auto list = new VisualList(scene);
+        QObject::connect(scene,&GraphicsScene::MenuAdd,[=]{
+            list->Insert(10);
+        });
+
+    });
 
     QObject::connect(array_action,&QAction::triggered,[=]{
         auto graphicsView = new GraphicsView(window);
@@ -120,7 +137,6 @@ void CreateMenuAndConnect(MainWindow *window, Ui::MainWindow *ui){
             *set0 << num;
         }
     });
-
 
 
     auto log_action = new QAction("日志");
