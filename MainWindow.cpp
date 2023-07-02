@@ -25,7 +25,7 @@
 #include "GraphicsView.h"
 #include "VisualArray.hpp"
 #include "VisualSort.h"
-#include "MArray.hpp"
+#include "Array.hpp"
 #include <QThread>
 #include <QSplineSeries>
 #include <QValueAxis>

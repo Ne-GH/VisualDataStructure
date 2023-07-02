@@ -15,6 +15,7 @@ find_package(Qt6 COMPONENTS
         REQUIRED)
 
 INCLUDE_DIRECTORIES(Graphics VisualStructure Logs MSTL)
+
 add_executable(VisualDataStructure main.cpp
         MainWindow.cpp MainWindow.h
         Logs/Log.h Logs/Log.cpp Logs/Log.ui
@@ -27,7 +28,13 @@ add_executable(VisualDataStructure main.cpp
         VisualStructure/VisualArray.hpp
         VisualStructure/VisualSort.h
 
-        MSTL/MArray.hpp
+        MSTL/Array.hpp
+        MSTL/BinaryTree.hpp
+        MSTL/Find.hpp
+        MSTL/List.hpp
+        MSTL/Map.hpp
+        MSTL/Queue.hpp
+        MSTL/Stack.hpp
 
         )
 
