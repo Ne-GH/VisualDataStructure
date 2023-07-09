@@ -14,6 +14,10 @@ find_package(Qt6 COMPONENTS
         Charts
         REQUIRED)
 
+find_package(Lua51)
+include_directories(${LUA_INCLUDE_DIR})
+
+
 INCLUDE_DIRECTORIES(Graphics VisualStructure Logs MSTL)
 
 add_executable(VisualDataStructure main.cpp
@@ -43,4 +47,5 @@ target_link_libraries(VisualDataStructure
         Qt::Gui
         Qt::Widgets
         Qt::Charts
+        ${LUA_LIBRARIES}
         )

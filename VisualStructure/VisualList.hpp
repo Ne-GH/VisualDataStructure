@@ -10,20 +10,21 @@
 #include "VisualStructureBase.hpp"
 #include "GraphicsItem.h"
 #include "GraphicsScene.h"
+#include "GraphicsView.h"
 #include "Log.h"
 
 #include <vector>
+#include <QPoint>
 
 class VisualList : public QObject, public VisualStructureBase<std::vector> {
     Q_OBJECT
-private:
-
-
 private:
     GraphicsScene *_scene;
     int _x = 0;
     int _y = 0;
     using VisualStructureBase<std::vector>::_val;
+
+    std::vector<QLine> _lines;
 public:
     VisualList() = default;
     ~VisualList() = default;
@@ -35,6 +36,21 @@ public:
             _x = scene_width / 2;
     }
 
+    void AddLine() {
+        if (_val.size() <= 1)
+            return;
+        int begin_x,begin_y,end_x,end_y;
+
+        for (int i = 0;i < _val.size()-1 ; ++i) {
+            std::tie(begin_x,begin_y) = _val[i]->GetPos();
+            std::tie(end_x,end_y) = _val[i+1]->GetPos();
+//            auto line = new QLine(begin_x,begin_y,end_x,end_y);
+            _scene->addLine(begin_x,begin_y,end_x,end_y);
+        }
+    }
+    void RemoveLine() {
+
+    }
 
     void Clear(GraphicsScene* scene) {
         scene->clear();
@@ -83,24 +99,13 @@ public:
     }
     void Insert(int val) {
         auto p = new GraphicsItem(0,0,100,100,GraphicsItem::Ellipse);
-        int install_x,install_y;
-        if (_val.size() == 0) {
-            install_x = _x;
-            install_y = _y;
-        }
-        else {
-            std::tie(install_x,install_y) = _val[_val.size()-1]->GetPos();
-            std::cout << "" << install_x << " " << install_y << std::endl;
-            auto [w,h] = _val[_val.size()-1]->GetWH();
-            install_x += w;
-        }
 
-        p->SetPos(install_x,install_y);
-        auto [tmpx,tmpy] = p->GetPos();
+        QPointF pos = _scene->views().at(0)->mapToScene(QCursor::pos());
+
+        p->SetPos(pos.x(),pos.y()-50);
         p->SetVal(val);
         Insert(p);
-        std::cout << "set:" << install_x << " " << install_y << std::endl;
-        std::cout << "set:" << tmpx << " " << tmpy << std::endl;
+        AddLine();
     }
 
     void Delete(GraphicsItem* item) {
