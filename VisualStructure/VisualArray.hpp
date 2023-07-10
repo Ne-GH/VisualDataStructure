@@ -82,6 +82,7 @@ public:
         _scene->addItem(item);
         this->_val.PushBack(item);
         item->InputVal();
+
     }
     // TODO int => T
     void Insert(int val) {

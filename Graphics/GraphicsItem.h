@@ -94,9 +94,15 @@ public:
         lineEdit->setFocus();
 
         QObject::connect(lineEdit,&QLineEdit::editingFinished,[=]{
-            int val = std::stoi(lineEdit->text().toStdString());
-            SetVal(val);
-            lineEdit->deleteLater();
+            try {
+                int val = std::stoi(lineEdit->text().toStdString());
+                SetVal(val);
+                lineEdit->deleteLater();
+            }
+            catch (...) {
+                lineEdit->deleteLater();
+                InputVal();
+            }
         });
     }
     // 返回Item的中心坐标
