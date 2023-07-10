@@ -7,8 +7,6 @@
 #ifndef MSTL_ARRAY_HPP_
 #define MSTL_ARRAY_HPP_
 
-#include <iterator>
-
 namespace MSTL{
 template<typename T>
 class Arrary{
@@ -88,9 +86,9 @@ public:
         return _arr_address[offset];
     }
 
-};
+};  // class MSTL::Array
 
-}
+}   // namespace MSTL
 
 
 #endif

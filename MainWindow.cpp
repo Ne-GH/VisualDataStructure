@@ -89,10 +89,12 @@ void CreateMenuAndConnect(MainWindow *window, Ui::MainWindow *ui){
 
     auto sort_menu = new QMenu("排序");
     auto std_sort_action = new QAction("std::sort");
+    auto bubble_sort = new QAction("冒泡排序");
     sort_menu->addAction(std_sort_action);
+    sort_menu->addAction(bubble_sort);
     ui->menu_bar->addMenu(sort_menu);
-    auto s = new VisualSort();
-    s->GetRandomVector(100);
+    auto visual_sort = new VisualSort();
+    visual_sort->GetRandomVector(100);
     auto run = new QThread();
 
     QBarSet *set0 = new QBarSet("");
@@ -101,15 +103,14 @@ void CreateMenuAndConnect(MainWindow *window, Ui::MainWindow *ui){
     QBarCategoryAxis *axisX = new QBarCategoryAxis();
     QValueAxis *axisY = new QValueAxis();
     QChartView *chartView = new QChartView(chart);
-
-    QObject::connect(std_sort_action,&QAction::triggered,[=]{
+    auto SetChart = [=]{
         QStringList categories;
         series->append(set0);
         chart->addSeries(series);
         chart->setTitle("");
         // chart->setAnimationOptions(QChart::SeriesAnimations);
         chart->setAnimationOptions(QChart::NoAnimation);
-        for (int i = 0;i < s->GetRandomVector().size(); ++i) {
+        for (int i = 0;i < visual_sort->GetRandomVector().size(); ++i) {
             categories << std::to_string(i).c_str();
         }
         axisX->append(categories);
@@ -124,14 +125,24 @@ void CreateMenuAndConnect(MainWindow *window, Ui::MainWindow *ui){
         chart->legend()->setAlignment(Qt::AlignBottom);
         chartView->setRenderHint(QPainter::Antialiasing);
         window->setCentralWidget(chartView);
-        s->moveToThread(run);
+    };
+
+    QObject::connect(std_sort_action,&QAction::triggered,[=]{
+        SetChart();
+        visual_sort->moveToThread(run);
+        QObject::connect(run,&QThread::started,visual_sort,&VisualSort::StdSort);
         run->start();
     });
-    QObject::connect(run,&QThread::started,s,&VisualSort::begin);
+    QObject::connect(bubble_sort,&QAction::triggered,[=]{
+        SetChart();
+        visual_sort->moveToThread(run);
+        QObject::connect(run,&QThread::started,visual_sort,&VisualSort::BubbleSort);
+        run->start();
+    });
 
 
-    QObject::connect(s,&VisualSort::UPUI,[=]mutable  {
-        auto vec = s->GetRandomVector();
+    QObject::connect(visual_sort,&VisualSort::UPUI,[=]mutable  {
+        auto vec = visual_sort->GetRandomVector();
         set0->remove(0,vec.size());
         for (auto num : vec) {
             *set0 << num;
