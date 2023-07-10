@@ -11,21 +11,21 @@
 #include "GraphicsScene.h"
 #include "Log.h"
 
+#include "Array.hpp"
 #include <array>
 #include <vector>
 
 
 
 
-class VisualArray : public QObject, public VisualStructureBase<std::vector>{
+class VisualArray : public QObject, public VisualStructureBase<MSTL::Arrary>{
     Q_OBJECT
-
 
 private:
     GraphicsScene *_scene;
     int _x = 0;
     int _y = 0;
-    using VisualStructureBase<std::vector>::_val;
+    using VisualStructureBase<MSTL::Arrary>::_val;
 public:
     VisualArray() = default;
     ~VisualArray() = default;
@@ -47,7 +47,7 @@ public:
     }
     // pos是删除元素的下标
     void ReMove() {
-        for (int i = 1;i < _val.size(); ++i) {
+        for (int i = 1;i < _val.Size(); ++i) {
             auto [x,y] = _val[i-1]->GetPos();
             auto [w,h] = _val[i-1]->GetWH();
             _val[i]->SetPos(x+w,y);
@@ -55,17 +55,17 @@ public:
         _scene->update();
     }
     void Insert(GraphicsItem* item) {
-        QObject::connect(item,&GraphicsItem::LeftSelected,[&](auto pitem){
+        QObject::connect(item,&GraphicsItem::LeftSelected,[=](auto pitem){
             for (auto it : _val) {
                 it->setSelected(true);
             }
 //            std::cout << _val.size() << std::endl;
 //            std::cout << x << std::endl;
         });
-        QObject::connect(item,&GraphicsItem::RightSelected,[&](auto pitem){
+        QObject::connect(item,&GraphicsItem::RightSelected,[=](auto pitem){
             for (auto it = _val.begin();it != _val.end(); ++it) {
                 if (*it == pitem) {
-                    _val.erase(it);
+                    _val.Delete(it);
                     break;
                 }
             }
@@ -80,20 +80,20 @@ public:
             ReMove();
         });
         _scene->addItem(item);
-        this->_val.push_back(item);
+        this->_val.PushBack(item);
         item->InputVal();
     }
     // TODO int => T
     void Insert(int val) {
         auto p = new GraphicsItem(0,0,100,100);
         int install_x,install_y;
-        if (_val.size() == 0) {
+        if (_val.Size() == 0) {
             install_x = _x;
             install_y = _y;
         }
         else {
-            std::tie(install_x,install_y) = _val[_val.size()-1]->GetPos();
-            auto [w,h] = _val[_val.size()-1]->GetWH();
+            std::tie(install_x,install_y) = _val[_val.Size()-1]->GetPos();
+            auto [w,h] = _val[_val.Size()-1]->GetWH();
             install_x += w;
         }
 
@@ -105,7 +105,7 @@ public:
     void Delete(GraphicsItem* item) {
         for (auto it = _val.begin();it != _val.end(); ) {
             if (*it == item) {
-                it = _val.erase(it);
+                it = _val.Delete(it);
             }
             else {
                 it ++;
