@@ -87,12 +87,7 @@ void CreateMenuAndConnect(MainWindow *window, Ui::MainWindow *ui){
         });
     });
 
-    auto sort_menu = new QMenu("排序");
-    auto std_sort_action = new QAction("std::sort");
-    auto bubble_sort = new QAction("冒泡排序");
-    sort_menu->addAction(std_sort_action);
-    sort_menu->addAction(bubble_sort);
-    ui->menu_bar->addMenu(sort_menu);
+
     auto visual_sort = new VisualSort();
     visual_sort->GetRandomVector(100);
     auto run = new QThread();
@@ -126,20 +121,57 @@ void CreateMenuAndConnect(MainWindow *window, Ui::MainWindow *ui){
         chartView->setRenderHint(QPainter::Antialiasing);
         window->setCentralWidget(chartView);
     };
-
+    auto sort_menu = new QMenu("排序");
+    auto std_sort_action = new QAction("std::sort");
+    sort_menu->addAction(std_sort_action);
+    ui->menu_bar->addMenu(sort_menu);
     QObject::connect(std_sort_action,&QAction::triggered,[=]{
         SetChart();
         visual_sort->moveToThread(run);
         QObject::connect(run,&QThread::started,visual_sort,&VisualSort::StdSort);
         run->start();
     });
+    auto bubble_sort = new QAction("冒泡排序");
+    sort_menu->addAction(bubble_sort);
     QObject::connect(bubble_sort,&QAction::triggered,[=]{
         SetChart();
         visual_sort->moveToThread(run);
         QObject::connect(run,&QThread::started,visual_sort,&VisualSort::BubbleSort);
         run->start();
     });
+    auto selection_sort = new QAction("选择排序");
+    sort_menu->addAction(selection_sort);
+    QObject::connect(selection_sort,&QAction::triggered,[=]{
+        SetChart();
+        visual_sort->moveToThread(run);
+        QObject::connect(run,&QThread::started,visual_sort,&VisualSort::SelectionSort);
+        run->start();
+    });
+    auto insertion_sort = new QAction("插入排序");
+    sort_menu->addAction(insertion_sort);
+    QObject::connect(insertion_sort,&QAction::triggered,[=]{
+        SetChart();
+        visual_sort->moveToThread(run);
+        QObject::connect(run,&QThread::started,visual_sort,&VisualSort::InsertionSort);
+        run->start();
+    });
+    auto quick_sort = new QAction("快排");
+    sort_menu->addAction(quick_sort);
+    QObject::connect(quick_sort,&QAction::triggered,[=]{
+        SetChart();
+        visual_sort->moveToThread(run);
+        QObject::connect(run,&QThread::started,visual_sort,&VisualSort::QuickSort);
+        run->start();
+    });
 
+    auto merge_sort = new QAction("归并");
+    sort_menu->addAction(merge_sort);
+    QObject::connect(merge_sort,&QAction::triggered,[=]{
+        SetChart();
+        visual_sort->moveToThread(run);
+        QObject::connect(run,&QThread::started,visual_sort,&VisualSort::MergeSort);
+        run->start();
+    });
 
     QObject::connect(visual_sort,&VisualSort::UPUI,[=]mutable  {
         auto vec = visual_sort->GetRandomVector();

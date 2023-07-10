@@ -17,7 +17,7 @@
 #include "Sort.hpp"
 
 #define CMP \
-    [=](auto val1,auto val2) {\
+    [this](auto val1,auto val2) {\
         emit UPUI();\
         std::this_thread::sleep_for(std::chrono::milliseconds(sleep_time));\
         if (val1 < val2)\
@@ -25,6 +25,9 @@
         else\
             return false;\
     }
+#define SORT_FUNC_BASE(func) func(vec.begin(),vec.end(),CMP); \
+                        emit UPUI();\
+                        thread()->quit();
 class VisualSort : public QObject {
     Q_OBJECT
 
@@ -42,12 +45,22 @@ public:
     }
 
     void BubbleSort() {
-        MSTL::bubble_sort(vec.begin(), vec.end(), CMP);
-        thread()->quit();
+        SORT_FUNC_BASE(MSTL::BubbleSort);
     }
     void StdSort() {
-        std::sort(vec.begin(),vec.end(),CMP);
-        thread()->quit();
+        SORT_FUNC_BASE(std::sort);
+    }
+    void SelectionSort() {
+        SORT_FUNC_BASE(MSTL::SelectionSort);
+    }
+    void InsertionSort() {
+        SORT_FUNC_BASE(MSTL::InsertionSort);
+    }
+    void QuickSort() {
+        SORT_FUNC_BASE(MSTL::QuickSort);
+    }
+    void MergeSort() {
+        SORT_FUNC_BASE(MSTL::MergeSort);
     }
     void GetRandomVector(size_t size) {
         vec.resize(size);
@@ -62,7 +75,7 @@ public:
 };
 
 #undef CMP
-
+#undef SORT_FUNC_BASE
 
 
 
