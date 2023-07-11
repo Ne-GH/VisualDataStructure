@@ -11,6 +11,30 @@ namespace MSTL{
 template<typename T>
 class Arrary{
 private:
+
+    class iterator {
+        T *it;
+    public:
+        iterator(T *p) {
+            it = p;
+        }
+        T &operator *() {
+            return *it;
+        }
+        bool operator != (const iterator & that) {
+            return this->it != that.it;
+        }
+        size_t operator - (const iterator &that) {
+            return it - that.it;
+        }
+        iterator & operator ++ (){
+            ++it;
+            return *this;
+        }
+
+    };
+
+
     T *_arr_address;
     size_t _memory_size = 10;
     size_t _data_len = 0;
@@ -57,8 +81,8 @@ public:
         ReallocDown();
         return pop_val;
     }
-    T* Delete(T *del_addr) {
-        size_t offset = del_addr - _arr_address;
+    iterator Delete(iterator del_addr) {
+        size_t offset = del_addr - iterator(_arr_address);
         while (offset+1 < _data_len) {
             _arr_address[offset] = _arr_address[offset + 1];
             ++offset;
@@ -69,17 +93,17 @@ public:
             return end();
         }
         else {
-            return _arr_address + offset;
+            return iterator(_arr_address + offset);
         }
     }
     size_t Size() {
         return _data_len;
     }
-    T* begin() {
-        return _arr_address;
+    iterator begin() {
+        return iterator(_arr_address);
     }
-    T* end() {
-        return _arr_address + _data_len;
+    iterator end() {
+        return iterator(_arr_address + _data_len);
     }
 
     T operator[] (size_t offset) {
