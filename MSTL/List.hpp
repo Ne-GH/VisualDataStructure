@@ -39,23 +39,45 @@ private:
     _Node *_head;
     _Node *_end;
 
+    /*******************************************************************************
+     * 会把构造函数中创建的head_node一并删除
+    *******************************************************************************/
+    void  _Clear(_Node *p) {
+        if (p->_next == nullptr) {
+            delete p;
+            return;
+        }
+        _Clear(p->_next);
+        delete p;
+    }
+
 public:
 
-    List(){
-        _head = new _Node;
-        // _head->data = _Node();
-        _head->_next = NULL;
-        _end = _head;
-        // _end = _head->_next;
+    List() {
+        auto head_node = new _Node(0);
+        _head = _end = head_node;
+        _end->_next = nullptr;
+        _list_len = 0;
     }
 
     ~List(){
-        _Node* tmp;
-        while(_head){
-            tmp = _head;
-            _head = _head->_next;
-            delete tmp;
-        }
+        Clear();
+        if (_head != nullptr)
+            delete _head;
+        _head = _end = nullptr;
+        _list_len = 0;
+    }
+    void PushBack(T data) {
+        auto node = new _Node(data);
+        _end->_next = node;
+        _end = node;
+        _end->_next = nullptr;
+    }
+    void Clear() {
+        _Clear(_head);
+        _head = _end = new _Node(0);
+        _end->_next = nullptr;
+        _list_len = 0;
     }
 
     void Insert(size_t pos,T data){
@@ -103,15 +125,6 @@ public:
         return;
     }
 
-    void Show(){
-        _Node *p = _head->_next;
-
-        while(p){
-            std::cout << p->data << std::endl;
-            p = p->_next;
-        }
-
-    }
 
     void Delete(size_t pos){
 
@@ -195,17 +208,12 @@ public:
         exit(0);
     }
 
+    // head 和 end一定不为空，因为创建了head_node
     iterator begin(){
-        if(_list_len != 0){
-            return iterator(_head);
-        }
-        return iterator(nullptr);
+        return iterator(_head->_next);
     }
     iterator end(){
-        if(_list_len != 0){
-            return iterator(_end);
-        }
-        return iterator(nullptr);
+        return iterator(_end->_next);
     }
 
     size_t Size(){

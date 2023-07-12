@@ -19,4 +19,5 @@ int main(int argc, char *argv[]) {
     for (auto num : arr) {
         qDebug() << num;
     }
+    arr.Clear();
 }
