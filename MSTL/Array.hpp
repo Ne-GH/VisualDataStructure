@@ -4,8 +4,8 @@
 *******************************************************************************/
 
 
-#ifndef MSTL_ARRAY_HPP_
-#define MSTL_ARRAY_HPP_
+#ifndef MSTL_ARRAY_HPP
+#define MSTL_ARRAY_HPP
 
 namespace MSTL{
 template<typename T>

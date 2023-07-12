@@ -1,6 +1,6 @@
 
-#ifndef _LIST_HPP_
-#define _LIST_HPP_
+#ifndef MSTL_LIST_HPP
+#define MSTL_LIST_HPP
 
 #include <iostream>
 
@@ -8,16 +8,33 @@ namespace MSTL {
 template<typename T>
 class List{
 private:
-
     class _Node{
     public:
-        _Node(){}
-        _Node(T data):data(data){}
+        _Node() { }
+        _Node(T data):data(data) { }
         T data;
         _Node *_next;
     };
+    class iterator {
+        _Node *it;
+    public:
 
-    size_t _link_len= 0;
+        iterator(_Node *p) : it(p) {  }
+        iterator &operator ++() {
+            it = it->_next;
+            return *this;
+        }
+        bool operator != (const iterator& that) {
+            return this->it != that.it;
+        }
+        T &operator * () {
+            return it->data;
+        }
+
+    };
+
+
+    size_t _list_len= 0;
 
     _Node *_head;
     _Node *_end;
@@ -45,7 +62,7 @@ public:
 
         // pos == 1, end = head;
         // link_lin = 0;
-        if(pos <= 0 ||pos > _link_len+1){
+        if(pos <= 0 ||pos > _list_len+1){
 //            OUT_ERROR("pos" << pos << "is" << "error");
             return;
         }
@@ -63,16 +80,16 @@ public:
         q->_next = tmp->_next;
         tmp->_next = q;
 
-        if(pos == _link_len){
+        if(pos == _list_len){
             _end = tmp->_next;
         }
 
-        _link_len ++;
+        _list_len ++;
 
     }
 
     void Push_back(T data){
-        // Insert(this->_link_len+1, data);
+        // Insert(this->_list_len+1, data);
        
         
         _Node *p = new _Node(data);
@@ -80,7 +97,7 @@ public:
         p->_next = nullptr;
         _end = p;
 
-        _link_len ++;
+        _list_len ++;
 
 
         return;
@@ -102,11 +119,11 @@ public:
             _Node *tmp = _head;
             _head = _head->_next;
             delete tmp;
-            _link_len --;
+            _list_len --;
             return;
         }
 
-        if(pos < 0 || pos > _link_len){
+        if(pos < 0 || pos > _list_len){
 //            OUT_ERROR("pos" << pos << "is error");
             exit(0);
         }
@@ -120,21 +137,21 @@ public:
         _Node *q = tmp->_next;
         tmp->_next = tmp->_next->_next;
 
-        if(cnt == _link_len){
+        if(cnt == _list_len){
             _end = tmp;
         }
 
         delete q;
-        _link_len --;
+        _list_len --;
 
     }
 
     void Pop_back(){
-        Delete(this->_link_len);
+        Delete(this->_list_len);
     }
     T *Find_val_by_pos(size_t pos){
 
-        if(pos <= 0 || pos > _link_len){
+        if(pos <= 0 || pos > _list_len){
 //            OUT_ERROR("pos" << pos << "is error");
             return nullptr;
         }
@@ -178,21 +195,21 @@ public:
         exit(0);
     }
 
-    T *begin(){
-        if(_link_len != 0){
-            return &_head->data;
+    iterator begin(){
+        if(_list_len != 0){
+            return iterator(_head);
         }
-        return nullptr;
+        return iterator(nullptr);
     }
-    T *end(){
-        if(_link_len != 0){
-            return &(_end->data);
+    iterator end(){
+        if(_list_len != 0){
+            return iterator(_end);
         }
-        return nullptr;
+        return iterator(nullptr);
     }
 
     size_t Size(){
-        return _link_len;
+        return _list_len;
     }
     
 };
