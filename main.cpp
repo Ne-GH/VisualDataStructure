@@ -15,6 +15,8 @@ int main(int argc, char *argv[]) {
         arr.Insert(i,i);
     }
 
+
+    arr.Delete(9);
     for (auto num : arr) {
         qDebug() << num ;
     }

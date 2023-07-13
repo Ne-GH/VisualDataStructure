@@ -105,35 +105,28 @@ public:
     }
 
 
-    void Delete(size_t pos){
-
-        if(pos == 0){
-            _Node *tmp = _head;
-            _head = _head->_next;
-            delete tmp;
-            _list_len --;
+    /*******************************************************************************
+     * delete 的参数和Insert的参数对应，删除下标为x的元素,下标从0开始
+    *******************************************************************************/
+    void Delete(size_t del_pos){
+        if (del_pos < 0 || del_pos >= _list_len) {
+            std::cerr << "pos: " << del_pos << "is error" << std::endl;
             return;
         }
-
-        if(pos < 0 || pos > _list_len){
-//            OUT_ERROR("pos" << pos << "is error");
-            exit(0);
+        int pos = 0;
+        auto tmp = _head;
+        auto cur = _head->_next;
+        while (pos ++ < del_pos) {
+            tmp = cur;
+            cur = cur->_next;
         }
-
-        _Node *tmp = _head;
-        pos--;
-        size_t cnt = 0;
-        while(cnt++ < pos){
-            tmp = tmp->_next;
-        }
-        _Node *q = tmp->_next;
         tmp->_next = tmp->_next->_next;
+        delete cur;
 
-        if(cnt == _list_len){
+        if (_list_len == pos) {
             _end = tmp;
+            _end->_next = nullptr;
         }
-
-        delete q;
         _list_len --;
 
     }
