@@ -3,7 +3,7 @@
 
 #include "MSTL/Array.hpp"
 #include "MSTL/List.hpp"
-#include "MSTL/Queue.hpp"
+#include "MSTL/Stack.hpp"
 
 int main(int argc, char *argv[]) {
 //    QApplication a(argc, argv);
@@ -11,16 +11,14 @@ int main(int argc, char *argv[]) {
 //    main_window.show();
 //    return a.exec();
 
-    MSTL::Queue<int> arr;
-    for (int i = 0;i < 10; ++i) {
-        arr.PushBack(i);
+
+    MSTL::Stack<int> arr;
+    for (int i = 0;i < 20; ++i) {
+        arr.Push(i);
     }
 
-    auto tmp = arr.PopFront();
-    qDebug() << tmp;
-    auto &t = arr.Front();
-    t = 20;
-    qDebug() << arr.PopFront();
+    int tmp = arr.Pop();
+    std::cout << tmp << std::endl;
 
 
 

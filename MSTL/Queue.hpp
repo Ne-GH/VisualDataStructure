@@ -23,7 +23,7 @@ public:
 
     }
 
-    void PushBack(T val) {
+    void Push(T val) {
         _queue.PushBack(val);
     }
 
@@ -31,7 +31,7 @@ public:
         return *_queue.begin();
     }
 
-    T PopFront(){
+    T Pop(){
         T ret = Front();
         _queue.Delete(0);
         return ret;

@@ -40,16 +40,18 @@ private:
     size_t _data_len = 0;
 
     void Realloc(size_t new_memory_size) {
-        _arr_address = (T *)::realloc((void *)_arr_address,new_memory_size);
+        _arr_address = (T *)::realloc((void *)_arr_address,new_memory_size*sizeof(T));
         if (_arr_address == nullptr) {
             throw std::bad_alloc();
         }
     }
     size_t ReallocUpSize() {
-        return _memory_size*3 / 2;
+        _memory_size = _memory_size*3/2;
+        return _memory_size;
     }
     size_t ReallocDownSize() {
-        return _memory_size*2 / 3;
+        _memory_size = _memory_size*2/3;
+        return _memory_size;
     }
     void ReallocUp() {
         if (_data_len == _memory_size) {
@@ -65,7 +67,7 @@ private:
 public:
 
     Arrary(){
-        _arr_address = (T *)::malloc(_memory_size);
+        _arr_address = (T *)::malloc(_memory_size*sizeof(T));
     }
     ~Arrary(){
         ::free(_arr_address);
@@ -76,7 +78,7 @@ public:
         _arr_address[_data_len++] = val;
     }
     T PopBack() {
-        T pop_val = _arr_address[_data_len];
+        T pop_val = _arr_address[_data_len-1];
         _data_len --;
         ReallocDown();
         return pop_val;

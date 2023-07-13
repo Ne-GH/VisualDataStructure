@@ -3,12 +3,10 @@
 *    Create By yongheng
 */
 
-#ifndef _STACK_HPP_
-#define _STACK_HPP_
+#ifndef MSTL_STACK_HPP
+#define MSTL_STACK_HPP
 
 #include <iostream>
-
-
 #include "Array.hpp"
 
 namespace MSTL {
@@ -20,17 +18,17 @@ private:
 
 public:
     
-    void Push_back(T data){
-        _stack.Push_back(data);
+    void Push(T data){
+        _stack.PushBack(data);
     }
-    T Pop_back() {
-        return _stack.Pop_back();
+    T Pop() {
+        return _stack.PopBack();
     }
     size_t Size(){
         return _stack.Size();
     }
     T Top(){
-        return _stack.End();
+        return _stack[_stack.Size()-1];
     }
 
 
