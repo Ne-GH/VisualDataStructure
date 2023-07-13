@@ -131,54 +131,6 @@ public:
 
     }
 
-    void Pop_back(){
-        Delete(this->_list_len);
-    }
-    T *Find_val_by_pos(size_t pos){
-
-        if(pos <= 0 || pos > _list_len){
-//            OUT_ERROR("pos" << pos << "is error");
-            return nullptr;
-        }
-
-        _Node *tmp = _head;
-
-        size_t cnt = 0;
-        while(cnt++ < pos){
-            tmp = tmp->_next;
-        }
-
-        return &(tmp->data);
-    }
-
-    size_t Find_pos_by_val(T val){
-        _Node *tmp = _head->_next;
-
-        size_t cnt = 1;
-        while(tmp){
-            if(tmp->data == val){
-                return cnt;
-            }
-            cnt ++;
-            tmp = tmp->_next;
-
-        }
-        return 0;
-    }
-
-
-
-    
-    T Front(){
-        T *p = begin();
-        if(p != nullptr){
-            return *p;
-        }
-        else{
-//            OUT_ERROR("This List is empty");
-        }
-        exit(0);
-    }
 
     // head 和 end一定不为空，因为创建了head_node
     iterator begin(){
