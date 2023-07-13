@@ -87,35 +87,21 @@ public:
     }
 
     /*******************************************************************************
-     * 插入一个节点，下标从1开始
+     * 插入一个节点，使之下标成为insert_pos
     *******************************************************************************/
-    void Insert(size_t pos,T data){
-        // pos == 1, end = head;
-        // link_lin = 0;
-        if(pos <= 0 ||pos > _list_len+1){
-            std::cerr << "pos: " << pos << "is error" << std::endl;
+    void Insert(size_t insert_pos,T data){
+        if(insert_pos < 0 || insert_pos > _list_len+1){
+            std::cerr << "pos: " << insert_pos << "is error" << std::endl;
             return;
         }
-
-        int cnt = 0;
-        pos--;
-        _Node *tmp = _head;
-
-        _Node *q = new _Node(data);
-
-        while(cnt++ < pos){
+        auto tmp = _head;
+        int pos = 0;
+        while (pos++ < insert_pos) {
             tmp = tmp->_next;
         }
-
-        q->_next = tmp->_next;
-        tmp->_next = q;
-
-        if(pos == _list_len){
-            _end = tmp->_next;
-        }
-
+        tmp->_next = _end = new _Node(data);
+        _end->_next = nullptr;
         _list_len ++;
-
     }
 
 

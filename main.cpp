@@ -11,7 +11,7 @@ int main(int argc, char *argv[]) {
 //    return a.exec();
 
     MSTL::List<int> arr;
-    for (int i = 1;i < 10; ++i) {
+    for (int i = 0;i < 10; ++i) {
         arr.Insert(i,i);
     }
 
