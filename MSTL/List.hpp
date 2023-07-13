@@ -77,12 +77,13 @@ public:
         _end->_next = node;
         _end = node;
         _end->_next = nullptr;
+        _list_len ++;
     }
 
     void Clear() {
         _Clear(_head->_next);
         _head->_next = nullptr;
-        _end = nullptr;
+        _end = _head;
         _list_len = 0;
     }
 

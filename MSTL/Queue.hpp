@@ -2,8 +2,8 @@
  * Auther : yongheng
  * Date : 2022/10/18 12:45
 *********************************************************************/
-#ifndef _QUEUE_HPP_
-#define _QUEUE_HPP_
+#ifndef MSTL_QUEUE_HPP
+#define MSTL_QUEUE_HPP
 
 #include "List.hpp"
 
@@ -14,7 +14,7 @@ namespace MSTL {
 template<typename T>
 class Queue {
 private:
-    List<T> _queue;
+    MSTL::List<T> _queue;
 public:
     Queue(){
         _queue = List<T>();
@@ -23,23 +23,27 @@ public:
 
     }
 
-    void Push_back(T val){
-        _queue.Push_back(val);
-        return;
+    void PushBack(T val) {
+        _queue.PushBack(val);
     }
 
-    T Pop_front(){
-        T ret = _queue.Front();
+    T& Front() {
+        return *_queue.begin();
+    }
+
+    T PopFront(){
+        T ret = Front();
         _queue.Delete(0);
         return ret;
     }
 
-    T Front(){
-        return _queue.Front();
-    }
 
     size_t Size(){
         return _queue.Size();
+    }
+
+    void Clear() {
+        _queue.Clear();
     }
 
 };
