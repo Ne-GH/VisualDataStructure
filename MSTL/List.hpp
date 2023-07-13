@@ -8,6 +8,7 @@ namespace MSTL {
 template<typename T>
 class List{
 private:
+
     class _Node{
     public:
         _Node() { }
@@ -15,6 +16,7 @@ private:
         T data;
         _Node *_next;
     };
+
     class iterator {
         _Node *it;
     public:
@@ -43,7 +45,9 @@ private:
      * 会把构造函数中创建的head_node一并删除
     *******************************************************************************/
     void  _Clear(_Node *p) {
-        if (p->_next == nullptr) {
+        if (p == nullptr)
+            return;
+        else if (p->_next == nullptr) {
             delete p;
             return;
         }
@@ -67,25 +71,29 @@ public:
         _head = _end = nullptr;
         _list_len = 0;
     }
+
     void PushBack(T data) {
         auto node = new _Node(data);
         _end->_next = node;
         _end = node;
         _end->_next = nullptr;
     }
+
     void Clear() {
-        _Clear(_head);
-        _head = _end = new _Node(0);
-        _end->_next = nullptr;
+        _Clear(_head->_next);
+        _head->_next = nullptr;
+        _end = nullptr;
         _list_len = 0;
     }
 
+    /*******************************************************************************
+     * 插入一个节点，下标从1开始
+    *******************************************************************************/
     void Insert(size_t pos,T data){
-
         // pos == 1, end = head;
         // link_lin = 0;
         if(pos <= 0 ||pos > _list_len+1){
-//            OUT_ERROR("pos" << pos << "is" << "error");
+            std::cerr << "pos: " << pos << "is error" << std::endl;
             return;
         }
 
@@ -108,21 +116,6 @@ public:
 
         _list_len ++;
 
-    }
-
-    void Push_back(T data){
-        // Insert(this->_list_len+1, data);
-       
-        
-        _Node *p = new _Node(data);
-        _end->_next = p;
-        p->_next = nullptr;
-        _end = p;
-
-        _list_len ++;
-
-
-        return;
     }
 
 
