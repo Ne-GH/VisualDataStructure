@@ -2,8 +2,8 @@
  * Auther : yongheng
  * Date : 2022/10/19 15:46
 *********************************************************************/
-#ifndef _BINARYTREE_HPP_
-#define _BINARYTREE_HPP_
+#ifndef MSTL_BINARYTREE_HPP
+#define MSTL_BINARYTREE_HPP
 #include <iostream>
 #include <vector>
 
@@ -48,7 +48,10 @@ TreeNode<T> *Build(int left,int right,std::vector<T>& vec){
     return root;
 }
 
-template<typename T>
+/*******************************************************************************
+ * mode 为 是否开启平衡二叉树
+*******************************************************************************/
+template<typename T,bool mode = true>
 class BinaryTree{
 
     TreeNode<T> *_root;
@@ -68,7 +71,10 @@ public:
         else{
             _Insert(_root,data);
         }
-        BalanceBinaryTree();
+
+        if constexpr (mode == true) {
+            BalanceBinaryTree();
+        }
     }
     void Delete(T data){
         if(_root->_val == data){
