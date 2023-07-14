@@ -23,6 +23,8 @@ protected:
         setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
         setResizeAnchor(QGraphicsView::AnchorUnderMouse);
 
+        setRenderHint(QPainter::Antialiasing); // 启用抗锯齿效果
+
     }
 
     void wheelEvent(QWheelEvent *event) {

@@ -45,7 +45,11 @@ public:
             std::tie(begin_x,begin_y) = _val[i]->GetPos();
             std::tie(end_x,end_y) = _val[i+1]->GetPos();
 //            auto line = new QLine(begin_x,begin_y,end_x,end_y);
-            _scene->addLine(begin_x,begin_y,end_x,end_y);
+            QGraphicsLineItem* line = new QGraphicsLineItem();
+            line->setLine(QLineF(begin_x,begin_y, end_x,end_y));
+            line->setZValue(-1); // 设置 Z 值为较小的负值
+            _scene->addItem(line);
+//            _scene->addLine(begin_x,begin_y,end_x,end_y);
         }
     }
     void RemoveLine() {
@@ -70,9 +74,9 @@ public:
     }
     void Insert(GraphicsItem* item) {
         QObject::connect(item,&GraphicsItem::LeftSelected,[&](auto pitem){
-            for (auto it : _val) {
-                it->setSelected(true);
-            }
+//            for (auto it : _val) {
+//                it->setSelected(true);
+//            }
 //            std::cout << _val.size() << std::endl;
 //            std::cout << x << std::endl;
         });
@@ -105,7 +109,31 @@ public:
         p->SetPos(pos.x(),pos.y()-50);
         p->SetVal(val);
         Insert(p);
-        AddLine();
+
+        // 绘制线条至少需要存在两个元素
+        if (_val.size() < 2) {
+            return;
+        }
+
+        auto pre = _val[_val.size()-2];
+        auto [begin_x,begin_y] = pre->GetPos();
+        auto [end_x,end_y] = p->GetPos();
+        QGraphicsLineItem* line = new QGraphicsLineItem();
+        line->setLine(QLineF(begin_x,begin_y, end_x,end_y));
+        line->setZValue(-1);
+        _scene->addItem(line);
+
+        QObject::connect(p,&GraphicsItem::Move,[=]{
+            auto [begin_x,begin_y] = pre->GetPos();
+            auto [end_x,end_y] = p->GetPos();
+            line->setLine(QLineF(begin_x,begin_y, end_x,end_y));
+        });
+        QObject::connect(pre,&GraphicsItem::Move,[=]{
+            auto [begin_x,begin_y] = pre->GetPos();
+            auto [end_x,end_y] = p->GetPos();
+            line->setLine(QLineF(begin_x,begin_y, end_x,end_y));
+        });
+//        AddLine();
     }
 
     void Delete(GraphicsItem* item) {
