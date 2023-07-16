@@ -3,8 +3,8 @@
  * Data   : 2023/06/08 13:49
 *******************************************************************************/
 
-#ifndef _GRAPHICSITEM_H_
-#define _GRAPHICSITEM_H_
+#ifndef GRAPHICSITEM_H
+#define GRAPHICSITEM_H
 #include "../Logs/Log.h"
 
 #include <vector>

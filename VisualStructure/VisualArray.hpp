@@ -3,8 +3,8 @@
  * Data   : 2023/06/08 16:12
 *******************************************************************************/
 
-#ifndef _ARRAY_H_
-#define _ARRAY_H_
+#ifndef VISUAL_ARRAY_HPP
+#define VISUAL_ARRAY_HPP
 
 #include "VisualStructureBase.hpp"
 #include "GraphicsItem.h"

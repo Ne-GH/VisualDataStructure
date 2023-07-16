@@ -4,8 +4,8 @@
 *******************************************************************************/
 //
 
-#ifndef _VISUALSORT_H_
-#define _VISUALSORT_H_
+#ifndef VISUAL_SORT_HPP
+#define VISUAL_SORT_HPP
 
 #include <vector>
 #include <random>

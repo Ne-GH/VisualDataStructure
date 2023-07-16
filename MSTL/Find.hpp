@@ -2,8 +2,8 @@
  * Auther : yongheng
  * Date : 2022/11/12 03:54
 *********************************************************************/
-#ifndef _FIND_HPP_
-#define _FIND_HPP_
+#ifndef MSTL_FIND_HPP
+#define MSTL_FIND_HPP
 
 #include <vector>
 

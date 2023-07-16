@@ -3,8 +3,8 @@
  * Data   : 2023/06/01 15:11
 *******************************************************************************/
 
-#ifndef _MAINWINDOW_H_
-#define _MAINWINDOW_H_
+#ifndef MAINWINDOW_H
+#define MAINWINDOW_H
 
 #include <QWidget>
 #include <QMainWindow>

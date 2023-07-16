@@ -2,8 +2,8 @@
  * Auther : yongheng
  * Date : 2022/10/18 13:59
 *********************************************************************/
-#ifndef _MAP_HPP_
-#define _MAP_HPP_
+#ifndef MSTL_MAP_HPP
+#define MSTL_MAP_HPP
 
 #include "BinaryTree.hpp"
 

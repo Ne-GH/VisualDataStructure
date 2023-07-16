@@ -3,8 +3,8 @@
  * Data   : 2023/06/10 21:50
 *******************************************************************************/
 
-#ifndef _GraphicsView_H_
-#define _GraphicsView_H_
+#ifndef GRAPHICSVIEW_H
+#define GRAPHICSVIEW_H
 
 #include <QGraphicsView>
 #include <QGraphicsScene>
@@ -79,4 +79,4 @@ public:
 };
 
 
-#endif // _GraphicsView_H_
+#endif // GRAPHICSVIEW_H

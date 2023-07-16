@@ -4,8 +4,8 @@
 *******************************************************************************/
 
 
-#ifndef _VisualList_H_
-#define _VisualList_H_
+#ifndef VISUAL_LIST_HPP
+#define VISUAL_LIST_HPP
 
 #include "VisualStructureBase.hpp"
 #include "GraphicsItem.h"

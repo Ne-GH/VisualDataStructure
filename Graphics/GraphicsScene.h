@@ -3,8 +3,8 @@
  * Data   : 2023/06/08 15:08
 *******************************************************************************/
 
-#ifndef _GRAPHICSSCENE_H_
-#define _GRAPHICSSCENE_H_
+#ifndef GRAPHICSSCENE_H
+#define GRAPHICSSCENE_H
 
 #include "GraphicsItem.h"
 

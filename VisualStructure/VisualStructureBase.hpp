@@ -3,8 +3,8 @@
  * Data   : 2023/06/08 15:06
 *******************************************************************************/
 
-#ifndef _STRUCTUREBASE_H_
-#define _STRUCTUREBASE_H_
+#ifndef VISUAL_STRUCTURE_BASE_HPP
+#define VISUAL_STRUCTURE_BASE_HPP
 
 #include "GraphicsScene.h"
 #include "GraphicsItem.h"

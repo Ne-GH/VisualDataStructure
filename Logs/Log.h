@@ -1,5 +1,5 @@
-#ifndef _LOG_H_
-#define _LOG_H_
+#ifndef LOG_H
+#define LOG_H
 
 #include <QDialog>
 #include <string>
@@ -43,4 +43,4 @@ private:
 };
 
 #define LOG Log::GetInstance()
-#endif // _LOG_H_
+#endif // LOG_H

@@ -4,8 +4,8 @@
 *******************************************************************************/
 
 
-#ifndef MSTL_Sort_H_
-#define MSTL_Sort_H_
+#ifndef MSTL_SORT_HPP
+#define MSTL_SORT_HPP
 
 namespace MSTL {
 template <typename RandomIt, typename Compare>
