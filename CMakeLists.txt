@@ -41,7 +41,7 @@ add_executable(VisualDataStructure main.cpp
         MSTL/Queue.hpp
         MSTL/Stack.hpp
         MSTL/Sort.hpp
-        )
+        Graphics/ArrowItem.h)
 
 target_link_libraries(VisualDataStructure
         Qt::Core

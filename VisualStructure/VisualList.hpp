@@ -13,6 +13,7 @@
 #include "GraphicsView.h"
 #include "Log.h"
 
+#include <ArrowItem.h>
 #include <vector>
 #include <QPoint>
 
@@ -23,8 +24,8 @@ private:
     int _x = 0;
     int _y = 0;
     using VisualStructureBase<std::vector>::_val;
+    std::vector<ArrowItem *> _lines;
 
-    std::vector<QLine> _lines;
 public:
     VisualList() = default;
     ~VisualList() = default;
@@ -36,22 +37,7 @@ public:
             _x = scene_width / 2;
     }
 
-    void AddLine() {
-        if (_val.size() <= 1)
-            return;
-        int begin_x,begin_y,end_x,end_y;
 
-        for (int i = 0;i < _val.size()-1 ; ++i) {
-            std::tie(begin_x,begin_y) = _val[i]->GetPos();
-            std::tie(end_x,end_y) = _val[i+1]->GetPos();
-//            auto line = new QLine(begin_x,begin_y,end_x,end_y);
-            QGraphicsLineItem* line = new QGraphicsLineItem();
-            line->setLine(QLineF(begin_x,begin_y, end_x,end_y));
-            line->setZValue(-1); // 设置 Z 值为较小的负值
-            _scene->addItem(line);
-//            _scene->addLine(begin_x,begin_y,end_x,end_y);
-        }
-    }
     void RemoveLine() {
 
     }
@@ -118,9 +104,11 @@ public:
         auto pre = _val[_val.size()-2];
         auto [begin_x,begin_y] = pre->GetPos();
         auto [end_x,end_y] = p->GetPos();
-        QGraphicsLineItem* line = new QGraphicsLineItem();
-        line->setLine(QLineF(begin_x,begin_y, end_x,end_y));
-        line->setZValue(-1);
+        auto line = new ArrowItem(pre,p);
+        _lines.push_back(line);
+//        QGraphicsLineItem* line = new QGraphicsLineItem();
+//        line->setLine(QLineF(begin_x,begin_y, end_x,end_y));
+//        line->setZValue(-1);
         _scene->addItem(line);
 
         QObject::connect(p,&GraphicsItem::Move,[=]{
