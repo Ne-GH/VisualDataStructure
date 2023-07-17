@@ -38,7 +38,41 @@ public:
     }
 
 
-    void RemoveLine() {
+    void AddLine(GraphicsItem *pre,GraphicsItem *back) {
+        auto [begin_x,begin_y] = pre->GetPos();
+        auto [end_x,end_y] = back->GetPos();
+        auto line = new ArrowItem(pre,back);
+        _lines.push_back(line);
+        _scene->addItem(line);
+    }
+    void RemoveLine(int pos) {
+        if (_lines.size() == 0)
+            return ;
+        if (pos == 0) {
+            _scene->removeItem(*_lines.begin());
+            _lines.erase(_lines.begin());
+        }
+
+        else if (pos == _val.size()-1) {
+            _scene->removeItem(*(_lines.end()-1));
+            _lines.erase(_lines.end()-1);
+        }
+        else {
+            _scene->removeItem(*(std::next(_lines.begin(),pos-1)));
+            _lines.erase(std::next(_lines.begin(),pos-1));
+            _lines.erase(std::next(_lines.begin(),pos-1));
+
+            _lines.insert(
+                    std::next(_lines.begin(),pos-1),
+                    new ArrowItem(_val[pos-1],_val[pos]));
+        }
+
+        // line :\
+            0       1       2       3       4\
+            0 1     1 2     2 3     3 4
+        // 删除第pos个元素，需要删除线条pos-1 和 pos
+        // 并连接新的pos
+
 
     }
 
@@ -49,15 +83,7 @@ public:
     void Push_back(int val) {
         Insert(val);
     }
-    // pos是删除元素的下标
-    void ReMove() {
-        for (int i = 1;i < _val.size(); ++i) {
-            auto [x,y] = _val[i-1]->GetPos();
-            auto [w,h] = _val[i-1]->GetWH();
-            _val[i]->SetPos(x+w,y);
-        }
-        _scene->update();
-    }
+
     void Insert(GraphicsItem* item) {
         QObject::connect(item,&GraphicsItem::LeftSelected,[&](auto pitem){
 //            for (auto it : _val) {
@@ -67,21 +93,23 @@ public:
 //            std::cout << x << std::endl;
         });
         QObject::connect(item,&GraphicsItem::RightSelected,[&](auto pitem){
-            for (auto it = _val.begin();it != _val.end(); ++it) {
-                if (*it == pitem) {
-                    _val.erase(it);
+
+            int pos = 0;
+            while (pos < _val.size()) {
+                if (_val[pos] == pitem) {
                     break;
                 }
+                ++ pos;
             }
+            // std::advance(it,pos);
+            _val.erase(std::next(_val.begin(),pos));
+
             _scene->removeItem(pitem);
             delete pitem;
 
-            for (auto p : _val) {
-                auto [x,y] = p->GetPos();
-                std::cout << x << " " << y << std::endl;
-            }
-            std::cout << std::endl;
-            ReMove();
+            RemoveLine(pos);
+
+
         });
         _scene->addItem(item);
         this->_val.push_back(item);
@@ -100,28 +128,8 @@ public:
         if (_val.size() < 2) {
             return;
         }
+        AddLine(_val[_val.size()-2],_val[_val.size()-1]);
 
-        auto pre = _val[_val.size()-2];
-        auto [begin_x,begin_y] = pre->GetPos();
-        auto [end_x,end_y] = p->GetPos();
-        auto line = new ArrowItem(pre,p);
-        _lines.push_back(line);
-//        QGraphicsLineItem* line = new QGraphicsLineItem();
-//        line->setLine(QLineF(begin_x,begin_y, end_x,end_y));
-//        line->setZValue(-1);
-        _scene->addItem(line);
-
-        QObject::connect(p,&GraphicsItem::Move,[=]{
-            auto [begin_x,begin_y] = pre->GetPos();
-            auto [end_x,end_y] = p->GetPos();
-            line->setLine(QLineF(begin_x,begin_y, end_x,end_y));
-        });
-        QObject::connect(pre,&GraphicsItem::Move,[=]{
-            auto [begin_x,begin_y] = pre->GetPos();
-            auto [end_x,end_y] = p->GetPos();
-            line->setLine(QLineF(begin_x,begin_y, end_x,end_y));
-        });
-//        AddLine();
     }
 
     void Delete(GraphicsItem* item) {

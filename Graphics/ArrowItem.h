@@ -24,6 +24,7 @@ public:
         this->setZValue(m_pStartItem->zValue() - 1); //目的：让箭头后置
         setFlag(QGraphicsItem::ItemIsSelectable);
         setPen(QPen(Qt::black, 2, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+
     }
 
     //item绘制区域的估计值
@@ -38,6 +39,7 @@ public:
 
         QPen pen(Qt::black);
         painter->setPen(pen);
+        painter->setRenderHint(QPainter::Antialiasing); // 开启抗锯齿
 
         painter->setBrush(Qt::black);
         qreal arrowsize = 10;
