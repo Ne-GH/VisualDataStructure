@@ -52,7 +52,6 @@ public:
             _scene->removeItem(*_lines.begin());
             _lines.erase(_lines.begin());
         }
-
         else if (pos == _val.size()-1) {
             _scene->removeItem(*(_lines.end()-1));
             _lines.erase(_lines.end()-1);
@@ -60,11 +59,12 @@ public:
         else {
             _scene->removeItem(*(std::next(_lines.begin(),pos-1)));
             _lines.erase(std::next(_lines.begin(),pos-1));
+            _scene->removeItem(*(std::next(_lines.begin(),pos-1)));
             _lines.erase(std::next(_lines.begin(),pos-1));
 
-            _lines.insert(
-                    std::next(_lines.begin(),pos-1),
-                    new ArrowItem(_val[pos-1],_val[pos]));
+            auto line = new ArrowItem(_val[pos-1],_val[pos+1]);
+            _scene->addItem(line);
+            _lines.insert(std::next(_lines.begin(),pos-1),line);
         }
 
         // line :\
@@ -102,12 +102,12 @@ public:
                 ++ pos;
             }
             // std::advance(it,pos);
+            RemoveLine(pos);
             _val.erase(std::next(_val.begin(),pos));
 
             _scene->removeItem(pitem);
             delete pitem;
 
-            RemoveLine(pos);
 
 
         });
