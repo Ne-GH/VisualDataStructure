@@ -39,13 +39,15 @@ public:
 
 
     void AddLine(GraphicsItem *pre,GraphicsItem *back) {
-        auto [begin_x,begin_y] = pre->GetPos();
-        auto [end_x,end_y] = back->GetPos();
         auto line = new ArrowItem(pre,back);
         _lines.push_back(line);
         _scene->addItem(line);
     }
     void RemoveLine(int pos) {
+
+        // line :
+        // 0       1       2       3       4
+        // 0 1     1 2     2 3     3 4
         if (_lines.size() == 0)
             return ;
         if (pos == 0) {
@@ -67,31 +69,15 @@ public:
             _lines.insert(std::next(_lines.begin(),pos-1),line);
         }
 
-        // line :\
-            0       1       2       3       4\
-            0 1     1 2     2 3     3 4
-        // 删除第pos个元素，需要删除线条pos-1 和 pos
-        // 并连接新的pos
-
-
     }
 
     void Clear(GraphicsScene* scene) {
         scene->clear();
     }
 
-    void Push_back(int val) {
-        Insert(val);
-    }
 
     void Insert(GraphicsItem* item) {
-        QObject::connect(item,&GraphicsItem::LeftSelected,[&](auto pitem){
-//            for (auto it : _val) {
-//                it->setSelected(true);
-//            }
-//            std::cout << _val.size() << std::endl;
-//            std::cout << x << std::endl;
-        });
+
         QObject::connect(item,&GraphicsItem::RightSelected,[&](auto pitem){
 
             int pos = 0;
@@ -107,8 +93,6 @@ public:
 
             _scene->removeItem(pitem);
             delete pitem;
-
-
 
         });
         _scene->addItem(item);
