@@ -53,6 +53,7 @@ protected:
         selectionRect_.setTopLeft(event->scenePos());
         selectionRect_.setSize(QSizeF());
         _showRect = true;
+        QGraphicsScene::mousePressEvent(event);
 
     }
 //    void mousePressEvent(QGraphicsSceneMouseEvent* event) override {
@@ -60,6 +61,7 @@ protected:
     void mouseMoveEvent(QGraphicsSceneMouseEvent* event) override {
 //        selectionRect_.setTopLeft(event->scenePos());
 //        selectionRect_.setSize(QSizeF());
+
         if (event->buttons() & Qt::LeftButton) {
             if (_showRect == true) {
                 QPointF currentPos = event->scenePos();

@@ -77,22 +77,14 @@ public:
         _val = val;
     }
     void InputVal() {
-        // 创建一个QLineEdit小部件
         QLineEdit *lineEdit = new QLineEdit(nullptr);
-        lineEdit->setGeometry(QRect(0, 0, 100, 20));  // 设置小部件的位置和大小
+        lineEdit->setGeometry(QRect(0, 0, 30, 25));
 
-        // 设置小部件的属性，例如字体、对齐方式等
-
-        // 将小部件添加到场景中
         scene()->addWidget(lineEdit);
-
-        // 将小部件放置在图形项的中心位置
         QPointF centerPos = mapToScene(boundingRect().center());
         lineEdit->move(centerPos.x() - lineEdit->width() / 2, centerPos.y() - lineEdit->height() / 2);
-
         // 将光标设置为小部件的焦点
         lineEdit->setFocus();
-
         QObject::connect(lineEdit,&QLineEdit::editingFinished,[=]{
             try {
                 int val = std::stoi(lineEdit->text().toStdString());
@@ -157,14 +149,6 @@ protected:
         event->accept();
     }
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
-//        QPointF scene_pos = this->scenePos() + boundingRect().center();
-//        int x =  scene_pos.x();
-//        int y =  scene_pos.y();
-//        SetPos(x,y);
-//        auto [cur_x,cur_y] = GetPos();
-//
-//        std::cout << x << " " << y << " " << cur_x << " " << cur_y << std::endl;
-
         QGraphicsItem::mouseReleaseEvent(event);
         event->accept();
     }
