@@ -76,24 +76,27 @@ public:
     }
 
 
+    void Remove(QGraphicsItem* item) {
+
+        int pos = 0;
+        while (pos < _val.size()) {
+            if (_val[pos] == item) {
+                break;
+            }
+            ++ pos;
+        }
+        // std::advance(it,pos);
+        RemoveLine(pos);
+        _val.erase(std::next(_val.begin(),pos));
+
+        _scene->removeItem(item);
+        delete item;
+    }
+
     void Insert(GraphicsItem* item) {
 
         QObject::connect(item,&GraphicsItem::RightSelected,[&](auto pitem){
-
-            int pos = 0;
-            while (pos < _val.size()) {
-                if (_val[pos] == pitem) {
-                    break;
-                }
-                ++ pos;
-            }
-            // std::advance(it,pos);
-            RemoveLine(pos);
-            _val.erase(std::next(_val.begin(),pos));
-
-            _scene->removeItem(pitem);
-            delete pitem;
-
+            Delete(pitem);
         });
         _scene->addItem(item);
         this->_val.push_back(item);

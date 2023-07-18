@@ -61,6 +61,9 @@ void CreateMenuAndConnect(MainWindow *window, Ui::MainWindow *ui){
         QObject::connect(scene,&GraphicsScene::MenuAdd,[=]{
             list->Insert(10);
         });
+        QObject::connect(scene,&GraphicsScene::MenuDel,[=](QGraphicsItem *item) {
+            list->Remove(item);
+        });
 
     });
 
@@ -73,6 +76,9 @@ void CreateMenuAndConnect(MainWindow *window, Ui::MainWindow *ui){
         auto arr = new VisualArray(scene);
         QObject::connect(scene,&GraphicsScene::MenuAdd,[=]{
             arr->Insert(0);
+        });
+        QObject::connect(scene,&GraphicsScene::MenuDel,[=](QGraphicsItem *item){
+            arr->Remove(item);
         });
     });
     QObject::connect(stack_action,&QAction::triggered,[=]{

@@ -18,24 +18,35 @@ class GraphicsScene : public QGraphicsScene {
     Q_OBJECT
 signals:
     void MenuAdd();
+    void MenuDel(QGraphicsItem *);
+
 private:
     QRectF selectionRect_;
     bool _showRect = false;
 protected:
 //     重写contextMenuEvent函数处理右键菜单事件
     void contextMenuEvent(QGraphicsSceneContextMenuEvent *event) override {
+        // 获取鼠标当前位置下的 item
+
         QMenu menu;
         // 在菜单中添加所需的操作项
-        QAction* action1 = menu.addAction("添加");
-        QAction* action2 = menu.addAction("删除");
+        QAction* add = menu.addAction("添加");
         // 显示菜单，并获取所选操作项
+        QAction* del = nullptr;
+        QGraphicsItem* item = itemAt(event->scenePos(), QTransform());
+        if (item) {
+            std::cout << "右键点击" << std::endl;
+            del = menu.addAction("删除");
+        }
         QAction* selectedItem = menu.exec(event->screenPos());
+
         // 处理所选操作项的逻辑
-        if (selectedItem == action1) {
+        if (selectedItem == add) {
             emit MenuAdd();
         }
-        else if (selectedItem == action2) {
+        else if (selectedItem == del) {
             // 菜单2
+            emit MenuDel(item);
         }
     }
     void mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event) override {
@@ -56,7 +67,16 @@ protected:
             }
             update();
         }
-
+//        // 获取鼠标当前位置下的 item
+//        QGraphicsItem* item = itemAt(event->scenePos(), QTransform());
+//
+//        // 检查 item 是否存在
+//        if (item) {
+//            // 比较 item 的当前位置与之前的位置
+//            if (item->pos() != item->scenePos()) {
+//                // item 移动了
+//            }
+//        }
         QGraphicsScene::mouseMoveEvent(event);
 
     }

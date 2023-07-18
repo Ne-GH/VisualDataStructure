@@ -54,6 +54,23 @@ public:
         }
         _scene->update();
     }
+    void Remove(QGraphicsItem *item) {
+        for (auto it = _val.begin();it != _val.end(); ++it) {
+            if (*it == item) {
+                _val.Delete(it);
+                break;
+            }
+        }
+        _scene->removeItem(item);
+        delete item;
+
+        for (auto p : _val) {
+            auto [x,y] = p->GetPos();
+            std::cout << x << " " << y << std::endl;
+        }
+        std::cout << std::endl;
+        ReMove();
+    }
     void Insert(GraphicsItem* item) {
         QObject::connect(item,&GraphicsItem::LeftSelected,[=](auto pitem){
             for (auto it : _val) {
@@ -63,21 +80,7 @@ public:
 //            std::cout << x << std::endl;
         });
         QObject::connect(item,&GraphicsItem::RightSelected,[=](auto pitem){
-            for (auto it = _val.begin();it != _val.end(); ++it) {
-                if (*it == pitem) {
-                    _val.Delete(it);
-                    break;
-                }
-            }
-            _scene->removeItem(pitem);
-            delete pitem;
-
-            for (auto p : _val) {
-                auto [x,y] = p->GetPos();
-                std::cout << x << " " << y << std::endl;
-            }
-            std::cout << std::endl;
-            ReMove();
+            Remove(pitem);
         });
         _scene->addItem(item);
         this->_val.PushBack(item);

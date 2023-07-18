@@ -151,7 +151,7 @@ protected:
             emit LeftSelected(this);
         }
         else if (event->button() == Qt::RightButton) {
-            emit RightSelected(this);
+//            emit RightSelected(this);
         }
         QGraphicsItem::mousePressEvent(event);
         event->accept();
