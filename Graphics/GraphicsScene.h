@@ -20,8 +20,7 @@ signals:
     void MenuAdd();
 private:
     QRectF selectionRect_;
-    bool _showRect = true;
-    GraphicsItem *_move_item = nullptr;
+    bool _showRect = false;
 protected:
 //     重写contextMenuEvent函数处理右键菜单事件
     void contextMenuEvent(QGraphicsSceneContextMenuEvent *event) override {
@@ -40,22 +39,16 @@ protected:
         }
     }
     void mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event) override {
-        if (event->button() == Qt::LeftButton) {
-            selectionRect_.setTopLeft(event->scenePos());
-            selectionRect_.setSize(QSizeF());
-        }
+        selectionRect_.setTopLeft(event->scenePos());
+        selectionRect_.setSize(QSizeF());
         _showRect = true;
 
-        QGraphicsScene::mousePressEvent(event);
-        for (auto it : items()) {
-            if (it->isSelected() == true) {
-                _showRect = false;
-            }
-        }
     }
 //    void mousePressEvent(QGraphicsSceneMouseEvent* event) override {
 //    }
     void mouseMoveEvent(QGraphicsSceneMouseEvent* event) override {
+//        selectionRect_.setTopLeft(event->scenePos());
+//        selectionRect_.setSize(QSizeF());
         if (event->buttons() & Qt::LeftButton) {
             if (_showRect == true) {
                 QPointF currentPos = event->scenePos();
@@ -64,22 +57,9 @@ protected:
             update();
         }
 
-        // 获取鼠标当前位置下的 item
-        QGraphicsItem* item = itemAt(event->scenePos(), QTransform());
-
-        // 检查 item 是否存在
-        if (item) {
-            _move_item = nullptr;
-            // 比较 item 的当前位置与之前的位置
-            if (item->pos() != item->scenePos()) {
-                // item 移动了
-            }
-        }
         QGraphicsScene::mouseMoveEvent(event);
 
     }
-
-
 
     void mouseReleaseEvent(QGraphicsSceneMouseEvent* event) override {
         if (event->button() == Qt::LeftButton) {
