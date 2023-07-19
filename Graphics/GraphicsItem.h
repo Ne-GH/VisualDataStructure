@@ -5,7 +5,8 @@
 
 #ifndef GRAPHICSITEM_H
 #define GRAPHICSITEM_H
-#include "../Logs/Log.h"
+#include "Log.h"
+#include "Setting.h"
 
 #include <vector>
 #include <iostream>
@@ -129,7 +130,8 @@ protected:
             pen.setStyle(Qt::SolidLine); //实线
         }
         painter->setPen(pen);
-        painter->setBrush(QColorConstants::Svg::orange);
+        QColor color = "#00aaff";
+        painter->setBrush(color);
         if (_item_type == Rect) {
             painter->drawRect(QRectF(_points[0],_points[1],_points[2],_points[3]));
         }

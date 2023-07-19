@@ -188,6 +188,15 @@ void CreateMenuAndConnect(MainWindow *window, Ui::MainWindow *ui){
     });
 
 
+    auto setting_action = new QAction("设置");
+    ui->menu_bar->addAction(setting_action);
+    QObject::connect(setting_action,&QAction::triggered,[=]{
+        Setting setting_dialog;
+        setting_dialog.setWindowTitle("设置");
+        setting_dialog.LoadSettingFile();
+        setting_dialog.exec();
+    });
+
     auto log_action = new QAction("日志");
     ui->menu_bar->addAction(log_action);
     QObject::connect(log_action,&QAction::triggered,[=]{

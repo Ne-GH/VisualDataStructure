@@ -18,7 +18,7 @@ find_package(Lua51)
 include_directories(${LUA_INCLUDE_DIR})
 
 
-INCLUDE_DIRECTORIES(Graphics VisualStructure Logs MSTL)
+INCLUDE_DIRECTORIES(Graphics VisualStructure Logs MSTL Setting)
 
 add_executable(VisualDataStructure main.cpp
         MainWindow.cpp MainWindow.h
@@ -27,6 +27,7 @@ add_executable(VisualDataStructure main.cpp
         Graphics/GraphicsView.h
         Graphics/GraphicsScene.h
         Graphics/GraphicsItem.h
+        Graphics/ArrowItem.h
 
         VisualStructure/VisualStructureBase.hpp
         VisualStructure/VisualArray.hpp
@@ -41,7 +42,11 @@ add_executable(VisualDataStructure main.cpp
         MSTL/Queue.hpp
         MSTL/Stack.hpp
         MSTL/Sort.hpp
-        Graphics/ArrowItem.h)
+
+        Setting/Setting.h
+        Setting/Setting.cpp
+
+        )
 
 target_link_libraries(VisualDataStructure
         Qt::Core
@@ -50,3 +55,9 @@ target_link_libraries(VisualDataStructure
         Qt::Charts
         ${LUA_LIBRARIES}
         )
+
+set(VERSION "0.1")
+add_compile_definitions(VERSION="${VERSION}")
+
+#set(CMAKE_BUILD_TYPE "Release")
+
