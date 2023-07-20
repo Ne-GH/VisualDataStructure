@@ -72,14 +72,14 @@ public:
         ReMove();
     }
     void Insert(GraphicsItem* item) {
-        QObject::connect(item,&GraphicsItem::LeftSelected,[=](auto pitem){
+        QObject::connect(item,&GraphicsItem::LeftSelected,[=,this](auto pitem){
             for (auto it : _val) {
                 it->setSelected(true);
             }
 //            std::cout << _val.size() << std::endl;
 //            std::cout << x << std::endl;
         });
-        QObject::connect(item,&GraphicsItem::RightSelected,[=](auto pitem){
+        QObject::connect(item,&GraphicsItem::RightSelected,[=,this](auto pitem){
             Remove(pitem);
         });
         _scene->addItem(item);

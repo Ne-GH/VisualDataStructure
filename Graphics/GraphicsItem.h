@@ -86,7 +86,7 @@ public:
         lineEdit->move(centerPos.x() - lineEdit->width() / 2, centerPos.y() - lineEdit->height() / 2);
         // 将光标设置为小部件的焦点
         lineEdit->setFocus();
-        QObject::connect(lineEdit,&QLineEdit::editingFinished,[=]{
+        QObject::connect(lineEdit,&QLineEdit::editingFinished,[=,this]{
             try {
                 int val = std::stoi(lineEdit->text().toStdString());
                 SetVal(val);
