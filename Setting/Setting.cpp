@@ -7,12 +7,11 @@
 
 #include <QColorDialog>
 #include <QPushButton>
+#include <filesystem>
+#include <QJsonObject>
+#include <QJsonDocument>
+#include <QFile>
 
-extern "C" {
-#include "lua.h"
-#include "lauxlib.h"
-#include "lualib.h"
-}
 /*******************************************************************************
  * 参数：当前颜色
  * 返回值：选择的颜色，如果没有选择有效颜色，返回当前颜色
@@ -57,51 +56,66 @@ Setting::~Setting() {
 }
 
 /*******************************************************************************
- * 使用Lua加载配置文件
+ * 使用JSON加载配置文件,第一个参数默认为"./config.json"
 *******************************************************************************/
-void Setting::LoadSettingFile() {
-    lua_State *l = luaL_newstate();
-    if (l == nullptr) {
+void Setting::LoadSettingFile(std::string file_path) {
+    using namespace std::filesystem;
+
+    if (!exists(file_path)) {
+        qDebug() << "配置文件不存在";
+        // 创建JSON对象
+        QJsonObject jsonObject;
+        jsonObject["name"] = "张三";
+        QJsonDocument jsonDocument(jsonObject);
+        QFile file(file_path.c_str());
+        if (file.open(QIODevice::WriteOnly)) {
+            file.write(jsonDocument.toJson());
+            file.close();
+            qDebug() << "JSON文件已成功创建并保存。";
+        }
+        else {
+            qDebug() << "无法创建或保存JSON文件。";
+        }
         return;
     }
 
-    int bret = luaL_loadfile(l, "./.config.lua");
-    if (bret) {
-        qDebug() << "加载配置文件失败";
+    // 打开JSON文件
+    QFile file(file_path.c_str());
+    if (!file.open(QIODevice::ReadOnly)) {
+        qDebug() << "无法打开JSON文件。";
         return;
     }
 
-    bret = lua_pcall(l, 0, 0, 0);
-    if (bret) {
-        qDebug() << "pcall 失败";
-        return;
+    // 读取JSON数据
+    QByteArray jsonData = file.readAll();
+    file.close();
+
+    // 解析JSON数据
+    QJsonDocument jsonDocument = QJsonDocument::fromJson(jsonData);
+    if (jsonDocument.isNull()) {
+        qDebug() << "无法解析JSON数据。";
     }
 
-// 获取并保存默认颜色值
-    const char* DefaultColor = nullptr;
-    lua_getglobal(l, "Color");
-    lua_getfield(l, -1, "default");
-    DefaultColor = lua_tostring(l, -1);
-    lua_pop(l, 1); // 弹出栈顶元素，现在栈为空
+    // 将JSON数据转换为JSON对象
+    QJsonObject jsonObject = jsonDocument.object();
 
-// 修改 "default" 字段的值为 "#ff0000"
-    lua_getglobal(l, "Color");
-    lua_pushstring(l, "#ff0000");
-    lua_setfield(l, -2, "default");
+    // 获取JSON数据并进行处理
+    QString name = jsonObject["name"].toString();
+    int age = jsonObject["age"].toInt();
+    QString city = jsonObject["city"].toString();
 
-// 获取并保存新的默认颜色值
-    const char* NewDefaultColor = nullptr;
-    lua_getglobal(l, "Color");
-    lua_getfield(l, -1, "default");
-    NewDefaultColor = lua_tostring(l, -1);
-    lua_pop(l, 1); // 弹出栈顶元素，现在栈为空
+    qDebug() << "姓名：" << name;
+    qDebug() << "年龄：" << age;
+    if (jsonObject.contains("city")) {
+        qDebug() << "城市：" << city;
+    }
+    else {
+        qDebug() << "2" ;
+    }
 
-// 输出结果
-    qDebug() << "Original Default Color: " << DefaultColor;
-    qDebug() << "New Default Color: " << NewDefaultColor;
 
-// 关闭 Lua 状态
-    lua_close(l);
+
+
 
 }
 

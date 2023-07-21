@@ -26,7 +26,7 @@ public:
 
     explicit Setting(QWidget *parent = nullptr);
     ~Setting() override;
-    void LoadSettingFile();
+    void LoadSettingFile(std::string = "./config.json");
 
 
 
