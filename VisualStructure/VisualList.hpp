@@ -11,7 +11,6 @@
 #include "GraphicsItem.h"
 #include "GraphicsScene.h"
 #include "GraphicsView.h"
-#include "Log.h"
 
 #include <ArrowItem.h>
 #include <vector>

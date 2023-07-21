@@ -18,11 +18,10 @@ find_package(Lua51)
 include_directories(${LUA_INCLUDE_DIR})
 
 
-INCLUDE_DIRECTORIES(Graphics VisualStructure Logs MSTL Setting)
+INCLUDE_DIRECTORIES(Graphics VisualStructure MSTL Setting)
 
 add_executable(VisualDataStructure main.cpp
         MainWindow.cpp MainWindow.h
-        Logs/Log.h Logs/Log.cpp Logs/Log.ui
 
         Graphics/GraphicsView.h
         Graphics/GraphicsScene.h
@@ -53,7 +52,6 @@ target_link_libraries(VisualDataStructure
         Qt::Gui
         Qt::Widgets
         Qt::Charts
-        ${LUA_LIBRARIES}
         )
 
 set(VERSION "0.1")

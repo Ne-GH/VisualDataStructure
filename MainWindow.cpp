@@ -18,7 +18,6 @@
 #include <QPalette>
 #include "MainWindow.h"
 #include "ui_MainWindow.h"
-#include "Logs/Log.h"
 
 #include "GraphicsScene.h"
 #include "GraphicsItem.h"
@@ -30,7 +29,7 @@
 #include <QThread>
 #include <QSplineSeries>
 #include <QValueAxis>
-
+#include <memory>
 enum class StructType {
     Array,
     Stack,
@@ -57,7 +56,7 @@ void CreateMenuAndConnect(MainWindow *window, Ui::MainWindow *ui){
         window->setCentralWidget(graphicsView);
         auto scene = new GraphicsScene();
         graphicsView->setScene(scene);
-        auto list = new VisualList(scene);
+        auto list = std::make_shared<VisualList>(scene);
         QObject::connect(scene,&GraphicsScene::MenuAdd,[=]{
             list->Insert(10);
         });
@@ -197,11 +196,6 @@ void CreateMenuAndConnect(MainWindow *window, Ui::MainWindow *ui){
         setting_dialog.exec();
     });
 
-    auto log_action = new QAction("日志");
-    ui->menu_bar->addAction(log_action);
-    QObject::connect(log_action,&QAction::triggered,[=]{
-        LOG.Show();
-    });
 }
 MainWindow::MainWindow(QWidget *parent) :
                         QMainWindow(parent), ui(new Ui::MainWindow){
@@ -210,14 +204,11 @@ MainWindow::MainWindow(QWidget *parent) :
 
     CreateMenuAndConnect(this,ui);
 
-    LOG.AddLog("MainWindow构造函数");
 
 
 
 
 
-    LOG.AddLog("MainWindow构造完成");
-    LOG.AddLog("启动完成");
     ui->status_bar->showMessage("启动完成...");
 }
 

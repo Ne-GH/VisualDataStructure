@@ -9,7 +9,6 @@
 #include "VisualStructureBase.hpp"
 #include "GraphicsItem.h"
 #include "GraphicsScene.h"
-#include "Log.h"
 
 #include "Array.hpp"
 #include <array>
