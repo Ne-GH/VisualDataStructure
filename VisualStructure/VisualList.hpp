@@ -51,16 +51,20 @@ public:
             return ;
         if (pos == 0) {
             _scene->removeItem(*_lines.begin());
+            delete _lines[0];
             _lines.erase(_lines.begin());
         }
         else if (pos == _val.size()-1) {
             _scene->removeItem(*(_lines.end()-1));
+            delete _lines[pos];
             _lines.erase(_lines.end()-1);
         }
         else {
             _scene->removeItem(*(std::next(_lines.begin(),pos-1)));
+            delete _lines[pos-1];
             _lines.erase(std::next(_lines.begin(),pos-1));
             _scene->removeItem(*(std::next(_lines.begin(),pos-1)));
+            delete _lines[pos-1];
             _lines.erase(std::next(_lines.begin(),pos-1));
 
             auto line = new ArrowItem(_val[pos-1],_val[pos+1]);
@@ -127,6 +131,7 @@ public:
                 it ++;
             }
         }
+        delete item;
     }
 
     void Draw(GraphicsScene* scene) {  }
