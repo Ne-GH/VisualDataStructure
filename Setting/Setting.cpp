@@ -12,6 +12,8 @@
 #include <QJsonDocument>
 #include <QFile>
 
+
+
 /*******************************************************************************
  * 参数：当前颜色
  * 返回值：选择的颜色，如果没有选择有效颜色，返回当前颜色
@@ -32,10 +34,27 @@ Setting::Setting(QWidget *parent) : QDialog(parent) ,ui(new Ui::Setting) {
     QObject::connect(ui->listWidget,&QListWidget::itemSelectionChanged,[&]{
         switch (ui->listWidget->currentRow()) {
             case 0: {
-                auto p = QColorDialog::getColor(Qt::red, ui->setting_widget, "选择颜色");
-                qDebug() << p;
+                QJsonObject tmp_json    ;
+                QColorDialog colorDialog;
+                QColor selected_color;
+                if (colorDialog.exec() == QColorDialog::Accepted) {
+                    // 用户选择了颜色
+                    selected_color = colorDialog.currentColor();
+                    tmp_json["color"] = selected_color.name();
+                } else {
+                    // 用户没有选择颜色
+                }
+
+                for (auto obj : tmp_json) {
+                    qDebug() << obj;
+                }
+                if (!tmp_json.empty()) {
+                    qDebug() << "有配置信息未保存";
+
+                }
                 return ;
             }
+
         }
     });
 
