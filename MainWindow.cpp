@@ -3,11 +3,10 @@
  * Data   : 2023/06/01 15:11
 *******************************************************************************/
 
-#include <iostream>
 #include <random>
-#include <QTimer>
 #include <QThread>
-#include <thread>
+#include <QPushButton>
+#include <QSlider>
 #include <algorithm>
 #include <QGraphicsView>
 #include <QtCharts/QChart>
@@ -35,6 +34,53 @@ enum class StructType {
     Stack,
     Queue
 };
+void CreateSortLayout(QWidget *window,Ui::MainWindow *ui) {
+    QBarSet *set0 = new QBarSet("");
+    QBarSeries *series = new QBarSeries();
+    QChart *chart = new QChart();
+    QBarCategoryAxis *axisX = new QBarCategoryAxis();
+    QValueAxis *axisY = new QValueAxis();
+    QChartView *chartView = new QChartView(chart);
+    QStringList categories;
+    series->append(set0);
+    chart->addSeries(series);
+    chart->setTitle("");
+    // chart->setAnimationOptions(QChart::SeriesAnimations);
+    chart->setAnimationOptions(QChart::NoAnimation);
+//    for (int i = 0;i < visual_sort->GetRandomVector().size(); ++i) {
+//        categories << std::to_string(i).c_str();
+//    }
+    axisX->append(categories);
+    axisX->setVisible(false);
+    axisY->setVisible(false);
+    chart->addAxis(axisX, Qt::AlignBottom);
+    series->attachAxis(axisX);
+    axisY->setRange(0,100);
+    chart->addAxis(axisY, Qt::AlignLeft);
+    series->attachAxis(axisY);
+    chart->legend()->setVisible(false);
+    chart->legend()->setAlignment(Qt::AlignBottom);
+    chartView->setRenderHint(QPainter::Antialiasing);
+//    window->setCentralWidget(chartView);
+
+
+    ui->layout->addWidget(chartView,0,0,10,10);
+
+
+
+
+    QSlider *lider = new QSlider(Qt::Horizontal);
+
+    auto start_but = new QPushButton("开始");
+    auto pause_but = new QPushButton("暂停");
+    auto stop_but = new QPushButton("停止");
+
+    ui->layout->addWidget(start_but, 10, 1, 1, 1);
+    ui->layout->addWidget(pause_but, 10, 3, 1, 1);
+    ui->layout->addWidget(stop_but, 10, 5, 1, 1);
+    ui->layout->addWidget(lider, 10, 7, 1, 2);
+
+}
 
 void CreateMenuAndConnect(MainWindow *window, Ui::MainWindow *ui){
 
@@ -203,6 +249,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
     CreateMenuAndConnect(this,ui);
+
+    CreateSortLayout(this,ui);
 
 
 
