@@ -56,7 +56,7 @@ public:
         }
         else if (pos == _val.size()-1) {
             _scene->removeItem(*(_lines.end()-1));
-            delete _lines[pos];
+            delete _lines[pos-1];
             _lines.erase(_lines.end()-1);
         }
         else {

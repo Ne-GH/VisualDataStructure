@@ -21,7 +21,7 @@ public:
     ArrowItem(GraphicsItem *startI,GraphicsItem *endI,QGraphicsItem *parent = nullptr) {
         m_pendItem = startI; //起点item
         m_pStartItem = endI; //终点item
-        this->setZValue(m_pStartItem->zValue() - 1); //目的：让箭头后置
+        this->setZValue(-1); //目的：让箭头后置
         setFlag(QGraphicsItem::ItemIsSelectable);
         setPen(QPen(Qt::black, 2, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
 
