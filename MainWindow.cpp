@@ -101,13 +101,8 @@ void CreateMenuAndConnect(MainWindow *window, Ui::MainWindow *ui){
         visual_sort->moveToThread(sort_thread);\
         QObject::connect(sort_thread,&QThread::started,visual_sort,GETSORTNAME(sort_name));\
         sort_thread->start();\
-        QObject::connect(visual_sort,&VisualSort::UPUI,[=]mutable  {\
-            auto vec = visual_sort->GetRandomVector();\
-            auto set = visual_sort->GetBarSet();\
-            set->remove(0,vec.size());\
-            for (auto num : vec) {\
-                *set << num;\
-            }\
+        QObject::connect(visual_sort,&VisualSort::UPUI,[=] mutable {\
+            visual_sort->UpUI();\
         });\
     });\
 
