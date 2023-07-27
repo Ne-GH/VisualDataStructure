@@ -173,8 +173,16 @@ public:
         });
 
 
-    }
 
+    }
+    void UpUI() {
+        auto vec = this->GetRandomVector();
+        auto set = this->GetBarSet();
+        set->remove(0,vec.size());
+        for (auto num : vec) {
+            *set << num;
+        }
+    }
 };
 
 #undef CMP

@@ -88,32 +88,41 @@ void CreateMenuAndConnect(MainWindow *window, Ui::MainWindow *ui){
         });
     });
 
+#define CAT(a,b) a: ## :b
+#define GETSORTNAME(sort_name) CAT(&VisualSort,sort_name)
+#define CONNECT_SORT(action_name,sort_name) \
+    auto sort_name = new QAction(action_name);\
+    sort_menu->addAction(sort_name);\
+    QObject::connect(sort_name,&QAction::triggered,[=]{ \
+        auto visual_sort = new VisualSort();\
+        auto sort_thread = new QThread();\
+        visual_sort->GetRandomVector(100);\
+        visual_sort->CreateSortLayout(ui->layout);\
+        visual_sort->moveToThread(sort_thread);\
+        QObject::connect(sort_thread,&QThread::started,visual_sort,GETSORTNAME(sort_name));\
+        sort_thread->start();\
+        QObject::connect(visual_sort,&VisualSort::UPUI,[=]mutable  {\
+            auto vec = visual_sort->GetRandomVector();\
+            auto set = visual_sort->GetBarSet();\
+            set->remove(0,vec.size());\
+            for (auto num : vec) {\
+                *set << num;\
+            }\
+        });\
+    });\
 
     auto sort_menu = new QMenu("排序");
     ui->menu_bar->addMenu(sort_menu);
-    auto std_sort_action = new QAction("std::sort");
-    sort_menu->addAction(std_sort_action);
-    QObject::connect(std_sort_action,&QAction::triggered,[=]{
-        auto visual_sort = new VisualSort();
-        auto sort_thread = new QThread();
-        visual_sort->GetRandomVector(100);
-        visual_sort->CreateSortLayout(ui->layout);
-        visual_sort->moveToThread(sort_thread);
-        QObject::connect(sort_thread,&QThread::started,visual_sort,&VisualSort::StdSort);
-        sort_thread->start();
+    CONNECT_SORT("std::sort",StdSort);
+    CONNECT_SORT("冒泡排序",BubbleSort);
+    CONNECT_SORT("选择排序",SelectionSort);
+    CONNECT_SORT("插入排序",InsertionSort);
+    CONNECT_SORT("快速排序",QuickSort);
+    CONNECT_SORT("归并排序",MergeSort);
 
-        QObject::connect(visual_sort,&VisualSort::UPUI,[=]mutable  {
-            auto vec = visual_sort->GetRandomVector();
-            auto set = visual_sort->GetBarSet();
-            set->remove(0,vec.size());
-            for (auto num : vec) {
-                *set << num;
-            }
-        });
-    });
-
-
-
+#undef CAT
+#undef GETSORTNAME
+#undef CONNECT_SORT
 
 
     auto setting_action = new QAction("设置");
