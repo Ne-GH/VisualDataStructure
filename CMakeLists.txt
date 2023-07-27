@@ -14,8 +14,6 @@ find_package(Qt6 COMPONENTS
         Charts
         REQUIRED)
 
-find_package(Lua51)
-include_directories(${LUA_INCLUDE_DIR})
 
 
 INCLUDE_DIRECTORIES(Graphics VisualStructure MSTL Setting)
@@ -31,6 +29,7 @@ add_executable(VisualDataStructure main.cpp
         VisualStructure/VisualStructureBase.hpp
         VisualStructure/VisualArray.hpp
         VisualStructure/VisualSort.h
+        VisualStructure/VisualTree.hpp
         VisualStructure/VisualList.hpp
 
         MSTL/Array.hpp
