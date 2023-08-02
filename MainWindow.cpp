@@ -26,67 +26,39 @@
 #include "Array.hpp"
 
 #include <memory>
-enum class StructType {
-    Array,
-    Stack,
-    Queue
-};
 
 void CreateMenuAndConnect(MainWindow *window, Ui::MainWindow *ui){
 
     auto struct_menu = new QMenu("数据结构");
-    auto array_action = new QAction("数组");
-    auto list_action = new QAction("链表");
-    auto stack_action = new QAction("栈");
-    auto queue_action = new QAction("队列");
-    struct_menu->addAction(array_action);
-    struct_menu->addAction(list_action);
-    struct_menu->addAction(stack_action);
-    struct_menu->addAction(queue_action);
+
+#define CONNECT_STRUCT(action_string,visual_type) \
+{                                              \
+    auto action = new QAction(action_string);     \
+    struct_menu->addAction(action);               \
+    QObject::connect(action,&QAction::triggered,[=]{\
+    auto graphicsView = new GraphicsView(window);\
+    graphicsView->setAlignment(Qt::AlignCenter);\
+    window->setCentralWidget(graphicsView);\
+    auto scene = new GraphicsScene();\
+    graphicsView->setScene(scene);\
+    auto visual = std::make_shared<visual_type>(scene);\
+    QObject::connect(scene,&GraphicsScene::MenuAdd,[=]{\
+        visual->Insert(0);\
+    });\
+    QObject::connect(scene,&GraphicsScene::MenuDel,[=](QGraphicsItem *item) {\
+        visual->Remove(item);\
+    });\
+}); \
+}
+
+    CONNECT_STRUCT("数组",VisualArray);
+    CONNECT_STRUCT("链表",VisualList);
+
+
     ui->menu_bar->addMenu(struct_menu);
 
 
-    QObject::connect(list_action,&QAction::triggered,[=]{
-        auto graphicsView = new GraphicsView(window);
-        graphicsView->setAlignment(Qt::AlignCenter);
-        window->setCentralWidget(graphicsView);
-        auto scene = new GraphicsScene();
-        graphicsView->setScene(scene);
-        auto list = std::make_shared<VisualList>(scene);
-        QObject::connect(scene,&GraphicsScene::MenuAdd,[=]{
-            list->Insert(10);
-        });
-        QObject::connect(scene,&GraphicsScene::MenuDel,[=](QGraphicsItem *item) {
-            list->Remove(item);
-        });
-
-    });
-
-    QObject::connect(array_action,&QAction::triggered,[=]{
-        auto graphicsView = new GraphicsView(window);
-        graphicsView->setAlignment(Qt::AlignCenter);
-        window->setCentralWidget(graphicsView);
-        auto scene = new GraphicsScene();
-        graphicsView->setScene(scene);
-        auto arr = new VisualArray(scene);
-        QObject::connect(scene,&GraphicsScene::MenuAdd,[=]{
-            arr->Insert(0);
-        });
-        QObject::connect(scene,&GraphicsScene::MenuDel,[=](QGraphicsItem *item){
-            arr->Remove(item);
-        });
-    });
-    QObject::connect(stack_action,&QAction::triggered,[=]{
-        GraphicsView *graphicsView = new GraphicsView(window);
-        graphicsView->setAlignment(Qt::AlignCenter);
-        window->setCentralWidget(graphicsView);
-        auto scene = new GraphicsScene();
-        graphicsView->setScene(scene);
-        auto a = new VisualArray(scene);
-        QObject::connect(scene,&GraphicsScene::MenuAdd,[=]{
-            a->Insert(0);
-        });
-    });
+#undef CONNECT_STRUCT
 
 #define CAT(a,b) a: ## :b
 #define GETSORTNAME(sort_name) CAT(&VisualSort,sort_name)
