@@ -74,6 +74,9 @@ public:
         painter->drawLine(line());
         painter->drawPolygon(arrowHead);
     }
+    void SetDestination(GraphicsItem * new_dest) {
+        m_pendItem = new_dest;
+    }
 
 
 private:
