@@ -17,14 +17,13 @@
 
 
 
-class VisualArray : public QObject, public VisualStructureBase<MSTL::Arrary>{
+class VisualArray : public QObject, public VisualStructureBase<MSTL::Arrary<GraphicsItem *>>{
     Q_OBJECT
 
 private:
     GraphicsScene *_scene;
     int _x = 0;
     int _y = 0;
-    using VisualStructureBase<MSTL::Arrary>::_val;
 public:
     VisualArray() = default;
     ~VisualArray() = default;

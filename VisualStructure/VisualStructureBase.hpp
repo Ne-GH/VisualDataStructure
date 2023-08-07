@@ -9,10 +9,10 @@
 #include "GraphicsScene.h"
 #include "GraphicsItem.h"
 
-template <template<typename> class U>
+template <typename T>
 class VisualStructureBase {
 protected:
-    U<GraphicsItem *> _val;
+    T _val;
 public:
     virtual void Draw(GraphicsScene*) = 0;
     virtual void Clear(GraphicsScene*) = 0;

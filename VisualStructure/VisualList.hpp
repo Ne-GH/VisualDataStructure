@@ -16,13 +16,12 @@
 #include <vector>
 #include <QPoint>
 
-class VisualList : public QObject, public VisualStructureBase<std::vector> {
+class VisualList : public QObject, public VisualStructureBase<std::vector<GraphicsItem *>> {
     Q_OBJECT
 private:
     GraphicsScene *_scene;
     int _x = 0;
     int _y = 0;
-    using VisualStructureBase<std::vector>::_val;
     std::vector<ArrowItem *> _lines;
 
 public:

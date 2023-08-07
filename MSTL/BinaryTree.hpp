@@ -12,17 +12,16 @@ namespace MSTL{
 template<typename T>
 class TreeNode{
 public:
-    T _val;
-    TreeNode *_left;
-    TreeNode *_right;
-    TreeNode(){
-        _left = nullptr;
-        _right = nullptr;
-    }
-    TreeNode(T val){
+    T _val = 0;
+    TreeNode *_left = nullptr;
+    TreeNode *_right = nullptr;
+    TreeNode *_parent = nullptr;
+    TreeNode() {  }
+    TreeNode(T val) {
         _val = val;
-        _left = nullptr;
-        _right = nullptr;
+    }
+    TreeNode *GetParent() {
+        return _parent;
     }
     friend std::ostream & operator << (std::ostream &out,TreeNode node){
         out << node._val;
@@ -52,17 +51,14 @@ TreeNode<T> *Build(int left,int right,std::vector<T>& vec){
  * mode 为 是否开启平衡二叉树
 *******************************************************************************/
 template<typename T,bool mode = true>
-class BinaryTree{
+class BinaryTree {
 
-    TreeNode<T> *_root;
+    TreeNode<T> *_root = nullptr;
 public:
-    BinaryTree(){
-        _root = nullptr;
-    }
+    BinaryTree() {  }
     BinaryTree(T data){
         _root = new TreeNode<T>(data);
     }
-
 
     void Insert(T data){
         if(_root == nullptr){
@@ -71,11 +67,11 @@ public:
         else{
             _Insert(_root,data);
         }
-
         if constexpr (mode == true) {
             BalanceBinaryTree();
         }
     }
+
     void Delete(T data){
         if(_root->_val == data){
             TreeNode<T> *tmproot = new TreeNode<T>;
@@ -142,6 +138,37 @@ public:
 };
 
 template<typename T>
+void _Insert(TreeNode<T> *root,T data){
+    if(root == nullptr)
+        return;
+
+    if(root->_val > data){
+        if(root->_left == nullptr){
+            TreeNode<T> *node = new TreeNode<T>(data);
+            root->_left = node;
+            node->_left = node->_right = nullptr;
+            node->_parent = root;
+        }
+        else{
+            _Insert(root->_left,data);
+        }
+    }
+        /* root->val <= data */
+    else{
+        if(root->_right == nullptr){
+            TreeNode<T> *node = new TreeNode<T>(data);
+            root->_right = node;
+            node->_left = node->_right = nullptr;
+            node->_parent = root;
+        }
+        else{
+            _Insert(root->_right,data);
+        }
+    }
+
+}
+
+template<typename T>
 void GetInorder(std::vector<T>&vec,TreeNode<T> *root){
     if(root->_left != nullptr){
         GetInorder(vec,root->_left);
@@ -199,34 +226,6 @@ void _Destroy(TreeNode<T> *root){
     _Destroy(root->_left);
     _Destroy(root->_right);
     return;
-}
-template<typename T>
-void _Insert(TreeNode<T> *root,T data){
-    if(root == nullptr)
-        return;
-
-    if(root->_val > data){
-        if(root->_left == nullptr){
-            TreeNode<T> *node = new TreeNode<T>(data);
-            root->_left = node;
-            node->_left = node->_right = nullptr;
-        }
-        else{
-            _Insert(root->_left,data);
-        }
-    }
-        /* root->val <= data */
-    else{
-        if(root->_right == nullptr){
-            TreeNode<T> *node = new TreeNode<T>(data);
-            root->_right = node;
-            node->_left = node->_right = nullptr;
-        }
-        else{
-            _Insert(root->_right,data);
-        }
-    }
-
 }
 template<typename T>
 TreeNode<T>* _Search(TreeNode<T> *root,T data){

@@ -3,17 +3,10 @@
  * Data   : 2023/06/01 15:11
 *******************************************************************************/
 
-#include <random>
 #include <QThread>
 #include <QPushButton>
 #include <algorithm>
-#include <QGraphicsView>
 #include <QtCharts/QChart>
-#include <QtCharts/QBarSet>
-#include <QtCharts/QChartView>
-#include <QtCharts/QBarSeries>
-#include <QBarCategoryAxis>
-#include <QPalette>
 #include "MainWindow.h"
 #include "ui_MainWindow.h"
 
@@ -22,8 +15,8 @@
 #include "GraphicsView.h"
 #include "VisualArray.hpp"
 #include "VisualList.hpp"
+#include "VisualTree.hpp"
 #include "VisualSort.h"
-#include "Array.hpp"
 
 #include <memory>
 
@@ -53,6 +46,7 @@ void CreateMenuAndConnect(MainWindow *window, Ui::MainWindow *ui){
 
     CONNECT_STRUCT("数组",VisualArray);
     CONNECT_STRUCT("链表",VisualList);
+    CONNECT_STRUCT("二叉树",VisualTree);
 
 
     ui->menu_bar->addMenu(struct_menu);
