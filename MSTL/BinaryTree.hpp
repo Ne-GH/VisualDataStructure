@@ -6,11 +6,14 @@
 #define MSTL_BINARYTREE_HPP
 #include <iostream>
 #include <vector>
+#include "GraphicsItem.h"
+
 
 namespace MSTL{
 
+
 template<typename T>
-class TreeNode{
+class TreeNode {
 public:
     T _val = 0;
     TreeNode *_left = nullptr;
@@ -31,6 +34,7 @@ public:
         out << pnode->_val;
         return out;
     }
+
 };
 
 
@@ -60,16 +64,17 @@ public:
         _root = new TreeNode<T>(data);
     }
 
-    void Insert(T data){
+    TreeNode<T>* Insert(T data){
         if(_root == nullptr){
             _root = new TreeNode<T>(data);
+            return _root;
         }
         else{
-            _Insert(_root,data);
+            return _Insert(_root,data);
         }
-        if constexpr (mode == true) {
-            BalanceBinaryTree();
-        }
+//        if constexpr (mode == true) {
+//            BalanceBinaryTree();
+//        }
     }
 
     void Delete(T data){
@@ -138,19 +143,18 @@ public:
 };
 
 template<typename T>
-void _Insert(TreeNode<T> *root,T data){
-    if(root == nullptr)
-        return;
-
-    if(root->_val > data){
+TreeNode<T>* _Insert(TreeNode<T> *root,T data){
+    if(root->_val->GetVal() > data->GetVal()){
         if(root->_left == nullptr){
             TreeNode<T> *node = new TreeNode<T>(data);
             root->_left = node;
             node->_left = node->_right = nullptr;
             node->_parent = root;
+            std::cout << node->_val->GetVal() << " " << root->_val->GetVal() << std::endl;
+            return node;
         }
         else{
-            _Insert(root->_left,data);
+            return _Insert(root->_left,data);
         }
     }
         /* root->val <= data */
@@ -160,9 +164,11 @@ void _Insert(TreeNode<T> *root,T data){
             root->_right = node;
             node->_left = node->_right = nullptr;
             node->_parent = root;
+            std::cout << " " << node->_val->GetVal() << " " << root->_val->GetVal() << std::endl;
+            return node;
         }
         else{
-            _Insert(root->_right,data);
+            return _Insert(root->_right,data);
         }
     }
 

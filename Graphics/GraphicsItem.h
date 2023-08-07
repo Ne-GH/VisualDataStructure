@@ -76,6 +76,9 @@ public:
     void SetVal(int val) {
         _val = val;
     }
+    int GetVal() {
+        return _val;
+    }
     void InputVal() {
         QLineEdit *lineEdit = new QLineEdit(nullptr);
         lineEdit->setGeometry(QRect(0, 0, 30, 25));
@@ -90,6 +93,7 @@ public:
                 int val = std::stoi(lineEdit->text().toStdString());
                 SetVal(val);
                 lineEdit->deleteLater();
+                emit InputFish();
             }
             catch (...) {
                 lineEdit->deleteLater();
@@ -168,6 +172,7 @@ signals:
     void Move(GraphicsItem *item);
     void LeftSelected(GraphicsItem *item);
     void RightSelected(GraphicsItem *item);
+    void InputFish();
 
 private:
     ItemType _item_type;

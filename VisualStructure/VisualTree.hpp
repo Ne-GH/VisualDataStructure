@@ -105,7 +105,17 @@ public:
         });
         _scene->addItem(item);
         item->InputVal();
-        this->_val.Insert(item);
+        QObject::connect(item,&GraphicsItem::InputFish,[=]() mutable {
+            auto p = this->_val.Insert(item);
+            static int flag = false;
+            if (flag == true) {
+                auto arrow = new ArrowItem(p->_parent->_val,item);
+                _scene->addItem(arrow);
+            }
+            else {
+                flag = true;
+            }
+        });
 
 //        this->_val.push_back(item);
     }
