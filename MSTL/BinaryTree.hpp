@@ -15,13 +15,17 @@ namespace MSTL{
 template<typename T>
 class TreeNode {
 public:
-    T _val = 0;
+    TreeNode *_parent = nullptr;
     TreeNode *_left = nullptr;
     TreeNode *_right = nullptr;
-    TreeNode *_parent = nullptr;
+    bool _modify_flag = false;
+    T _val = 0;
     TreeNode() {  }
     TreeNode(T val) {
         _val = val;
+    }
+    bool GetModifyFlag() {
+        return _modify_flag;
     }
     TreeNode *GetParent() {
         return _parent;
@@ -52,6 +56,24 @@ TreeNode<T> *Build(int left,int right,std::vector<T>& vec){
 }
 
 /*******************************************************************************
+ * 获取root的右下角节点
+*******************************************************************************/
+template <typename T >
+TreeNode<T> *GetRightDownNode(TreeNode<T> *root) {
+    if (root == nullptr)
+        return nullptr;
+    if (root->_left == nullptr && root->_right == nullptr) {
+        return root;
+    }
+    if (root->_right) {
+        return GetRightDownNode(root->_right);
+    }
+    else {
+        return GetRightDownNode(root->_left);
+    }
+    return nullptr;
+}
+/*******************************************************************************
  * mode 为 是否开启平衡二叉树
 *******************************************************************************/
 template<typename T,bool mode = true>
@@ -77,6 +99,90 @@ public:
 //        }
     }
 
+    /*******************************************************************************
+     * 从给定的root出发,删除参数2中指定的节点
+    *******************************************************************************/
+    void Delete(TreeNode<T>* root,TreeNode<T> *delete_node) {
+        if (root == nullptr)
+            return ;
+        auto parent = root->GetParent();
+        bool is_root = false;
+        bool is_left = false;
+        bool is_right = false;
+        // 没有父节点,意味着当前删除的是根节点
+        if (parent == nullptr) {
+            is_root = true;
+        }
+        else {
+            auto parent_val = parent->_val.GetVal();
+            auto cur_val = root->_val.GetVal();
+            if (cur_val < parent)
+                is_left = true;
+            else
+                is_right = true;
+        }
+
+        // 当前节点是需要被删除的节点
+        if (root == delete_node) {
+            // 左右子树均存在
+            if (root->_left && root->_right) {
+                auto right_down_nodw = GetRightDownNode(root->_left);
+                right_down_nodw->_right = root->_right;
+                root->_right->_parent = right_down_nodw;
+
+                if (parent && is_left) {
+                    parent->_left = root->_left;
+                    root->_left->_parent = parent;
+                }
+                else if (parent && is_right) {
+                    parent->_right = root->_left;
+                    root->_left->_parent = parent;
+                }
+            }
+            // 只有左子树
+            else if (root->_left) {
+                if (parent && is_left) {
+                    parent->_left = root->_left;
+                    root->_left->_parent = parent;
+                }
+                else if (parent && is_right) {
+                    parent->_right = root->_left;
+                    root->_left->_parent = parent;
+
+                }
+            }
+            // 只有右子树
+            else if (root->_right){
+                if (parent && is_left) {
+                    parent->_left = root->_right;
+                    root->_right->_parent = parent;
+                }
+                else if (parent && is_right) {
+                    parent->_right = root->_right;
+                    root->_right->_parent = parent;
+                }
+
+            }
+            // 叶子节点
+            else {
+                if (parent && is_left) {
+                    parent->_left = nullptr;
+                }
+                else if (parent && is_right) {
+                    parent->_right = nullptr;
+                }
+            }
+
+
+        }
+        if (root->_left) {
+            Delete(root->_left,delete_node);
+        }
+        if (root->_right) {
+            Delete(root->_right,delete_node);
+        }
+
+    }
     void Delete(T data){
         if(_root->_val == data){
             TreeNode<T> *tmproot = new TreeNode<T>;
@@ -141,6 +247,8 @@ public:
     }
 
 };
+
+
 
 template<typename T>
 TreeNode<T>* _Insert(TreeNode<T> *root,T data){
