@@ -102,100 +102,24 @@ public:
     /*******************************************************************************
      * 从给定的root出发,删除参数2中指定的节点
     *******************************************************************************/
-    void Delete(TreeNode<T>* root,TreeNode<T> *delete_node) {
-        if (root == nullptr)
+    void Delete(TreeNode<T> *delete_node) {
+        if (_root == nullptr) {
             return ;
-        auto parent = root->GetParent();
-        bool is_root = false;
-        bool is_left = false;
-        bool is_right = false;
-        // 没有父节点,意味着当前删除的是根节点
-        if (parent == nullptr) {
-            is_root = true;
         }
-        else {
-            auto parent_val = parent->_val.GetVal();
-            auto cur_val = root->_val.GetVal();
-            if (cur_val < parent)
-                is_left = true;
-            else
-                is_right = true;
-        }
+        _Delete(_root,delete_node);
+//        if (_root->_val == delete_node->_val) {
+//            TreeNode<T> *tmp_root = new TreeNode<T>;
+//            tmp_root->_left = _root;
+//            _Delete(tmp_root,delete_node);
+//            _root = tmp_root->_left;
+//            delete tmp_root;
+//            return;
+//        }
+//        else {
+//            _Delete(_root,delete_node);
+//            return;
+//        }
 
-        // 当前节点是需要被删除的节点
-        if (root == delete_node) {
-            // 左右子树均存在
-            if (root->_left && root->_right) {
-                auto right_down_nodw = GetRightDownNode(root->_left);
-                right_down_nodw->_right = root->_right;
-                root->_right->_parent = right_down_nodw;
-
-                if (parent && is_left) {
-                    parent->_left = root->_left;
-                    root->_left->_parent = parent;
-                }
-                else if (parent && is_right) {
-                    parent->_right = root->_left;
-                    root->_left->_parent = parent;
-                }
-            }
-            // 只有左子树
-            else if (root->_left) {
-                if (parent && is_left) {
-                    parent->_left = root->_left;
-                    root->_left->_parent = parent;
-                }
-                else if (parent && is_right) {
-                    parent->_right = root->_left;
-                    root->_left->_parent = parent;
-
-                }
-            }
-            // 只有右子树
-            else if (root->_right){
-                if (parent && is_left) {
-                    parent->_left = root->_right;
-                    root->_right->_parent = parent;
-                }
-                else if (parent && is_right) {
-                    parent->_right = root->_right;
-                    root->_right->_parent = parent;
-                }
-
-            }
-            // 叶子节点
-            else {
-                if (parent && is_left) {
-                    parent->_left = nullptr;
-                }
-                else if (parent && is_right) {
-                    parent->_right = nullptr;
-                }
-            }
-
-
-        }
-        if (root->_left) {
-            Delete(root->_left,delete_node);
-        }
-        if (root->_right) {
-            Delete(root->_right,delete_node);
-        }
-
-    }
-    void Delete(T data){
-        if(_root->_val == data){
-            TreeNode<T> *tmproot = new TreeNode<T>;
-            tmproot->_left = _root;
-            _Delete(tmproot,data);
-            _root = tmproot->_left;
-            delete tmproot;
-            return;
-        }
-        else{
-            _Delete(_root,data);
-            return;
-        }
     }
     TreeNode<T>* Search(T data){
         return _Search(_root,data);
@@ -220,59 +144,35 @@ public:
         Destroy();
     }
 
-    void Draw(){
-        _output(_root);
-    }
 
 
-    TreeNode<T> *Root(){
-        return _root;
-    }
-
-    friend std::ostream & operator << (std::ostream &out,BinaryTree * bt){
-        out << bt->_val;
-        return out;
-    }
-
-    /* 使用额外的数组进行平衡 */
-    void BalanceBinaryTree(){
-        std::vector<T> vec;
-        GetInorder(vec,_root);
-
-        TreeNode<T> *root = Build(0,vec.size()-1,vec);
-        this->Destroy();
-        _root = new TreeNode<T>;
-        _root = root;
-        return;
-    }
 
 };
 
 
-
 template<typename T>
 TreeNode<T>* _Insert(TreeNode<T> *root,T data){
+    // 插在左子树上
     if(root->_val->GetVal() > data->GetVal()){
         if(root->_left == nullptr){
             TreeNode<T> *node = new TreeNode<T>(data);
             root->_left = node;
             node->_left = node->_right = nullptr;
             node->_parent = root;
-            std::cout << node->_val->GetVal() << " " << root->_val->GetVal() << std::endl;
             return node;
         }
         else{
             return _Insert(root->_left,data);
         }
     }
-        /* root->val <= data */
+    /* root->val <= data */
+    // 插在右子树上
     else{
         if(root->_right == nullptr){
             TreeNode<T> *node = new TreeNode<T>(data);
             root->_right = node;
             node->_left = node->_right = nullptr;
             node->_parent = root;
-            std::cout << " " << node->_val->GetVal() << " " << root->_val->GetVal() << std::endl;
             return node;
         }
         else{
@@ -355,66 +255,53 @@ TreeNode<T>* _Search(TreeNode<T> *root,T data){
         return _Search(root->_right,data);
     }
 }
-template<typename T>
-void _Delete(TreeNode<T>* root,T data){
-    if(root == nullptr)
-        return;
-    if(root->_left != nullptr && root->_left->_val == data){
-        if(root->_left->_left){
-            TreeNode<T> *p = root->_left->_left;
-            delete root->_left;
-            root->_left = p;
+template <typename T>
+TreeNode<T> *_Delete(TreeNode<T> *root,TreeNode<T> *delete_node) {
+    if (root == nullptr) {
+        return nullptr;
+    }
+    // 当前节点是要被删除的节点,(_val此处即为GraphicsItem *)
+    if (root->_val == delete_node->_val) {
+        if (root->_left == nullptr && root->_right == nullptr) {
+//            delete delete_node;
+            return nullptr;
         }
-        else if(root->_left->_right){
-            TreeNode<T> *p = root->_left->_right;
-            delete root->_left;
-            root->_left = p;
+        // 只有左结点不为空
+        if (root->_right == nullptr) {
+//            delete delete_node;
+            return root->_left;
         }
-        else{
-            delete root->_left;
-            root->_left = nullptr;
+        // 只有右结点不为空
+        if (root->_left == nullptr) {
+//            delete delete_node;
+            return root->_right;
+        }
+        // 左右节点均不为空
+        if (root->_left && root->_right) {
+            // 将右子树挂到左子树的右下角
+            // 找到右子树的最小值
+            auto cur = root->_right;
+            while (cur->_left) {
+                cur = cur->_left;
+            }
+            cur->_left = root->_left;
+            root = root->_right;
+//            delete delete_node;
+            return root;
         }
 
     }
-    if(root->_right != nullptr && root->_right->_val == data){
-        if(root->_right->_left){
-            TreeNode<T> *p = root->_right->_left;
-            delete root->_right;
-            root->_right = p;
-        }
-        else if(root->_right->_right){
-            TreeNode<T> *p = root->_right->_right;
-            delete root->_right;
-            root->_right = p;
-        }
+    if (root->_val->GetVal() > delete_node->_val->GetVal()) {
+        root->_left = _Delete(root->_left,delete_node);
     }
-    _Delete(root->_left,data);
-    _Delete(root->_right,data);
+    if (root->_val->GetVal() < delete_node->_val->GetVal()) {
+        root->_right = _Delete(root->_right,delete_node);
+    }
 
 }
 
-template<typename T>
-void _output_impl(TreeNode<T> *root, bool left, std::string const& indent){
-    if (root->_right){
-        _output_impl(root->_right, false, indent + (left ? "|     " : "      "));
-    }
-    std::cout << indent;
-    std::cout << (left ? '\\' : '/');
-    std::cout << "-----";
-    std::cout << root->_val << std::endl;
-    if (root->_left){
-        _output_impl(root->_left, true, indent + (left ? "      " : "|     "));
-    }
-}
-template<typename T>
-void _output(TreeNode<T>* root) {
-    if (root->_right) {
-        _output_impl(root->_right, false, "");
-    }
-    std::cout << root->_val << std::endl;
-    if (root->_left) {
-        _output_impl(root->_left, true, "");
-    }
-}
+
+
+
 }
 #endif

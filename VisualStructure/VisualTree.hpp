@@ -82,20 +82,9 @@ public:
 
 
     void Remove(QGraphicsItem* item) {
-
-//        int pos = 0;
-//        while (pos < _val.size()) {
-//            if (_val[pos] == item) {
-//                break;
-//            }
-//            ++ pos;
-//        }
-//        // std::advance(it,pos);
-//        RemoveLine(pos);
-//        _val.erase(std::next(_val.begin(),pos));
-//
-//        _scene->removeItem(item);
-//        delete item;
+        _scene->removeItem(item);
+        auto node = MSTL::TreeNode<GraphicsItem *>(dynamic_cast<GraphicsItem *>(item));
+        _val.Delete(&node);
     }
 
     void Insert(GraphicsItem* item) {
@@ -105,17 +94,18 @@ public:
         });
         _scene->addItem(item);
         item->InputVal();
-        QObject::connect(item,&GraphicsItem::InputFish,[=]() mutable {
-            auto p = this->_val.Insert(item);
-            static int flag = false;
-            if (flag == true) {
-                auto arrow = new ArrowItem(p->_parent->_val,item);
-                _scene->addItem(arrow);
-            }
-            else {
-                flag = true;
-            }
-        });
+        _val.Insert(item);
+//        QObject::connect(item,&GraphicsItem::InputFish,[=]() mutable {
+//            auto p = this->_val.Insert(item);
+//            static int flag = false;
+//            if (flag == true) {
+//                auto arrow = new ArrowItem(p->_parent->_val,item);
+//                _scene->addItem(arrow);
+//            }
+//            else {
+//                flag = true;
+//            }
+//        });
 
 //        this->_val.push_back(item);
     }
