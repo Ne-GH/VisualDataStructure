@@ -81,10 +81,9 @@ public:
             }
         }
 
-
-//        _scene->removeItem(item);
-//        auto node = MSTL::TreeNode<GraphicsItem *>(dynamic_cast<GraphicsItem *>(item));
-//        _val.Delete(&node);
+        _scene->removeItem(item);
+        auto node = MSTL::TreeNode<GraphicsItem *>(dynamic_cast<GraphicsItem *>(item));
+        _val.Delete(&node);
     }
 
     void Insert(GraphicsItem* item) {

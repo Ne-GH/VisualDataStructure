@@ -38,6 +38,15 @@ public:
         out << pnode->_val;
         return out;
     }
+    ~TreeNode() {
+        _parent = nullptr;
+        _left = _right = nullptr;
+        _modify_flag = false;
+//        if (_val != nullptr) {
+//            delete _val;
+//        }
+        _val = nullptr;
+    }
 
 };
 
@@ -260,44 +269,49 @@ TreeNode<T> *_Delete(TreeNode<T> *root,TreeNode<T> *delete_node) {
     if (root == nullptr) {
         return nullptr;
     }
-    // 当前节点是要被删除的节点,(_val此处即为GraphicsItem *)
+
     if (root->_val == delete_node->_val) {
-        if (root->_left == nullptr && root->_right == nullptr) {
-//            delete delete_node;
-            return nullptr;
-        }
-        // 只有左结点不为空
-        if (root->_right == nullptr) {
-//            delete delete_node;
-            return root->_left;
-        }
-        // 只有右结点不为空
         if (root->_left == nullptr) {
-//            delete delete_node;
-            return root->_right;
-        }
-        // 左右节点均不为空
-        if (root->_left && root->_right) {
-            // 将右子树挂到左子树的右下角
-            // 找到右子树的最小值
-            auto cur = root->_right;
-            while (cur->_left) {
-                cur = cur->_left;
+            TreeNode<T> *new_root = root->_right;
+            if (new_root != nullptr) {
+                new_root->_parent = root->_parent;
+                if (new_root->_parent != nullptr) {
+                    new_root->_parent->_modify_flag = true;
+                }
             }
-            cur->_left = root->_left;
-            root = root->_right;
-//            delete delete_node;
-            return root;
+            delete root;
+            return new_root;
         }
-
+        else if (root->_right == nullptr) {
+            TreeNode<T> *new_root = root->_left;
+            if (new_root != nullptr) {
+                new_root->_parent = root->_parent;
+                if (new_root->_parent != nullptr) {
+                    new_root->_parent->_modify_flag = true;
+                }
+            }
+            delete root;
+            return new_root;
+        }
+        else {
+            // 找到右边的最小值
+            TreeNode<T> *min_right = root->_right;
+            while (min_right->_left) {
+                min_right = min_right->_left;
+            }
+            // 将最小值赋值给root,并去右子树删除该最小值
+            root->_val = min_right->_val;
+            root->_modify_flag = true;
+            root->_right = _Delete(root->_right, min_right);
+        }
     }
-    if (root->_val->GetVal() > delete_node->_val->GetVal()) {
-        root->_left = _Delete(root->_left,delete_node);
+    else if (root->_val->GetVal() > delete_node->_val->GetVal()) {
+        root->_left = _Delete(root->_left, delete_node);
     }
-    if (root->_val->GetVal() < delete_node->_val->GetVal()) {
-        root->_right = _Delete(root->_right,delete_node);
+    else {
+        root->_right = _Delete(root->_right, delete_node);
     }
-
+    return root;
 }
 
 
