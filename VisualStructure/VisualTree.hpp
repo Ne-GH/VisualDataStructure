@@ -84,6 +84,10 @@ public:
         _scene->removeItem(item);
         auto node = MSTL::TreeNode<GraphicsItem *>(dynamic_cast<GraphicsItem *>(item));
         _val.Delete(&node);
+
+
+        _val.LnOrderTraversal();
+        std::cout.flush();
     }
 
     void Insert(GraphicsItem* item) {

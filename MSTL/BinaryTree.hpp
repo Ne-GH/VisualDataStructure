@@ -87,8 +87,20 @@ TreeNode<T> *GetRightDownNode(TreeNode<T> *root) {
 *******************************************************************************/
 template<typename T,bool mode = true>
 class BinaryTree {
-
     TreeNode<T> *_root = nullptr;
+    class iterator {
+        friend class TreeNode<T>;
+        TreeNode<T>* it;
+        iterator(TreeNode<T> *p) : it(p) {  }
+        iterator &operator ++() {
+        }
+        bool operator != (const iterator *other) {
+            return this->it != other->it;
+        }
+        T &operator * () {
+            return *it;
+        }
+    };
 public:
     BinaryTree() {  }
     BinaryTree(T data){
@@ -151,6 +163,13 @@ public:
     }
     ~BinaryTree(){
         Destroy();
+    }
+
+    iterator begin() {
+
+    }
+    iterator end() {
+
     }
 
 
@@ -226,7 +245,13 @@ void _LnOrderTraversal(TreeNode<T> *root){
         return;
 
     _LnOrderTraversal(root->_left);
-    std::cout << root->_val << " ";
+    std::cout << root->_val->GetVal() << " ";
+    if (root->_parent) {
+        std::cout << root->_parent->_val->GetVal() << std::endl;
+    }
+    else {
+        std::cout << std::endl;
+    }
     _LnOrderTraversal(root->_right);
 
 }
@@ -313,7 +338,6 @@ TreeNode<T> *_Delete(TreeNode<T> *root,TreeNode<T> *delete_node) {
     }
     return root;
 }
-
 
 
 
