@@ -153,7 +153,7 @@ public:
 template<typename T>
 TreeNode<T>* _Insert(TreeNode<T> *root,T data){
     // 插在左子树上
-    if(root->_val->GetVal() > data->GetVal()){
+    if(data->GetVal() < root->_val->GetVal()){
         if(root->_left == nullptr){
             TreeNode<T> *node = new TreeNode<T>(data);
             root->_left = node;

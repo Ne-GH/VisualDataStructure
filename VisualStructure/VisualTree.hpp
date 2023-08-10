@@ -15,17 +15,37 @@
 #include "ArrowItem.h"
 
 #include "BinaryTree.hpp"
+#include <set>
 
+
+/*******************************************************************************
+ * 使用构造函数传入一个Graphics *,之后即可使用 == 来判断连线是否相等
+*******************************************************************************/
+struct TreeLine {
+    GraphicsItem *beg = nullptr;
+    GraphicsItem *end = nullptr;
+    ArrowItem *line = nullptr;
+
+    TreeLine(GraphicsItem *beg_item = nullptr,GraphicsItem *end_item = nullptr,ArrowItem *arrow = nullptr) :
+        beg(beg_item),end(end_item) ,line(arrow) {  }
+    //
+    bool operator == (const TreeLine &right) const {
+        return beg == right.beg || beg == right.end;
+    }
+    //
+    bool operator < (const TreeLine &right) const {
+        return this->beg < right.beg;
+    }
+};
 
 class VisualTree : public QObject, public VisualStructureBase<MSTL::BinaryTree<GraphicsItem *>> {
 Q_OBJECT
 private:
     GraphicsScene *_scene;
+    std::multiset<TreeLine> _lines;
+
     int _x = 0;
     int _y = 0;
-
-
-    std::vector<ArrowItem *> _lines;
 
 public:
     VisualTree() = default;
@@ -40,42 +60,12 @@ public:
 
 
     void AddLine(GraphicsItem *pre,GraphicsItem *back) {
-        auto line = new ArrowItem(pre,back);
-        _lines.push_back(line);
-        _scene->addItem(line);
+
     }
     void RemoveLine(int pos) {
 
-//        // line :
-//        // 0       1       2       3       4
-//        // 0 1     1 2     2 3     3 4
-//        if (_lines.size() == 0)
-//            return ;
-//        if (pos == 0) {
-//            _scene->removeItem(*_lines.begin());
-//            delete _lines[0];
-//            _lines.erase(_lines.begin());
-//        }
-//        else if (pos == _val.size()-1) {
-//            _scene->removeItem(*(_lines.end()-1));
-//            delete _lines[pos-1];
-//            _lines.erase(_lines.end()-1);
-//        }
-//        else {
-//            _scene->removeItem(*(std::next(_lines.begin(),pos-1)));
-//            delete _lines[pos-1];
-//            _lines.erase(std::next(_lines.begin(),pos-1));
-//            _scene->removeItem(*(std::next(_lines.begin(),pos-1)));
-//            delete _lines[pos-1];
-//            _lines.erase(std::next(_lines.begin(),pos-1));
-//
-//            auto line = new ArrowItem(_val[pos-1],_val[pos+1]);
-//            _scene->addItem(line);
-//            _lines.insert(std::next(_lines.begin(),pos-1),line);
-//        }
 
     }
-
     void Clear(GraphicsScene* scene) {
         scene->clear();
     }
@@ -94,9 +84,16 @@ public:
         });
         _scene->addItem(item);
         item->InputVal();
-        _val.Insert(item);
-//        QObject::connect(item,&GraphicsItem::InputFish,[=]() mutable {
-//            auto p = this->_val.Insert(item);
+        QObject::connect(item,&GraphicsItem::InputFish,[=] () mutable {
+            auto p = this->_val.Insert(item);
+            if (p->_parent == nullptr)
+                return;
+            auto arrow = new ArrowItem(p->_parent->_val,item);
+            auto line = TreeLine(p->_parent->_val,item,arrow);
+            _lines.insert(line);
+            _scene->addItem(arrow);
+
+
 //            static int flag = false;
 //            if (flag == true) {
 //                auto arrow = new ArrowItem(p->_parent->_val,item);
@@ -105,7 +102,7 @@ public:
 //            else {
 //                flag = true;
 //            }
-//        });
+        });
 
 //        this->_val.push_back(item);
     }
