@@ -144,6 +144,8 @@ public:
         item->InputVal();
         QObject::connect(item,&GraphicsItem::InputFish,[=] () mutable {
             auto p = this->_val.Insert(item);
+            std::cout << "当前高度: " << _val.GetDeep() << " "
+                      <<   "当前宽度: " << _val.GetWidth() << std::endl;
             if (p->_parent == nullptr)
                 return;
             auto arrow = new ArrowItem(p->_parent->_val,item);

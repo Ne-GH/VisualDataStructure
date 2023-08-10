@@ -6,6 +6,7 @@
 #define MSTL_BINARYTREE_HPP
 #include <iostream>
 #include <stack>
+#include <queue>
 #include "GraphicsItem.h"
 
 
@@ -13,7 +14,7 @@ namespace MSTL{
 
 
 template<typename T>
-class TreeNode {
+struct TreeNode {
 public:
     TreeNode *_parent = nullptr;
     TreeNode *_left = nullptr;
@@ -23,12 +24,6 @@ public:
     TreeNode() {  }
     TreeNode(T val) {
         _val = val;
-    }
-    bool GetModifyFlag() {
-        return _modify_flag;
-    }
-    TreeNode *GetParent() {
-        return _parent;
     }
     friend std::ostream & operator << (std::ostream &out,TreeNode node){
         out << node._val;
@@ -133,6 +128,24 @@ public:
     int GetDeep(){
         return _GetDeep(_root);
     }
+    int GetWidth() {
+        if(_root == nullptr) 
+            return 0;
+        int max = 0; //树的最大宽度 
+        std::queue<TreeNode<T> *> que;
+        que.push(_root);
+        while(!que.empty()){
+            int width = que.size(); //本层宽度 
+            for(int i = 0;i < width;i++){
+                TreeNode<T>* tmp = que.front();
+                que.pop();
+                if(tmp->_left) que.push(tmp->_left);
+                if(tmp->_right) que.push(tmp->_right);
+            }
+            max = max > width ? max : width; //宽度更新 
+        }
+        return max;
+    }
 
     void Destroy(){
         _Destroy(_root);
@@ -196,6 +209,13 @@ int _GetDeep(TreeNode<T> *root){
     if(root == nullptr)
         return 0;
     return MAX(_GetDeep(root->_left), _GetDeep(root->_right)) + 1;
+}
+template <typename T>
+int _GetWidth(TreeNode<T>* root,int& width) {
+    if (root == nullptr) {
+        
+    }
+
 }
 
 
