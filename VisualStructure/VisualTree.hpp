@@ -30,6 +30,9 @@ struct TreeLine {
         beg(beg_item),end(end_item) ,line(arrow) {  }
     //
     bool operator == (const TreeLine &right) const {
+        if (right.end == nullptr) {
+            return right.beg == beg || right.beg == end;
+        }
         return beg == right.beg || beg == right.end;
     }
     //
@@ -42,7 +45,7 @@ class VisualTree : public QObject, public VisualStructureBase<MSTL::BinaryTree<G
 Q_OBJECT
 private:
     GraphicsScene *_scene;
-    std::multiset<TreeLine> _lines;
+    std::vector<TreeLine> _lines;
 
     int _x = 0;
     int _y = 0;
@@ -58,27 +61,33 @@ public:
         _x = scene_width / 2;
     }
 
-
-    void AddLine(GraphicsItem *pre,GraphicsItem *back) {
-
-    }
-    void RemoveLine(int pos) {
-
-
-    }
     void Clear(GraphicsScene* scene) {
         scene->clear();
     }
 
-
+    // 对于结点的删除,需要先删除arrow后删除item,因为arrow会访问item
     void Remove(QGraphicsItem* item) {
-        _scene->removeItem(item);
-        auto node = MSTL::TreeNode<GraphicsItem *>(dynamic_cast<GraphicsItem *>(item));
-        _val.Delete(&node);
+        auto line = TreeLine(dynamic_cast<GraphicsItem *>(item));
+
+        // item 是当前选中的节点,line中仅有beg
+        for (auto it = _lines.begin();it != _lines.end();) {
+            if (line == *it) {
+                _scene->removeItem(it->line);
+                delete it->line;
+                it = _lines.erase(it);
+            }
+            else {
+                it ++;
+            }
+        }
+
+
+//        _scene->removeItem(item);
+//        auto node = MSTL::TreeNode<GraphicsItem *>(dynamic_cast<GraphicsItem *>(item));
+//        _val.Delete(&node);
     }
 
     void Insert(GraphicsItem* item) {
-
         QObject::connect(item,&GraphicsItem::RightSelected,[&](auto pitem){
             Delete(pitem);
         });
@@ -90,21 +99,9 @@ public:
                 return;
             auto arrow = new ArrowItem(p->_parent->_val,item);
             auto line = TreeLine(p->_parent->_val,item,arrow);
-            _lines.insert(line);
+            _lines.push_back(line);
             _scene->addItem(arrow);
-
-
-//            static int flag = false;
-//            if (flag == true) {
-//                auto arrow = new ArrowItem(p->_parent->_val,item);
-//                _scene->addItem(arrow);
-//            }
-//            else {
-//                flag = true;
-//            }
         });
-
-//        this->_val.push_back(item);
     }
     void Insert(int val) {
         auto p = new GraphicsItem(0,0,100,100,GraphicsItem::Ellipse);
@@ -112,27 +109,10 @@ public:
 
         p->SetPos(pos.x(),pos.y()-50);
         Insert(p);
-//
-//        // 绘制线条至少需要存在两个元素
-//        if (_val.size() < 2) {
-//            return;
-//        }
-//        AddLine(_val[_val.size()-2],_val[_val.size()-1]);
-
     }
 
-    void Delete(GraphicsItem* item) {
-//        for (auto it = _val.begin();it != _val.end(); ) {
-//            if (*it == item) {
-//                it = _val.erase(it);
-//            }
-//            else {
-//                it ++;
-//            }
-//        }
-//        delete item;
-    }
 
+    void Delete(GraphicsItem* item) override { }
     void Draw(GraphicsScene* scene) {  }
     void Updata(GraphicsItem*) {  }
     GraphicsItem* Search(GraphicsItem* item) {  }
