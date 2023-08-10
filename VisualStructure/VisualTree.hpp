@@ -28,7 +28,8 @@ struct TreeLine {
 
     TreeLine(GraphicsItem *beg_item = nullptr,GraphicsItem *end_item = nullptr,ArrowItem *arrow = nullptr) :
         beg(beg_item),end(end_item) ,line(arrow) {  }
-    //
+
+    // == 只需要left的begin 出现在right的begin或者end上即可
     bool operator == (const TreeLine &right) const {
         if (right.end == nullptr) {
             return right.beg == beg || right.beg == end;
@@ -38,6 +39,11 @@ struct TreeLine {
     //
     bool operator < (const TreeLine &right) const {
         return this->beg < right.beg;
+    }
+
+    // Equal的比较相较于 == 更为严格,需要beg == beg && end == end
+    bool Equal(const TreeLine& other) {
+        return beg == other.beg && end == other.end;
     }
 };
 
@@ -64,6 +70,13 @@ public:
     void Clear(GraphicsScene* scene) {
         scene->clear();
     }
+    bool FindLine(const TreeLine &line) {
+        for (auto _ : _lines) {
+            if (_.Equal(line))
+                return true;
+        }
+        return false;
+    }
 
     // 对于结点的删除,需要先删除arrow后删除item,因为arrow会访问item
     void Remove(QGraphicsItem* item) {
@@ -85,9 +98,42 @@ public:
         auto node = MSTL::TreeNode<GraphicsItem *>(dynamic_cast<GraphicsItem *>(item));
         _val.Delete(&node);
 
+        for (auto node : _val) {
+            if (node->_parent) {
+                std::cout << "有父节点" << " ";
+            }
+            if (node->_modify_flag) {
+                std::cout << "(modify)" << " ";
+            }
+            if (node->_modify_flag == true) {
+                if (node->_parent) {
+                    if (!FindLine(TreeLine(node->_parent->_val,node->_val))) {
+                        auto arrow = new ArrowItem(node->_parent->_val,node->_val);
+                        _scene->addItem(arrow);
+                        _lines.push_back(TreeLine(node->_parent->_val,node->_val,arrow));
+                    }
+                }
 
-        _val.LnOrderTraversal();
-        std::cout.flush();
+                if (node->_left) {
+                    if (!FindLine(TreeLine(node->_val,node->_left->_val))) {
+                        auto arrow = new ArrowItem(node->_val,node->_left->_val);
+                        _scene->addItem(arrow);
+                        _lines.push_back(TreeLine(node->_val,node->_left->_val,arrow));
+                    }
+                }
+
+                if (node->_right) {
+                    if (!FindLine(TreeLine(node->_val,node->_right->_val))) {
+                        auto arrow = new ArrowItem(node->_val,node->_right->_val);
+                        _scene->addItem(arrow);
+                        _lines.push_back(TreeLine(node->_val,node->_right->_val,arrow));
+                    }
+
+                }
+            }
+
+        }
+
     }
 
     void Insert(GraphicsItem* item) {

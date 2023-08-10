@@ -5,7 +5,7 @@
 #ifndef MSTL_BINARYTREE_HPP
 #define MSTL_BINARYTREE_HPP
 #include <iostream>
-#include <vector>
+#include <stack>
 #include "GraphicsItem.h"
 
 
@@ -64,24 +64,7 @@ TreeNode<T> *Build(int left,int right,std::vector<T>& vec){
     return root;
 }
 
-/*******************************************************************************
- * 获取root的右下角节点
-*******************************************************************************/
-template <typename T >
-TreeNode<T> *GetRightDownNode(TreeNode<T> *root) {
-    if (root == nullptr)
-        return nullptr;
-    if (root->_left == nullptr && root->_right == nullptr) {
-        return root;
-    }
-    if (root->_right) {
-        return GetRightDownNode(root->_right);
-    }
-    else {
-        return GetRightDownNode(root->_left);
-    }
-    return nullptr;
-}
+
 /*******************************************************************************
  * mode 为 是否开启平衡二叉树
 *******************************************************************************/
@@ -89,16 +72,34 @@ template<typename T,bool mode = true>
 class BinaryTree {
     TreeNode<T> *_root = nullptr;
     class iterator {
-        friend class TreeNode<T>;
-        TreeNode<T>* it;
-        iterator(TreeNode<T> *p) : it(p) {  }
-        iterator &operator ++() {
+    public:
+        iterator(TreeNode<T>* root) {
+            fillStack(root);
         }
-        bool operator != (const iterator *other) {
-            return this->it != other->it;
+
+        TreeNode<T>* operator*() const {
+            return traversalStack.top();
         }
-        T &operator * () {
-            return *it;
+
+        TreeNode<T>* operator++() {
+            TreeNode<T>* node = traversalStack.top();
+            traversalStack.pop();
+            fillStack(node->_right);
+            return node;
+        }
+
+        bool operator!=(const iterator& other) const {
+            return !traversalStack.empty() || !other.traversalStack.empty();
+        }
+
+    private:
+        std::stack<TreeNode<T>*> traversalStack;
+
+        void fillStack(TreeNode<T>* node) {
+            while (node) {
+                traversalStack.push(node);
+                node = node->_left;
+            }
         }
     };
 public:
@@ -115,9 +116,6 @@ public:
         else{
             return _Insert(_root,data);
         }
-//        if constexpr (mode == true) {
-//            BalanceBinaryTree();
-//        }
     }
 
     /*******************************************************************************
@@ -128,19 +126,6 @@ public:
             return ;
         }
         _Delete(_root,delete_node);
-//        if (_root->_val == delete_node->_val) {
-//            TreeNode<T> *tmp_root = new TreeNode<T>;
-//            tmp_root->_left = _root;
-//            _Delete(tmp_root,delete_node);
-//            _root = tmp_root->_left;
-//            delete tmp_root;
-//            return;
-//        }
-//        else {
-//            _Delete(_root,delete_node);
-//            return;
-//        }
-
     }
     TreeNode<T>* Search(T data){
         return _Search(_root,data);
@@ -148,15 +133,7 @@ public:
     int GetDeep(){
         return _GetDeep(_root);
     }
-    void PreOrderTraversal(){
-        _PreOrderTraversal(_root);
-    }
-    void LnOrderTraversal(){
-        _LnOrderTraversal(_root);
-    }
-    void PostOrderTraversal(){
-        _PostOrderTraversal(_root);
-    }
+
     void Destroy(){
         _Destroy(_root);
         _root = nullptr;
@@ -164,16 +141,16 @@ public:
     ~BinaryTree(){
         Destroy();
     }
-
-    iterator begin() {
+    bool Empty() {
+        return _root == nullptr;
+    }
+    auto begin() {
+        return iterator(_root);
 
     }
-    iterator end() {
-
+    auto end() {
+        return iterator(nullptr);
     }
-
-
-
 
 };
 
@@ -210,16 +187,6 @@ TreeNode<T>* _Insert(TreeNode<T> *root,T data){
 
 }
 
-template<typename T>
-void GetInorder(std::vector<T>&vec,TreeNode<T> *root){
-    if(root->_left != nullptr){
-        GetInorder(vec,root->_left);
-    }
-    vec.push_back(root->_val);
-    if(root->_right != nullptr){
-        GetInorder(vec,root->_right);
-    }
-}
 
 inline int MAX(int a,int b){
     return a > b ? a : b;
@@ -230,39 +197,7 @@ int _GetDeep(TreeNode<T> *root){
         return 0;
     return MAX(_GetDeep(root->_left), _GetDeep(root->_right)) + 1;
 }
-template<typename T>
-void _PreOrderTraversal(TreeNode<T> *root){
-    if(root == nullptr)
-        return;
-    std::cout << root->_val << " ";
-    _PreOrderTraversal(root->_left);
-    _PreOrderTraversal(root->_right);
-}
 
-template<typename T>
-void _LnOrderTraversal(TreeNode<T> *root){
-    if(root == nullptr)
-        return;
-
-    _LnOrderTraversal(root->_left);
-    std::cout << root->_val->GetVal() << " ";
-    if (root->_parent) {
-        std::cout << root->_parent->_val->GetVal() << std::endl;
-    }
-    else {
-        std::cout << std::endl;
-    }
-    _LnOrderTraversal(root->_right);
-
-}
-template<typename T>
-void _PostOrderTraversal(TreeNode<T> *root){
-    if(root == nullptr)
-        return;
-    _PostOrderTraversal(root->_left);
-    _PostOrderTraversal(root->_right);
-    std::cout << root->_val << " ";
-}
 
 /* 带头节点一起销毁 */
 template<typename T>
