@@ -152,6 +152,9 @@ public:
             auto line = TreeLine(p->_parent->_val,item,arrow);
             _lines.push_back(line);
             _scene->addItem(arrow);
+
+            int deep = _val.GetDeep();
+            AutoLayout(_val.GetRoot(),100,100,deep*50,200);
         });
     }
     void Insert(int val) {
@@ -162,12 +165,26 @@ public:
         Insert(p);
     }
 
+    void AutoLayout(MSTL::TreeNode<GraphicsItem *>*root,int x,int y,int width,int height) {
+        if (root == nullptr) {
+            return;
+        }
+        root->_val->SetPos(x,y);
+        if (root->_left) {
+            AutoLayout(root->_left,x - width, y + height,width/2,height);
+        }
+        if (root->_right) {
+            AutoLayout(root->_right,x + width,y + height,width/2,height);
+        }
+    }
+
 
     void Delete(GraphicsItem* item) override { }
     void Draw(GraphicsScene* scene) {  }
     void Updata(GraphicsItem*) {  }
     GraphicsItem* Search(GraphicsItem* item) {  }
 };
+
 
 
 #endif

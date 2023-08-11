@@ -102,6 +102,9 @@ public:
     BinaryTree(T data){
         _root = new TreeNode<T>(data);
     }
+    TreeNode<T> *GetRoot() {
+        return _root;
+    }
 
     TreeNode<T>* Insert(T data){
         if(_root == nullptr){
