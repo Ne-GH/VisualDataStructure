@@ -154,7 +154,12 @@ public:
             _scene->addItem(arrow);
 
             int deep = _val.GetDeep();
-            AutoLayout(_val.GetRoot(),100,100,deep*50,200);
+            std::vector<int> widths(deep+1);
+            widths[deep] = 50;
+            for (int i = deep-1;i > 0; --i) {
+                widths[i] = 2 * widths[i+1] ;// + 2 * 2 * 50;
+            }
+            AutoLayout(_val.GetRoot(),100,100,widths,1);
         });
     }
     void Insert(int val) {
@@ -165,16 +170,16 @@ public:
         Insert(p);
     }
 
-    void AutoLayout(MSTL::TreeNode<GraphicsItem *>*root,int x,int y,int width,int height) {
+    void AutoLayout(MSTL::TreeNode<GraphicsItem *>*root,int x,int y,std::vector<int> &widths,int deep) {
         if (root == nullptr) {
             return;
         }
         root->_val->SetPos(x,y);
         if (root->_left) {
-            AutoLayout(root->_left,x - width, y + height,width/2,height);
+            AutoLayout(root->_left,x - widths[deep], y + 100*deep,widths,deep+1);
         }
         if (root->_right) {
-            AutoLayout(root->_right,x + width,y + height,width/2,height);
+            AutoLayout(root->_right,x + widths[deep],y + 100*deep,widths,deep+1);
         }
     }
 
