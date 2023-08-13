@@ -17,13 +17,16 @@ template<typename T>
 struct TreeNode {
 public:
     TreeNode *_parent = nullptr;
+
     TreeNode *_left = nullptr;
     TreeNode *_right = nullptr;
     bool _modify_flag = false;
+    int _height = 0;
     T _val = 0;
     TreeNode() {  }
     TreeNode(T val) {
         _val = val;
+        _height = 1;
     }
     friend std::ostream & operator << (std::ostream &out,TreeNode node){
         out << node._val;
@@ -60,6 +63,57 @@ TreeNode<T> *Build(int left,int right,std::vector<T>& vec){
 }
 
 
+template <typename T>
+auto GetVal(T node) {
+    if constexpr (std::is_same_v<T,TreeNode<GraphicsItem *> *>) {
+        return node->_val->GetVal();
+
+    }
+    else if constexpr (std::is_same_v<T,GraphicsItem *>) {
+        return node->GetVal();
+    }
+    else {
+        std::cout << typeid(T).name() << std::endl;
+    }
+    return 0;
+
+}
+
+template <typename T>
+TreeNode<T>* RotateLeft (TreeNode<T> *root) {
+    auto tmp = root->_right;
+    root->_right = tmp->_left;
+    tmp->_left = root;
+    tmp->_parent = root->_parent;
+    root->_parent = tmp;
+    root->_height = _GetDeep(root);
+    tmp->_height = _GetDeep(tmp);
+    return tmp;
+}
+
+template<typename T>
+TreeNode<T> *RotateRight(TreeNode<T>* root) {
+    auto tmp = root->_left;
+    root->_left = tmp->_right;
+    tmp->_right = root;
+    tmp->_parent = root->_parent;
+    root->_parent = tmp;
+    root->_height = _GetDeep(root);
+    tmp->_height = _GetDeep(tmp);
+    return tmp;
+}
+
+template<typename T>
+TreeNode<T> *RotateLeftRight(TreeNode<T>* root) {
+    root->_left = RotateLeft(root->_left);
+    return RotateRight(root);
+}
+
+template<typename T>
+TreeNode<T> *RotateRightLeft(TreeNode<T>* root) {
+    root->_left = RotateRight(root->_left);
+    return RotateLeft(root);
+}
 /*******************************************************************************
  * mode 为 是否开启平衡二叉树
 *******************************************************************************/
@@ -113,6 +167,7 @@ public:
         }
         else{
             return _Insert(_root,data);
+//            return insert(_root->_parent,_root,data);
         }
     }
 
@@ -171,6 +226,7 @@ public:
 };
 
 
+
 template<typename T>
 TreeNode<T>* _Insert(TreeNode<T> *root,T data){
     // 插在左子树上
@@ -185,6 +241,18 @@ TreeNode<T>* _Insert(TreeNode<T> *root,T data){
         else{
             return _Insert(root->_left,data);
         }
+
+        if (_GetDeep(root->_left) - _GetDeep(root->_right) == 2) {
+            if (GetVal(data) < GetVal(root->_left)) {
+                root = RotateRight(root);
+
+            }
+            else {
+                root = RotateLeftRight(root);
+            }
+
+        }
+
     }
     /* root->val <= data */
     // 插在右子树上
@@ -213,14 +281,6 @@ int _GetDeep(TreeNode<T> *root){
         return 0;
     return MAX(_GetDeep(root->_left), _GetDeep(root->_right)) + 1;
 }
-template <typename T>
-int _GetWidth(TreeNode<T>* root,int& width) {
-    if (root == nullptr) {
-        
-    }
-
-}
-
 
 /* 带头节点一起销毁 */
 template<typename T>

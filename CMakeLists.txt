@@ -53,7 +53,7 @@ target_link_libraries(VisualDataStructure
         Qt::Charts
         )
 
-set(VERSION "0.1")
+set(VERSION "0.2")
 add_compile_definitions(VERSION="${VERSION}")
 
 #set(CMAKE_BUILD_TYPE "Release")
