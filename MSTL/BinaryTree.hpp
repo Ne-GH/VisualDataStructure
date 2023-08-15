@@ -79,6 +79,9 @@ auto GetVal(T node) {
 
 }
 
+
+
+
 template <typename T>
 TreeNode<T>* RotateLeft (TreeNode<T> *root) {
     auto tmp = root->_right;
@@ -114,6 +117,25 @@ TreeNode<T> *RotateRightLeft(TreeNode<T>* root) {
     root->_left = RotateRight(root->_left);
     return RotateLeft(root);
 }
+
+
+template<typename T>
+TreeNode<T>* insert(TreeNode<T> *parent,TreeNode<T> *root,TreeNode<T> *data) {
+    if (root == nullptr) {
+        data->_parent = parent;
+        return data;
+    }
+    // 插入到左子树
+    if (GetVal(data) < GetVal(root)) {
+        root->_left = insert(root,root->_left,data);
+    }
+    // >= 插入到右子树
+    else {
+        root->_right = insert(root,root->_right,data);
+    }
+    return root;
+}
+
 /*******************************************************************************
  * mode 为 是否开启平衡二叉树
 *******************************************************************************/
@@ -166,8 +188,10 @@ public:
             return _root;
         }
         else{
-            return _Insert(_root,data);
-//            return insert(_root->_parent,_root,data);
+//            return _Insert(_root,data);
+            TreeNode<T> *node = new TreeNode<T>(data);
+            insert(_root->_parent,_root,node);
+            return node;
         }
     }
 
@@ -225,51 +249,6 @@ public:
 
 };
 
-
-
-template<typename T>
-TreeNode<T>* _Insert(TreeNode<T> *root,T data){
-    // 插在左子树上
-    if(data->GetVal() < root->_val->GetVal()){
-        if(root->_left == nullptr){
-            TreeNode<T> *node = new TreeNode<T>(data);
-            root->_left = node;
-            node->_left = node->_right = nullptr;
-            node->_parent = root;
-            return node;
-        }
-        else{
-            return _Insert(root->_left,data);
-        }
-
-        if (_GetDeep(root->_left) - _GetDeep(root->_right) == 2) {
-            if (GetVal(data) < GetVal(root->_left)) {
-                root = RotateRight(root);
-
-            }
-            else {
-                root = RotateLeftRight(root);
-            }
-
-        }
-
-    }
-    /* root->val <= data */
-    // 插在右子树上
-    else{
-        if(root->_right == nullptr){
-            TreeNode<T> *node = new TreeNode<T>(data);
-            root->_right = node;
-            node->_left = node->_right = nullptr;
-            node->_parent = root;
-            return node;
-        }
-        else{
-            return _Insert(root->_right,data);
-        }
-    }
-
-}
 
 
 inline int MAX(int a,int b){
