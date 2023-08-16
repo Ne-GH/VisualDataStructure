@@ -79,6 +79,9 @@ public:
     int GetVal() {
         return _val;
     }
+    void InputVal(int val) {
+        SetVal(val);
+    }
     void InputVal() {
         QLineEdit *lineEdit = new QLineEdit(nullptr);
         lineEdit->setGeometry(QRect(0, 0, 30, 25));

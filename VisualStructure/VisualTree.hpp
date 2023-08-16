@@ -77,62 +77,58 @@ public:
         }
         return false;
     }
+    void RemoveAllArrow() {
+        for (auto tmp : _lines) {
+            _scene->removeItem(tmp.line);
+            delete tmp.line;
+        }
+        _lines.clear();
+    }
+    void CreateAllArrow() {
+        for (auto node : _val) {
+            if (node->_parent) {
+                auto arrow = new ArrowItem(node->_parent->_val,node->_val);
+                _scene->addItem(arrow);
+                _lines.push_back(TreeLine(node->_parent->_val,node->_val,arrow));
+                std::cout << node->_val->GetVal() << " " << node->_parent->_val->GetVal() << std::endl;
+            }
+//
+//            if (node->_left) {
+//                auto arrow = new ArrowItem(node->_val,node->_left->_val);
+//                _scene->addItem(arrow);
+//                _lines.push_back(TreeLine(node->_val,node->_left->_val,arrow));
+//            }
+//
+//            if (node->_right) {
+//                auto arrow = new ArrowItem(node->_val,node->_right->_val);
+//                _scene->addItem(arrow);
+//                _lines.push_back(TreeLine(node->_val,node->_right->_val,arrow));
+//            }
+        }
+    }
 
     // 对于结点的删除,需要先删除arrow后删除item,因为arrow会访问item
     void Remove(QGraphicsItem* item) {
-        auto line = TreeLine(dynamic_cast<GraphicsItem *>(item));
+//        auto line = TreeLine(dynamic_cast<GraphicsItem *>(item));
 
-        // item 是当前选中的节点,line中仅有beg
-        for (auto it = _lines.begin();it != _lines.end();) {
-            if (line == *it) {
-                _scene->removeItem(it->line);
-                delete it->line;
-                it = _lines.erase(it);
-            }
-            else {
-                it ++;
-            }
-        }
+//        // item 是当前选中的节点,line中仅有beg
+//        for (auto it = _lines.begin();it != _lines.end();) {
+//            if (line == *it) {
+//                _scene->removeItem(it->line);
+//                delete it->line;
+//                it = _lines.erase(it);
+//            }
+//            else {
+//                it ++;
+//            }
+//        }
 
+        RemoveAllArrow();
         _scene->removeItem(item);
         auto node = MSTL::TreeNode<GraphicsItem *>(dynamic_cast<GraphicsItem *>(item));
         _val.Delete(&node);
-
-        for (auto node : _val) {
-            if (node->_parent) {
-                std::cout << "有父节点" << " ";
-            }
-            if (node->_modify_flag) {
-                std::cout << "(modify)" << " ";
-            }
-            if (node->_modify_flag == true) {
-                if (node->_parent) {
-                    if (!FindLine(TreeLine(node->_parent->_val,node->_val))) {
-                        auto arrow = new ArrowItem(node->_parent->_val,node->_val);
-                        _scene->addItem(arrow);
-                        _lines.push_back(TreeLine(node->_parent->_val,node->_val,arrow));
-                    }
-                }
-
-                if (node->_left) {
-                    if (!FindLine(TreeLine(node->_val,node->_left->_val))) {
-                        auto arrow = new ArrowItem(node->_val,node->_left->_val);
-                        _scene->addItem(arrow);
-                        _lines.push_back(TreeLine(node->_val,node->_left->_val,arrow));
-                    }
-                }
-
-                if (node->_right) {
-                    if (!FindLine(TreeLine(node->_val,node->_right->_val))) {
-                        auto arrow = new ArrowItem(node->_val,node->_right->_val);
-                        _scene->addItem(arrow);
-                        _lines.push_back(TreeLine(node->_val,node->_right->_val,arrow));
-                    }
-
-                }
-            }
-
-        }
+        CreateAllArrow();
+        AutoLayout();
 
     }
 
@@ -143,23 +139,22 @@ public:
         _scene->addItem(item);
         item->InputVal();
         QObject::connect(item,&GraphicsItem::InputFish,[=] () mutable {
+            RemoveAllArrow();
             auto p = this->_val.Insert(item);
             std::cout << "当前高度: " << _val.GetDeep() << " "
                       <<   "当前宽度: " << _val.GetWidth() << std::endl;
+            // 只有root ,无需绘制arrow
             if (p->_parent == nullptr)
                 return;
-            auto arrow = new ArrowItem(p->_parent->_val,item);
-            auto line = TreeLine(p->_parent->_val,item,arrow);
-            _lines.push_back(line);
-            _scene->addItem(arrow);
 
-            int deep = _val.GetDeep();
-            std::vector<int> widths(deep+1);
-            widths[deep] = 50;
-            for (int i = deep-1;i > 0; --i) {
-                widths[i] = 2 * widths[i+1] ;// + 2 * 2 * 50;
-            }
-            AutoLayout(_val.GetRoot(),100,100,widths,1);
+            CreateAllArrow();
+//            auto arrow = new ArrowItem(p->_parent->_val,item);
+//            auto line = TreeLine(p->_parent->_val,item,arrow);
+//            _lines.push_back(line);
+//            _scene->addItem(arrow);
+
+            AutoLayout();
+
         });
     }
     void Insert(int val) {
@@ -170,24 +165,34 @@ public:
         Insert(p);
     }
 
-    void AutoLayout(MSTL::TreeNode<GraphicsItem *>*root,int x,int y,std::vector<int> &widths,int deep) {
-        if (root == nullptr) {
-            return;
+    void AutoLayout() {
+        int deep = _val.GetDeep();
+        std::vector<int> widths(deep+1);
+        widths[deep] = 50;
+        for (int i = deep-1;i > 0; --i) {
+            widths[i] = 2 * widths[i+1] ;       // + 2 * 2 * 50;
         }
-        root->_val->SetPos(x,y);
-        if (root->_left) {
-            AutoLayout(root->_left,x - widths[deep], y + 100*deep,widths,deep+1);
-        }
-        if (root->_right) {
-            AutoLayout(root->_right,x + widths[deep],y + 100*deep,widths,deep+1);
-        }
+        _AutoLayout(_val.GetRoot(),100,100,widths,1);
     }
-
 
     void Delete(GraphicsItem* item) override { }
     void Draw(GraphicsScene* scene) {  }
     void Updata(GraphicsItem*) {  }
     GraphicsItem* Search(GraphicsItem* item) {  }
+
+private:
+    void _AutoLayout(MSTL::TreeNode<GraphicsItem *>*root,int x,int y,std::vector<int> &widths,int deep) {
+        if (root == nullptr) {
+            return;
+        }
+        root->_val->SetPos(x,y);
+        if (root->_left) {
+            _AutoLayout(root->_left,x - widths[deep], y + 100*deep,widths,deep+1);
+        }
+        if (root->_right) {
+            _AutoLayout(root->_right,x + widths[deep],y + 100*deep,widths,deep+1);
+        }
+    }
 };
 
 

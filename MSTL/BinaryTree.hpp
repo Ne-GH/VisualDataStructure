@@ -86,6 +86,9 @@ template <typename T>
 TreeNode<T>* RotateLeft (TreeNode<T> *root) {
     auto tmp = root->_right;
     root->_right = tmp->_left;
+    if (tmp->_left) {
+        tmp->_left->_parent = root;
+    }
     tmp->_left = root;
     tmp->_parent = root->_parent;
     root->_parent = tmp;
@@ -98,6 +101,9 @@ template<typename T>
 TreeNode<T> *RotateRight(TreeNode<T>* root) {
     auto tmp = root->_left;
     root->_left = tmp->_right;
+    if (tmp->_right) {
+        tmp->_right->_parent = root;
+    }
     tmp->_right = root;
     tmp->_parent = root->_parent;
     root->_parent = tmp;
@@ -123,20 +129,42 @@ template<typename T>
 TreeNode<T>* insert(TreeNode<T> *parent,TreeNode<T> *root,TreeNode<T> *data) {
     if (root == nullptr) {
         data->_parent = parent;
+//        if (parent) {
+//            parent->_modify_flag = true;
+//        }
         return data;
     }
     // 插入到左子树
     if (GetVal(data) < GetVal(root)) {
         root->_left = insert(root,root->_left,data);
+        root->_height = _GetDeep(root);
+        if (_GetDeep(root->_left) - _GetDeep(root->_right) == 2) {
+            if(GetVal(data) < GetVal(root)) {
+                root = RotateRight(root);
+            }
+            else {
+                root = RotateLeftRight(root);
+            }
+        }
     }
-    // >= 插入到右子树
+        // >= 插入到右子树
     else {
         root->_right = insert(root,root->_right,data);
+        root->_height = _GetDeep(root);
+
+        if (_GetDeep(root->_left) - _GetDeep(root->_right) == -2) {
+            if (GetVal(data) > GetVal(root)) {
+                root = RotateLeft(root);
+            }
+            else {
+                root = RotateRightLeft(root);
+            }
+        }
     }
     return root;
 }
 
-/*******************************************************************************
+    /*******************************************************************************
  * mode 为 是否开启平衡二叉树
 *******************************************************************************/
 template<typename T,bool mode = true>
@@ -190,10 +218,12 @@ public:
         else{
 //            return _Insert(_root,data);
             TreeNode<T> *node = new TreeNode<T>(data);
-            insert(_root->_parent,_root,node);
+            _root = insert(_root->_parent,_root,node);
             return node;
         }
     }
+
+
 
     /*******************************************************************************
      * 从给定的root出发,删除参数2中指定的节点
