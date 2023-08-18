@@ -108,6 +108,12 @@ public:
         return iterator(_arr_address + _data_len);
     }
 
+    T *GetBegin() {
+        return _arr_address;
+    }
+    T *GetEnd() {
+        return _arr_address + _data_len;
+    }
     T operator[] (size_t offset) {
         return _arr_address[offset];
     }

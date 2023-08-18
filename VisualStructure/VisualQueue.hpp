@@ -15,7 +15,7 @@
 #include <array>
 #include <vector>
 
-class VisualStack : public QObject, public VisualStructureBase<MSTL::Queue<GraphicsItem *>>{
+class VisualQueue : public QObject, public VisualStructureBase<MSTL::Queue<GraphicsItem *>>{
 Q_OBJECT
 
 private:
@@ -23,9 +23,9 @@ private:
     int _x = 0;
     int _y = 0;
 public:
-    VisualStack() = default;
-    ~VisualStack() = default;
-    VisualStack(GraphicsScene *scene) : _scene(scene) {
+    VisualQueue() = default;
+    ~VisualQueue() = default;
+    VisualQueue(GraphicsScene *scene) : _scene(scene) {
         int scene_width = _scene->width();
         int scene_height = _scene->height();
 
@@ -50,25 +50,18 @@ public:
         }
         _scene->update();
     }
-    // 删除 TODO
-    void Remove(QGraphicsItem *item) {
-        for (auto it = _val.begin();it != _val.end(); ++it) {
-            if (*it == item) {
-                _val.Delete(it);
-                break;
-            }
-        }
-        _scene->removeItem(item);
-        delete item;
 
-        for (auto p : _val) {
-            auto [x,y] = p->GetPos();
-            std::cout << x << " " << y << std::endl;
-        }
-        std::cout << std::endl;
-        ReMove();
+    /*******************************************************************************
+     * 虚假的删除Delete,真正的删除Remove
+     * Queue仅需删除第一个元素即可,应当忽略此处的参数
+    *******************************************************************************/
+    void Remove(QGraphicsItem *item) {
+        auto remove_item = _val.Pop();
+        _scene->removeItem(remove_item);
+        delete remove_item;
+
+//        ReMove();
     }
-    // 插入 TODO
     void Insert(GraphicsItem* item) {
         QObject::connect(item,&GraphicsItem::LeftSelected,[=,this](auto pitem){
             for (auto it : _val) {
@@ -81,7 +74,7 @@ public:
             Remove(pitem);
         });
         _scene->addItem(item);
-        this->_val.PushBack(item);
+        this->_val.Push(item);
         item->InputVal();
 
     }
@@ -102,16 +95,16 @@ public:
         p->SetVal(val);
         Insert(p);
     }
-    // 删除 TODO
+
     void Delete(GraphicsItem* item) {
-        for (auto it = _val.begin();it != _val.end(); ) {
-            if (*it == item) {
-                it = _val.Delete(it);
-            }
-            else {
-                ++it;
-            }
-        }
+//        for (auto it = _val.begin();it != _val.end(); ) {
+//            if (*it == item) {
+//                it = _val.Delete(it);
+//            }
+//            else {
+//                ++it;
+//            }
+//        }
     }
 
     void Draw(GraphicsScene* scene) {  }

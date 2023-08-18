@@ -14,11 +14,14 @@
 #include "GraphicsItem.h"
 #include "GraphicsView.h"
 #include "VisualArray.hpp"
+#include "VisualStack.hpp"
+#include "VisualQueue.hpp"
 #include "VisualList.hpp"
 #include "VisualTree.hpp"
 #include "VisualSort.h"
 
-#include <memory>
+#include "Stack.hpp"
+#include "Queue.hpp"
 
 void CreateMenuAndConnect(MainWindow *window, Ui::MainWindow *ui){
 
@@ -45,6 +48,8 @@ void CreateMenuAndConnect(MainWindow *window, Ui::MainWindow *ui){
 }
 
     CONNECT_STRUCT("数组",VisualArray);
+    CONNECT_STRUCT("栈",VisualStack);
+    CONNECT_STRUCT("队列",VisualQueue);
     CONNECT_STRUCT("链表",VisualList);
     CONNECT_STRUCT("二叉树",VisualTree);
 

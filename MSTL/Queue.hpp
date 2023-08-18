@@ -5,7 +5,8 @@
 #ifndef MSTL_QUEUE_HPP
 #define MSTL_QUEUE_HPP
 
-#include "List.hpp"
+#include <iostream>
+#include "Array.hpp"
 
 
 namespace MSTL {
@@ -13,11 +14,33 @@ namespace MSTL {
 
 template<typename T>
 class Queue {
-private:
-    MSTL::List<T> _queue;
+    MSTL::Arrary<T> _queue;
+
+    class iterator {
+        T *it;
+    public:
+        iterator(T *p) {
+            it = p;
+        }
+        T &operator *() {
+            return *it;
+        }
+        bool operator != (const iterator & that) {
+            return this->it != that.it;
+        }
+        size_t operator - (const iterator &that) {
+            return it - that.it;
+        }
+        iterator & operator ++ (){
+            ++it;
+            return *this;
+        }
+
+    };
+
 public:
     Queue(){
-        _queue = List<T>();
+        _queue = Arrary<T>();
     }
     ~Queue(){
 
@@ -37,7 +60,6 @@ public:
         return ret;
     }
 
-
     size_t Size(){
         return _queue.Size();
     }
@@ -45,7 +67,15 @@ public:
     void Clear() {
         _queue.Clear();
     }
-
+    iterator begin() {
+        return iterator(_queue.GetBegin());
+    }
+    iterator end() {
+        return iterator(_queue.GetEnd());
+    }
+    T operator[] (size_t offset) {
+        return _queue.GetBegin()[offset];
+    }
 };
 
 }
