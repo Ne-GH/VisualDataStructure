@@ -12,6 +12,8 @@
 AboutDialog::AboutDialog(QWidget *parent) :
         QDialog(parent), ui(new Ui::AboutDialog) {
     ui->setupUi(this);
+
+    setWindowTitle("关于");
     ui->image_label->setScaledContents(true);
     ui->image_label->setPixmap(QPixmap(":/Resource/About.png"));
     ui->image_label->setMaximumSize(80,80);

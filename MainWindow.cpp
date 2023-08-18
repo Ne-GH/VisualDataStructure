@@ -117,6 +117,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
     CreateMenuAndConnect(this,ui);
+    setWindowTitle("VisualStructure");
+    setWindowIcon(QPixmap(":/Resource/About.png"));
 
 
 
