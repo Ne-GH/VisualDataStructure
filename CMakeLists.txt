@@ -28,9 +28,11 @@ add_executable(VisualDataStructure main.cpp
 
         VisualStructure/VisualStructureBase.hpp
         VisualStructure/VisualArray.hpp
-        VisualStructure/VisualSort.h
-        VisualStructure/VisualTree.hpp
+        VisualStructure/VisualStack.hpp
+        VisualStructure/VisualQueue.hpp
         VisualStructure/VisualList.hpp
+        VisualStructure/VisualTree.hpp
+        VisualStructure/VisualSort.h
 
         MSTL/Array.hpp
         MSTL/BinaryTree.hpp
@@ -44,7 +46,7 @@ add_executable(VisualDataStructure main.cpp
         Setting/Setting.h
         Setting/Setting.cpp
 
-        )
+)
 
 target_link_libraries(VisualDataStructure
         Qt::Core
