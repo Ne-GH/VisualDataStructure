@@ -39,25 +39,17 @@ class Queue {
     };
 
 public:
-    Queue(){
-        _queue = Arrary<T>();
-    }
-    ~Queue(){
-
-    }
 
     void Push(T val) {
         _queue.PushBack(val);
     }
 
-    T& Front() {
+    T Front() {
         return *_queue.begin();
     }
 
     T Pop(){
-        T ret = Front();
-        _queue.Delete(0);
-        return ret;
+        return _queue.FrontBack();
     }
 
     size_t Size(){

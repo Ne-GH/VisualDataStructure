@@ -83,6 +83,19 @@ public:
         ReallocDown();
         return pop_val;
     }
+    T FrontBack() {
+        if (_data_len == 0) {
+            std::cerr << "队列为空,不能进行出队" << std::endl;
+            exit(-1);
+        }
+        T front_val = _arr_address[0];
+        for (int i = 0;i < _data_len-1; ++i) {
+            _arr_address[i] = _arr_address[i+1];
+        }
+        _data_len --;
+        ReallocDown();
+        return front_val;
+    }
     iterator Delete(iterator del_addr) {
         size_t offset = del_addr - iterator(_arr_address);
         while (offset+1 < _data_len) {
@@ -97,6 +110,20 @@ public:
         else {
             return iterator(_arr_address + offset);
         }
+    }
+    /*******************************************************************************
+     * 按照下标进行删除
+    *******************************************************************************/
+    void Delete(size_t pos) {
+        if (pos < 0 || pos >= _data_len) {
+            std::cerr << "bad pos" << std::endl;
+        }
+        for (int i = pos;i < _data_len-1; ++i) {
+            _arr_address[pos] = _arr_address[pos+1];
+        }
+        _data_len --;
+        ReallocDownSize();
+        return;
     }
     size_t Size() {
         return _data_len;
