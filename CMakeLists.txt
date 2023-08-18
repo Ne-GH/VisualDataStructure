@@ -16,7 +16,7 @@ find_package(Qt6 COMPONENTS
 
 
 
-INCLUDE_DIRECTORIES(Graphics VisualStructure MSTL Setting)
+INCLUDE_DIRECTORIES(Graphics VisualStructure MSTL Setting AboutDialog)
 
 add_executable(VisualDataStructure main.cpp
         MainWindow.cpp MainWindow.h
@@ -46,6 +46,11 @@ add_executable(VisualDataStructure main.cpp
         Setting/Setting.h
         Setting/Setting.cpp
 
+        AboutDialog/AboutDialog.cpp
+        AboutDialog/AboutDialog.h
+        AboutDialog/AboutDialog.ui
+        Resource.qrc
+
 )
 
 target_link_libraries(VisualDataStructure
@@ -55,7 +60,7 @@ target_link_libraries(VisualDataStructure
         Qt::Charts
         )
 
-set(VERSION "0.2")
+set(VERSION "1.0")
 add_compile_definitions(VERSION="${VERSION}")
 
 #set(CMAKE_BUILD_TYPE "Release")

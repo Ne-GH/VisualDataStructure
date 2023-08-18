@@ -6,6 +6,7 @@
 #include <QThread>
 #include <QPushButton>
 #include <algorithm>
+#include <QLabel>
 #include <QtCharts/QChart>
 #include "MainWindow.h"
 #include "ui_MainWindow.h"
@@ -13,6 +14,7 @@
 #include "GraphicsScene.h"
 #include "GraphicsItem.h"
 #include "GraphicsView.h"
+
 #include "VisualArray.hpp"
 #include "VisualStack.hpp"
 #include "VisualQueue.hpp"
@@ -20,8 +22,7 @@
 #include "VisualTree.hpp"
 #include "VisualSort.h"
 
-#include "Stack.hpp"
-#include "Queue.hpp"
+#include "AboutDialog.h"
 
 void CreateMenuAndConnect(MainWindow *window, Ui::MainWindow *ui){
 
@@ -99,6 +100,15 @@ void CreateMenuAndConnect(MainWindow *window, Ui::MainWindow *ui){
         setting_dialog.LoadSettingFile();
         setting_dialog.exec();
     });
+
+
+    auto about_action = new QAction("关于");
+    ui->menu_bar->addAction(about_action);
+    QObject::connect(about_action,&QAction::triggered,[=]{
+       AboutDialog about_dialog = AboutDialog();
+       about_dialog.exec();
+    });
+
 
 }
 MainWindow::MainWindow(QWidget *parent) :
