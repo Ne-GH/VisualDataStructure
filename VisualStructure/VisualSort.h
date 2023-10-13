@@ -25,7 +25,8 @@
 #include <QtCharts/QChartView>
 #include <QtCharts/QBarSeries>
 #include <QBarCategoryAxis>
-#include "Sort.hpp"
+//#include "Sort.cppm"
+import Sort;
 
 #define CMP \
     [this](auto val1,auto val2) { \

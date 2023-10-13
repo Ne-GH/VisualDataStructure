@@ -16,7 +16,7 @@
 import Array;
 
 
-class VisualArray : public QObject, public VisualStructureBase<MSTL::Arrary<GraphicsItem *>>{
+class VisualArray : public QObject, public VisualStructureBase<MSTL::Array<GraphicsItem *>>{
     Q_OBJECT
 
 private:

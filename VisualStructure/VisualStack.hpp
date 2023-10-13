@@ -4,14 +4,13 @@
 *******************************************************************************/
 
 
-#ifndef VISUALSTACK_HPP
-#define VISUALSTACK_HPP
 
+import Stack;
 #include "VisualStructureBase.hpp"
 #include "GraphicsItem.h"
 #include "GraphicsScene.h"
 
-#include "Stack.hpp"
+//#include "Stack.cppm"
 #include <array>
 #include <vector>
 
@@ -118,4 +117,3 @@ public:
 };
 
 
-#endif  // VISUALSTACK_H

@@ -4,10 +4,12 @@
 *******************************************************************************/
 
 
-#ifndef MSTL_SORT_HPP
-#define MSTL_SORT_HPP
+module;
+#include <algorithm>
+#include <vector>
+export module Sort;
 
-namespace MSTL {
+export namespace MSTL {
 template <typename RandomIt, typename Compare>
 void BubbleSort(RandomIt first, RandomIt last, Compare comp) {
     for (auto it = first; it != last; ++it) {
@@ -57,6 +59,22 @@ void QuickSort(RandomIt first, RandomIt last, Compare comp) {
         QuickSort(middle2, last, comp);
     }
 }
+
+
+template <typename RandomIt, typename Compare>
+void MergeSort(RandomIt first, RandomIt last, Compare comp) {
+    auto size = std::distance(first, last);
+    if (size < 2) {
+        return;
+    }
+
+    auto middle = std::next(first, size / 2);
+    MergeSort(first, middle, comp);
+    MergeSort(middle, last, comp);
+    merge(first, middle, last, comp);
+}
+
+}   // MSTL
 template <typename RandomIt, typename Compare>
 static void merge(RandomIt first, RandomIt middle, RandomIt last, Compare comp) {
     std::vector<typename RandomIt::value_type> buffer;
@@ -80,21 +98,3 @@ static void merge(RandomIt first, RandomIt middle, RandomIt last, Compare comp) 
 
     std::move(buffer.begin(), buffer.end(), first);
 }
-
-template <typename RandomIt, typename Compare>
-void MergeSort(RandomIt first, RandomIt last, Compare comp) {
-    auto size = std::distance(first, last);
-    if (size < 2) {
-        return;
-    }
-
-    auto middle = std::next(first, size / 2);
-    MergeSort(first, middle, comp);
-    MergeSort(middle, last, comp);
-    merge(first, middle, last, comp);
-}
-
-}   // MSTL
-
-
-#endif  // MSTL_Sort_H_

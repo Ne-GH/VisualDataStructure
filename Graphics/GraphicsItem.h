@@ -5,6 +5,7 @@
 
 #ifndef GRAPHICSITEM_H
 #define GRAPHICSITEM_H
+
 #include "Setting.h"
 
 #include <vector>
