@@ -11,7 +11,7 @@ export module Array;
 
 export namespace MSTL{
 template<typename T>
-class Arrary{
+class Array{
 private:
 
     class iterator {
@@ -68,10 +68,10 @@ private:
 
 public:
 
-    Arrary(){
+    Array(){
         _arr_address = (T *)::malloc(_memory_size*sizeof(T));
     }
-    ~Arrary(){
+    ~Array(){
         ::free(_arr_address);
     }
 
