@@ -1,10 +1,9 @@
 
-#ifndef MSTL_LIST_HPP
-#define MSTL_LIST_HPP
-
+module ;
 #include <iostream>
+export module List;
 
-namespace MSTL {
+export namespace MSTL {
 template<typename T>
 class List{
 private:
@@ -148,4 +147,3 @@ public:
 };
 
 }
-#endif

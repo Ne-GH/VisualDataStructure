@@ -39,6 +39,8 @@ target_sources(VisualModules
         MSTL/Stack.cppm
         MSTL/Sort.cppm
         MSTL/Queue.cppm
+        MSTL/Find.cppm
+        MSTL/List.cppm
 )
 
 
@@ -58,8 +60,6 @@ add_executable(VisualDataStructure main.cpp
         VisualStructure/VisualTree.hpp
         VisualStructure/VisualSort.h
 
-        MSTL/Find.hpp
-        MSTL/List.hpp
         MSTL/Map.hpp
         MSTL/BinaryTree.hpp
 
