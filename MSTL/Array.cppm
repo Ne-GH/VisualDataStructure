@@ -4,10 +4,12 @@
 *******************************************************************************/
 
 
-#ifndef MSTL_ARRAY_HPP
-#define MSTL_ARRAY_HPP
+module ;
+#include <iostream>
+export module Array;
 
-namespace MSTL{
+
+export namespace MSTL{
 template<typename T>
 class Arrary{
 private:
@@ -149,5 +151,3 @@ public:
 
 }   // namespace MSTL
 
-
-#endif

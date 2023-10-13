@@ -6,8 +6,8 @@
 #define MSTL_QUEUE_HPP
 
 #include <iostream>
-#include "Array.hpp"
-
+//#include "Array.cppm"
+import Array;
 
 namespace MSTL {
 

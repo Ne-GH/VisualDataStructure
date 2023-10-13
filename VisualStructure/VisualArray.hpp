@@ -10,11 +10,10 @@
 #include "GraphicsItem.h"
 #include "GraphicsScene.h"
 
-#include "Array.hpp"
 #include <array>
 #include <vector>
 
-
+import Array;
 
 
 class VisualArray : public QObject, public VisualStructureBase<MSTL::Arrary<GraphicsItem *>>{
