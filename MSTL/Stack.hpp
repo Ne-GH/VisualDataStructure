@@ -3,20 +3,20 @@
 *    Create By yongheng
 */
 
+#ifndef MSTL_STACK_HPP
+#define MSTL_STACK_HPP
 
-module;
-import Array;
 #include <iostream>
-export module Stack;
 //#include "Array.cppm"
 
+import Array;
 
-export namespace MSTL {
+namespace MSTL {
 
 template<typename T>
 class Stack{
 private:
-    Array<T> _stack;
+    Arrary<T> _stack;
     class iterator {
         T *it;
     public:
@@ -64,3 +64,4 @@ public:
 };
 
 }
+#endif

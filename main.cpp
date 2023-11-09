@@ -1,6 +1,9 @@
 #include "MainWindow.h"
 #include <QApplication>
 
+#include "MSTL/BinaryTree.hpp"
+
+
 int main(int argc, char *argv[]) {
 
 

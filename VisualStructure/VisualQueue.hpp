@@ -11,10 +11,8 @@
 #include "GraphicsItem.h"
 #include "GraphicsScene.h"
 
-//#include "Stack.cppm"
-//#include "Queue.cppm"
-import Stack;
-import Queue;
+#include "Stack.hpp"
+#include "Queue.hpp"
 #include <array>
 #include <vector>
 

@@ -31,17 +31,6 @@ find_package(Qt6 COMPONENTS
 INCLUDE_DIRECTORIES(Graphics VisualStructure MSTL Setting AboutDialog)
 
 
-add_library(VisualModules)
-target_sources(VisualModules
-        PUBLIC
-        FILE_SET cxx_modules TYPE CXX_MODULES FILES
-        MSTL/Array.cppm
-        MSTL/Stack.cppm
-        MSTL/Sort.cppm
-        MSTL/Queue.cppm
-)
-
-
 add_executable(VisualDataStructure main.cpp
         MainWindow.cpp MainWindow.h
 
@@ -58,10 +47,13 @@ add_executable(VisualDataStructure main.cpp
         VisualStructure/VisualTree.hpp
         VisualStructure/VisualSort.h
 
+        MSTL/BinaryTree.hpp
         MSTL/Find.hpp
         MSTL/List.hpp
         MSTL/Map.hpp
-        MSTL/BinaryTree.hpp
+        MSTL/Queue.hpp
+        MSTL/Stack.hpp
+        MSTL/Sort.hpp
 
         Setting/Setting.h
         Setting/Setting.cpp
@@ -71,6 +63,14 @@ add_executable(VisualDataStructure main.cpp
         AboutDialog/AboutDialog.ui
         Resource.qrc
 )
+add_library(VisualModules)
+target_sources(VisualModules
+        PUBLIC
+        FILE_SET cxx_modules TYPE CXX_MODULES FILES
+        MSTL/Array.cppm
+)
+
+
 #target_link_libraries(VisualStructure Hello stdc++)
 target_link_libraries(VisualDataStructure
         Qt::Core

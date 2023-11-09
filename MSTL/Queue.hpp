@@ -2,20 +2,19 @@
  * Auther : yongheng
  * Date : 2022/10/18 12:45
 *********************************************************************/
+#ifndef MSTL_QUEUE_HPP
+#define MSTL_QUEUE_HPP
 
-module;
-#include "iostream"
-export module Queue;
-
-import Array;
+#include <iostream>
 //#include "Array.cppm"
+import Array;
 
-export namespace MSTL {
+namespace MSTL {
 
 
 template<typename T>
 class Queue {
-    MSTL::Array<T> _queue;
+    MSTL::Arrary<T> _queue;
 
     class iterator {
         T *it;
@@ -72,3 +71,4 @@ public:
 };
 
 }
+#endif
