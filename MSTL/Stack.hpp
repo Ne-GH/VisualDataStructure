@@ -7,9 +7,7 @@
 #define MSTL_STACK_HPP
 
 #include <iostream>
-//#include "Array.cppm"
-
-import Array;
+#include "Array.hpp"
 
 namespace MSTL {
 
