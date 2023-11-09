@@ -27,114 +27,68 @@
 #include <QBarCategoryAxis>
 #include "Sort.hpp"
 
-#define CMP \
-    [this](auto val1,auto val2) { \
-        while(_pause);    \
-        emit UPUI();\
-        std::this_thread::sleep_for(std::chrono::milliseconds(_sleep_time * (100-_speed) / 100));\
-        if (val1 < val2)\
-            return true;\
-        else\
-            return false;\
-    }
-#define SORT_FUNC_BASE(func) \
-    while(!_start);              \
-    func(vec.begin(),vec.end(),CMP); \
-    emit UPUI();\
-    thread()->quit();
-class VisualSort : public QObject {
-    Q_OBJECT
+struct SortWindow {
 
-signals:
-    void UPUI();
-private:
-    std::vector<int >vec;
-    int _sleep_time = 20;
-    QBarSet *_set = nullptr;
-    QBarSeries *_series = nullptr;
-    QChart *_chart = nullptr;
-    QBarCategoryAxis *_axisX = nullptr;
-    QValueAxis *_axisY = nullptr;
-    QChartView *_chartView = nullptr;
-    // 10 * 50 / 100
-    // 10 * 100 / 100;
+    friend class VisualSort;
+    QWidget *window = nullptr;
+    QGridLayout *layout = nullptr;
 
-    bool _start = false;
-    bool _pause = false;
-    bool _stop = false;
-    int _speed = 50;
+    QBarSet *set = nullptr;
+    QBarSeries *series = nullptr;
+    QChart *chart = nullptr;
+    QBarCategoryAxis *axisX = nullptr;
+    QValueAxis *axisY = nullptr;
+    QChartView *chart_view = nullptr;
 
-public:
+    std::vector<int> random_arr;
 
-    VisualSort() {
-        GetRandomVector(100);
-    }
+    int speed = 0;
+    bool start = false;
+    bool pause = false;
+    bool stop = false;
+    int sleep_time = 20;
 
-    void BubbleSort() {
-        SORT_FUNC_BASE(MSTL::BubbleSort);
-    }
-    void StdSort() {
-        SORT_FUNC_BASE(std::sort);
-    }
-    void SelectionSort() {
-        SORT_FUNC_BASE(MSTL::SelectionSort);
-    }
-    void InsertionSort() {
-        SORT_FUNC_BASE(MSTL::InsertionSort);
-    }
-    void QuickSort() {
-        SORT_FUNC_BASE(MSTL::QuickSort);
-    }
-    void MergeSort() {
-        SORT_FUNC_BASE(MSTL::MergeSort);
-    }
-    void GetRandomVector(size_t size) {
-        vec.resize(size);
-        std::default_random_engine rand_engine;
-        for (auto &p : vec) {
+    SortWindow() {
+        layout = new QGridLayout();
+        window = new QWidget();
+        window->setLayout(layout);
+
+        set = new QBarSet("");
+        series = new QBarSeries();
+        chart = new QChart();
+        axisX = new QBarCategoryAxis();
+        axisY = new QValueAxis();
+        chart_view = new QChartView(chart);
+        QStringList categories;
+        series->append(set);
+        chart->addSeries(series);
+        chart->setTitle("");
+//        _chart->setAnimationOptions(QChart::SeriesAnimations);
+        chart->setAnimationOptions(QChart::NoAnimation);
+
+        random_arr.resize(100);
+        std::default_random_engine rand_engine{};
+        for (auto &p : random_arr) {
             p = rand_engine() % 100;
         }
-    }
-    auto GetRandomVector() {
-        return vec;
-    }
-    QBarSet *GetBarSet() {
-        return _set;
-    }
 
-
-
-
-    void CreateSortLayout(QGridLayout *layout) {
-        _set = new QBarSet("");
-        _series = new QBarSeries();
-        _chart = new QChart();
-        _axisX = new QBarCategoryAxis();
-        _axisY = new QValueAxis();
-        _chartView = new QChartView(_chart);
-        QStringList categories;
-        _series->append(_set);
-        _chart->addSeries(_series);
-        _chart->setTitle("");
-//        _chart->setAnimationOptions(QChart::SeriesAnimations);
-        _chart->setAnimationOptions(QChart::NoAnimation);
-        for (int i = 0;i < GetRandomVector().size(); ++i) {
+        for (int i = 0;i < random_arr.size(); ++i) {
             categories << std::to_string(i).c_str();
         }
-        _axisX->append(categories);
-        _axisX->setVisible(false);
-        _axisY->setVisible(false);
-        _chart->addAxis(_axisX, Qt::AlignBottom);
-        _series->attachAxis(_axisX);
-        _axisY->setRange(0,100);
-        _chart->addAxis(_axisY, Qt::AlignLeft);
-        _series->attachAxis(_axisY);
-        _chart->legend()->setVisible(false);
-        _chart->legend()->setAlignment(Qt::AlignBottom);
-        _chartView->setRenderHint(QPainter::Antialiasing);
 
-        layout->addWidget(_chartView,0,0,10,10);
+        axisX->append(categories);
+        axisX->setVisible(false);
+        axisY->setVisible(false);
+        chart->addAxis(axisX, Qt::AlignBottom);
+        series->attachAxis(axisX);
+        axisY->setRange(0,100);
+        chart->addAxis(axisY, Qt::AlignLeft);
+        series->attachAxis(axisY);
+        chart->legend()->setVisible(false);
+        chart->legend()->setAlignment(Qt::AlignBottom);
+        chart_view->setRenderHint(QPainter::Antialiasing);
 
+        layout->addWidget(chart_view,0,0,10,10);
 
         QSlider *slider = new QSlider(Qt::Horizontal);
         slider->setValue(50);
@@ -147,24 +101,26 @@ public:
         layout->addWidget(stop_but, 10, 5, 1, 1);
         layout->addWidget(slider, 10, 7, 1, 2);
 
+
+
         slider->setTickInterval(true);
         slider->setMaximum(100);
         QObject::connect(slider,&QSlider::valueChanged,[=]{
-            _speed = slider->value();
+            speed = slider->value();
         });
 
         QObject::connect(start_but,&QPushButton::clicked,[=]{
-            if (_start == false) {
-                _start = true;
+            if (start == false) {
+                start = true;
             }
         });
         QObject::connect(pause_but,&QPushButton::clicked,[=]{
-            if (_pause == false) {
-                _pause = true;
+            if (pause == false) {
+                pause = true;
                 pause_but->setText("继续");
             }
             else {
-                _pause = false;
+                pause = false;
                 pause_but->setText("暂停");
             }
         });
@@ -173,20 +129,68 @@ public:
         });
 
 
-
     }
+};
+
+
+class VisualSort : public QObject {
+Q_OBJECT
+
+signals:
+    void UPUI();
+private:
+    SortWindow *sort_window = nullptr;
+public:
+
+    VisualSort(SortWindow *window) {
+        sort_window = window;
+    }
+
+    void BubbleSort() {
+        while (!sort_window->start) {
+            std::this_thread::sleep_for(std::chrono::milliseconds(5));
+        }
+        MSTL::BubbleSort(sort_window->random_arr.begin(),sort_window->random_arr.end(),[&](const auto &val1,const auto &val2) {
+            while (sort_window->pause) {
+                std::this_thread::sleep_for(std::chrono::milliseconds(5));
+            }
+            emit UPUI();
+            std::this_thread::sleep_for(std::chrono::milliseconds(sort_window->sleep_time * (100 - sort_window->speed) / 100));
+            if (val1 < val2)
+                return true;
+            else
+                return false;
+        });
+        emit UPUI();
+        thread()->quit();
+    }
+
+//    void StdSort() {
+//        SORT_FUNC_BASE(std::sort);
+//    }
+//    void SelectionSort() {
+//        SORT_FUNC_BASE(MSTL::SelectionSort);
+//    }
+//    void InsertionSort() {
+//        SORT_FUNC_BASE(MSTL::InsertionSort);
+//    }
+//    void QuickSort() {
+//        SORT_FUNC_BASE(MSTL::QuickSort);
+//    }
+//    void MergeSort() {
+//        SORT_FUNC_BASE(MSTL::MergeSort);
+//    }
+
+
     void UpUI() {
-        auto vec = this->GetRandomVector();
-        auto set = this->GetBarSet();
-        set->remove(0,vec.size());
+        auto vec = sort_window->random_arr;
+        sort_window->set->remove(0,vec.size());
         for (auto num : vec) {
-            *set << num;
+            *sort_window->set << num;
         }
     }
 };
 
-#undef CMP
-#undef SORT_FUNC_BASE
 
 
 
