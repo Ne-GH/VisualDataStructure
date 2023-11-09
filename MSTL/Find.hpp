@@ -2,12 +2,12 @@
  * Auther : yongheng
  * Date : 2022/11/12 03:54
 *********************************************************************/
-module ;
+#ifndef MSTL_FIND_HPP
+#define MSTL_FIND_HPP
+
 #include <vector>
-export module Find;
 
-
-export namespace MSTL{
+namespace MSTL{
 
 template <typename T>
 class Find{
@@ -30,3 +30,6 @@ std::vector<T> Find<T>::QueueFind_All(const T &val) {
 }
 
 }
+
+
+#endif
