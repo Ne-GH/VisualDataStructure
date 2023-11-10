@@ -40,6 +40,8 @@ struct SortWindow {
     QValueAxis *axisY = nullptr;
     QChartView *chart_view = nullptr;
 
+    QThread *sort_thread = nullptr;
+
     std::vector<int> random_arr;
 
     int speed = 0;
@@ -49,6 +51,8 @@ struct SortWindow {
     int sleep_time = 20;
 
     SortWindow() {
+        sort_thread = new QThread();
+
         layout = new QGridLayout();
         window = new QWidget();
         window->setLayout(layout);
@@ -150,7 +154,7 @@ public:
         while (!sort_window->start) {
             std::this_thread::sleep_for(std::chrono::milliseconds(5));
         }
-        MSTL::BubbleSort(sort_window->random_arr.begin(),sort_window->random_arr.end(),[&](const auto &val1,const auto &val2) {
+        MSTL::BubbleSort(sort_window->random_arr.begin(),sort_window->random_arr.end(),[=](const auto val1,const auto val2) {
             while (sort_window->pause) {
                 std::this_thread::sleep_for(std::chrono::milliseconds(5));
             }

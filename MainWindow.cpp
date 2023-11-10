@@ -99,22 +99,24 @@ void CreateMenuAndConnect(MainWindow *window, Ui::MainWindow *ui){
 struct StructWindow {
     QWidget *window = nullptr;
     GraphicsView *view;
+    QGridLayout *layout;
 
     StructWindow() {
         window = new QWidget(nullptr);
-        view = new GraphicsView(window);
+        view = new GraphicsView(nullptr);
+        layout = new QGridLayout(nullptr);
+        window->setLayout(layout);
+        layout->addWidget(view);
+
+        view->setAlignment(Qt::AlignCenter);
+//        window->show();
+//        auto but = new QPushButton(window);
     }
 };
 
 
 
-void ConfigStructWindow(QWidget *window) {
 
-}
-
-void ConfigSortWindow(QWidget *widow) {
-
-}
 
 MainWindow::MainWindow(QWidget *parent) :
         QMainWindow(parent), ui(new Ui::MainWindow){
@@ -127,25 +129,18 @@ MainWindow::MainWindow(QWidget *parent) :
 
 
 
-    struct_view = new GraphicsView(this);
-    struct_view->setScene(nullptr);
-    struct_view->setAlignment(Qt::AlignCenter);
-    struct_view->setParent(nullptr);
-
-    sort_layout = new QGridLayout();
-    // GetSortLayout(sort_layout);
-
+    StructWindow *struct_window = new StructWindow();
 
     auto struct_menu = new QMenu("数据结构");
     ui->menu_bar->addMenu(struct_menu);
 
     auto arr_action = new QAction("数组");
     struct_menu->addAction(arr_action);
-    QObject::connect(arr_action,&QAction::triggered,[=, this] {
-        ui->layout->addWidget(struct_view);
-
+    QObject::connect(arr_action,&QAction::triggered,[=] {
+        centralWidget()->setParent(nullptr);
+        setCentralWidget(struct_window->window);
         auto scene = new GraphicsScene();
-        struct_view->setScene(scene);
+        struct_window->view->setScene(scene);
         auto visual_arr = new VisualArray(scene);
         QObject::connect(scene,&GraphicsScene::MenuAdd,[=]{
             visual_arr->Insert(0);
@@ -159,9 +154,9 @@ MainWindow::MainWindow(QWidget *parent) :
     auto list_action = new QAction("链表");
     struct_menu->addAction(list_action);
     QObject::connect(list_action,&QAction::triggered,[=] {
-        ui->layout->addWidget(struct_view);
+        setCentralWidget(struct_window->window);
         auto scene = new GraphicsScene();
-        struct_view->setScene(scene);
+        struct_window->view->setScene(scene);
         auto visual_list = new VisualList(scene);
         QObject::connect(scene,&GraphicsScene::MenuAdd,[=]{
             visual_list->Insert(0);
@@ -170,24 +165,24 @@ MainWindow::MainWindow(QWidget *parent) :
             visual_list->Remove(item);
         });
     });
-
-    auto binary_tree_action = new QAction("二叉树");
-
-
-    struct_menu->addAction(binary_tree_action);
-    QObject::connect(binary_tree_action,&QAction::triggered,[=] {
-        ui->layout->addWidget(struct_view);
-        auto scene = new GraphicsScene();
-        struct_view->setScene(scene);
-        auto visual_tree = new VisualTree(scene);
-        QObject::connect(scene,&GraphicsScene::MenuAdd,[=]{
-            visual_tree->Insert(0);
-        });
-        QObject::connect(scene,&GraphicsScene::MenuDel,[=](QGraphicsItem *item) {
-            visual_tree->Remove(item);
-        });
-    });
-
+//
+//    auto binary_tree_action = new QAction("二叉树");
+//
+//
+//    struct_menu->addAction(binary_tree_action);
+//    QObject::connect(binary_tree_action,&QAction::triggered,[=] {
+//        ui->layout->addWidget(struct_view);
+//        auto scene = new GraphicsScene();
+//        struct_view->setScene(scene);
+//        auto visual_tree = new VisualTree(scene);
+//        QObject::connect(scene,&GraphicsScene::MenuAdd,[=]{
+//            visual_tree->Insert(0);
+//        });
+//        QObject::connect(scene,&GraphicsScene::MenuDel,[=](QGraphicsItem *item) {
+//            visual_tree->Remove(item);
+//        });
+//    });
+//
     //    CONNECT_STRUCT("数组",VisualArray);
     //    CONNECT_STRUCT("栈",VisualStack);
     //    CONNECT_STRUCT("队列",VisualQueue);
@@ -202,13 +197,13 @@ MainWindow::MainWindow(QWidget *parent) :
     auto bubble_sort = new QAction("冒泡排序");
     sort_menu->addAction(bubble_sort);
     QObject::connect(bubble_sort,&QAction::triggered,[=]{
+        centralWidget()->setParent(nullptr);
         setCentralWidget(sort_window->window);
         auto visual_sort = new VisualSort(sort_window);
-        auto sort_thread = new QThread();
 ////
-        visual_sort->moveToThread(sort_thread);
-        QObject::connect(sort_thread,&QThread::started,visual_sort,&VisualSort::BubbleSort);
-        sort_thread->start();
+        visual_sort->moveToThread(sort_window->sort_thread);
+        QObject::connect(sort_window->sort_thread,&QThread::started,visual_sort,&VisualSort::BubbleSort);
+        sort_window->sort_thread->start();
         QObject::connect(visual_sort,&VisualSort::UPUI,[=] mutable {
             visual_sort->UpUI();
         });

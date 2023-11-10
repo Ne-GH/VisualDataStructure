@@ -22,11 +22,7 @@ Q_OBJECT
 
     Ui::MainWindow *ui = nullptr;
 
-    QWidget *struct_window = nullptr;
-    QWidget *sort_window = nullptr;
 
-    QGridLayout *sort_layout = nullptr;
-    GraphicsView *struct_view = nullptr;
 public:
     MainWindow(QWidget *prent = nullptr);
     ~MainWindow() = default;
