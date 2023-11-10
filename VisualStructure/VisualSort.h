@@ -4,8 +4,7 @@
 *******************************************************************************/
 //
 
-#ifndef VISUAL_SORT_HPP
-#define VISUAL_SORT_HPP
+#pragma once
 
 #include <vector>
 #include <random>
@@ -194,8 +193,3 @@ public:
         }
     }
 };
-
-
-
-
-#endif
