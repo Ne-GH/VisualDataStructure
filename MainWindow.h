@@ -26,6 +26,7 @@ Q_OBJECT
 public:
     MainWindow(QWidget *prent = nullptr);
     ~MainWindow() = default;
+    void BarMessage(std::string &&);
 };
 
 
