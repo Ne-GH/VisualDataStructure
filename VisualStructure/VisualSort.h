@@ -26,11 +26,114 @@
 #include <QBarCategoryAxis>
 #include "Sort.hpp"
 
+enum class SortType {
+    NONE,
+    BUBBLE_SORT,
+    SELECTION_SORT,
+    INSERTION_SORT,
+    QUICK_SORT,
+    MERGE_SORT,
+    STD_SORT
+};
+
+class SortThread : public QThread {
+
+    Q_OBJECT
+
+    bool running = false;
+    bool pause = false;
+
+    std::vector<unsigned >::iterator begin ,end;
+    int sleep_time = 10;
+public:
+    SortType sort_type = SortType::NONE;
+    int speed = 50;
+    void SetSortType(SortType type) {
+        sort_type = type;
+    }
+    void SetArr(std::vector<unsigned >::iterator arg_beg ,std::vector<unsigned >::iterator arg_end) {
+        begin = arg_beg;
+        end = arg_end;
+    }
+    template <void (*sort_func)(std::vector<unsigned >::iterator,std::vector<unsigned >::iterator,std::function<bool (const unsigned ,const unsigned )>)>
+    void Sort() {
+        sort_func(begin,end,[=](const auto val1,const auto val2) {
+            if (!running) {
+                quit();
+            }
+            while (pause) {
+                std::this_thread::sleep_for(std::chrono::milliseconds(1));
+            }
+            emit UPUI();
+            std::this_thread::sleep_for(std::chrono::milliseconds(sleep_time * (100 - speed) / 100));
+            if (val1 < val2)
+                return true;
+            else
+                return false;
+        });
+        emit UPUI();
+        emit Finish();
+
+    }
+
+
+    void run() override {
+        running = true;
+
+        switch (sort_type) {
+            case SortType::NONE:
+                break;
+            case SortType::STD_SORT: {
+                Sort<std::sort>();
+                break;
+            }
+            case SortType::BUBBLE_SORT: {
+                Sort<MSTL::BubbleSort>();
+                break;
+            }
+            case SortType::SELECTION_SORT: {
+                Sort<MSTL::SelectionSort>();
+                break;
+            }
+            case SortType::QUICK_SORT: {
+                Sort<MSTL::QuickSort>();
+                break;
+            }
+            case SortType::INSERTION_SORT: {
+                Sort<MSTL::InsertionSort>();
+                break;
+            }
+            case SortType::MERGE_SORT: {
+                Sort<MSTL::MergeSort>();
+                break;
+            }
+            default:
+                break;
+        }
+
+    }
+    void Pause() {
+        pause = true;
+    }
+    void Continue() {
+        pause = false;
+    }
+    void Stop() {
+        Pause();
+        running = false;
+        quit();
+    }
+
+signals:
+    void UPUI();
+    void Finish();
+
+};
+
 struct SortWindow : public QObject{
     Q_OBJECT
 
 public:
-    friend class VisualSort;
     QWidget *window = nullptr;
     QGridLayout *layout = nullptr;
 
@@ -41,29 +144,83 @@ public:
     QValueAxis *axisY = nullptr;
     QChartView *chart_view = nullptr;
 
-    QThread *sort_thread = nullptr;
-    std::default_random_engine rand_engine;
-    std::vector<int> random_arr;
+    QPushButton *start_pause_button = nullptr;
+    QPushButton *stop_button = nullptr;
+    QSlider *slider = nullptr;
+
+    SortThread *sort_thread;
+    std::vector<unsigned> random_arr;
+
 
     int speed = 0;
     bool start = false;
     bool pause = false;
+    bool stop = false;
     int sleep_time = 20;
 
-    void ReSetRandomNumbers() {
-        for (auto &p : random_arr) {
-            p = rand_engine() % 100;
+    void SetSortType(SortType type) {
+        sort_thread->Stop();
+        sort_thread->SetSortType(type);
+    }
+
+    void Start() {
+        if (start == false) {
+            start = true;
+            Continue();
+            std::cout << static_cast<int>(sort_thread->sort_type) << std::endl;
+
+            sort_thread->SetArr(random_arr.begin(),random_arr.end());
+            sort_thread->start();
+        }
+    }
+
+    void Continue() {
+        if (pause == true) {
+            pause = false;
+            start_pause_button->setText("暂停");
+            emit ContinueSig();
+            sort_thread->Continue();
         }
 
+    }
+    void Pause() {
+        if (pause == false) {
+            pause = true;
+            start_pause_button->setText("继续");
+            emit PauseSig();
+            sort_thread->Pause();
+        }
+    }
+    void Stop() {
+        sort_thread->Stop();
+        emit StopSig();
+        start = false;
+        pause = true;
+        start_pause_button->setText("开始");
+    }
+
+    unsigned GetRandomNumber() {
+        static std::random_device dev;
+        static std::default_random_engine engine(dev());
+        static std::uniform_int_distribution<unsigned > uniform_dist(1,100);
+        return uniform_dist(engine);
+    }
+
+    void UPUI() {
         set->remove(0,random_arr.size());
         for (auto num : random_arr) {
             *set << num;
         }
     }
 
-    SortWindow() {
-        sort_thread = new QThread();
+    void ReSetRandomNumbers() {
+        for (auto &p : random_arr) {
+            p = GetRandomNumber();
+        }
 
+        UPUI();
+    }
+    void ConfigUI() {
         layout = new QGridLayout();
         window = new QWidget();
         window->setLayout(layout);
@@ -82,12 +239,9 @@ public:
         chart->setAnimationOptions(QChart::NoAnimation);
 
         random_arr.resize(100);
-
         for (int i = 0;i < random_arr.size(); ++i) {
             categories << std::to_string(i).c_str();
         }
-//        ReSetRandomNumbers();
-
         axisX->append(categories);
         axisX->setVisible(false);
         axisY->setVisible(false);
@@ -102,133 +256,63 @@ public:
 
         layout->addWidget(chart_view,0,0,10,10);
 
-        QSlider *slider = new QSlider(Qt::Horizontal);
+        slider = new QSlider(Qt::Horizontal);
         slider->setValue(40);
-        auto start_pause_but = new QPushButton("开始");
-        auto stop_but = new QPushButton("停止");
+        start_pause_button = new QPushButton("开始");
+        stop_button = new QPushButton("停止");
 
-        layout->addWidget(start_pause_but, 10, 1, 1, 1);
-        layout->addWidget(stop_but, 10, 5, 1, 1);
+        layout->addWidget(start_pause_button, 10, 1, 1, 1);
+        layout->addWidget(stop_button, 10, 5, 1, 1);
         layout->addWidget(slider, 10, 7, 1, 2);
-
-
 
         slider->setTickInterval(true);
         slider->setMaximum(80);
-        QObject::connect(slider,&QSlider::valueChanged,[=]{
-            speed = slider->value();
+
+    }
+
+
+    SortWindow() {
+        ConfigUI();
+
+        sort_thread = new SortThread();
+        QObject::connect(sort_thread,&SortThread::UPUI,[=]{
+            UPUI();
+        });
+        QObject::connect(sort_thread,&SortThread::Finish,[=]{
+            emit FinishSig();
         });
 
-        QObject::connect(start_pause_but,&QPushButton::clicked,[=]{
+
+
+        QObject::connect(slider,&QSlider::valueChanged,[=, this]{
+            sort_thread->speed = slider->value();
+        });
+
+        QObject::connect(start_pause_button,&QPushButton::clicked,[=,this]{
             if (start == false) {
-
-                ReSetRandomNumbers();
-                emit Start();
-                start = true;
-                start_pause_but->setText("暂停");
-
-                random_arr.resize(100);
-                std::default_random_engine rand_engine{};
-                for (auto &p : random_arr) {
-                    p = rand_engine() % 100;
-                }
+                Start();
             }
             else {
-                if (pause == false) {
-                    start_pause_but->setText("继续");
-                    pause = true;
-                    emit Pause();
-                }
-                else {
-                    start_pause_but->setText("暂停");
-                    pause = false;
-                    emit Start();
-
-                }
+                if (pause == true)
+                    Continue();
+                else
+                    Pause();
             }
         });
 
-        QObject::connect(stop_but,&QPushButton::clicked,[&]{
-            if (start == true) {
-                start = false;
-                sort_thread->quit();
-                emit Stop();
-            }
+        QObject::connect(stop_button,&QPushButton::clicked,[=,this]{
+            Stop();
         });
 
 
     }
 
 signals:
-    void Start();
-    void Pause();
-    void Stop();
+    void StartSig();
+    void ContinueSig();
+    void StopSig();
+    void PauseSig();
+    void FinishSig();
+    void UPUISig();
 
-};
-
-
-class VisualSort : public QObject {
-Q_OBJECT
-
-signals:
-    void UPUI();
-    void Finish();
-private:
-    SortWindow *sort_window = nullptr;
-    bool stop = false;
-public:
-
-    VisualSort(SortWindow *window) {
-        sort_window = window;
-        QObject::connect(sort_window,&SortWindow::Stop,[=]{
-            stop = true;
-        });
-    }
-
-    void BubbleSort() {
-        while (!sort_window->start) {
-            std::this_thread::sleep_for(std::chrono::milliseconds(5));
-        }
-        MSTL::BubbleSort(sort_window->random_arr.begin(),sort_window->random_arr.end(),[=](const auto val1,const auto val2) {
-            if (stop == true)
-                return true;
-            while (sort_window->pause) {
-                std::this_thread::sleep_for(std::chrono::milliseconds(5));
-            }
-            emit UPUI();
-            std::this_thread::sleep_for(std::chrono::milliseconds(sort_window->sleep_time * (100 - sort_window->speed) / 100));
-            if (val1 < val2)
-                return true;
-            else
-                return false;
-        });
-        emit UPUI();
-        thread()->quit();
-        emit Finish();
-    }
-
-//    void StdSort() {
-//        SORT_FUNC_BASE(std::sort);
-//    }
-//    void SelectionSort() {
-//        SORT_FUNC_BASE(MSTL::SelectionSort);
-//    }
-//    void InsertionSort() {
-//        SORT_FUNC_BASE(MSTL::InsertionSort);
-//    }
-//    void QuickSort() {
-//        SORT_FUNC_BASE(MSTL::QuickSort);
-//    }
-//    void MergeSort() {
-//        SORT_FUNC_BASE(MSTL::MergeSort);
-//    }
-
-
-    void UpUI() {
-        auto vec = sort_window->random_arr;
-        sort_window->set->remove(0,vec.size());
-        for (auto num : vec) {
-            *sort_window->set << num;
-        }
-    }
 };
