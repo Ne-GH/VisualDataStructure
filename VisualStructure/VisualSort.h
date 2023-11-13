@@ -177,18 +177,17 @@ public:
     void Continue() {
         pause = false;
         start_pause_button->setText("暂停");
-        emit ContinueSig();
         sort_thread->Continue();
+        emit ContinueSig();
     }
     void Pause() {
         pause = true;
         start_pause_button->setText("继续");
-        emit PauseSig();
         sort_thread->Pause();
+        emit PauseSig();
     }
     void Stop() {
         sort_thread->Stop();
-        emit StopSig();
         start = false;
         start_pause_button->setText("开始");
     }
@@ -312,9 +311,7 @@ public:
 signals:
     void StartSig();
     void ContinueSig();
-    void StopSig();
     void PauseSig();
     void FinishSig();
-    void UPUISig();
 
 };

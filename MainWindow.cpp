@@ -122,6 +122,9 @@ MainWindow::MainWindow(QWidget *parent) :
 //        sort_window->SetSortType(SortType::STD_SORT);
 //        setCentralWidget(sort_window->window);
 //    });
+    QObject::connect(sort_window,&SortWindow::StartSig,[=]{
+        BarMessage("开始...");
+    });
     QObject::connect(sort_window,&SortWindow::PauseSig,[=]{
         BarMessage("暂停...");
     });
@@ -130,9 +133,6 @@ MainWindow::MainWindow(QWidget *parent) :
     });
     QObject::connect(sort_window,&SortWindow::FinishSig,[=]{
         BarMessage("完成...");
-    });
-    QObject::connect(sort_window,&SortWindow::StopSig,[=]{
-        BarMessage("停止...");
     });
 
 //    ConnectSortAction<&VisualSort::BubbleSort>(this,sort_window,sort_menu,"冒泡排序");
