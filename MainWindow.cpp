@@ -70,6 +70,7 @@ void ConnectSortAction(MainWindow *window,SortWindow *sort_window,QMenu *menu,So
     menu->addAction(action);
     QObject::connect(action,&QAction::triggered,[=]{
         sort_window->Stop();
+        std::this_thread::sleep_for(std::chrono::milliseconds{10});
         sort_window->ReSetRandomNumbers();
         sort_window->SetSortType(sort_type);
         window->centralWidget()->setParent(nullptr);

@@ -59,7 +59,7 @@ public:
     void Sort() {
         sort_func(begin,end,[=](const auto val1,const auto val2) {
             if (!running) {
-                quit();
+                return false;
             }
             while (pause) {
                 std::this_thread::sleep_for(std::chrono::milliseconds(1));
@@ -73,7 +73,6 @@ public:
         });
         emit UPUI();
         emit Finish();
-
     }
 
 
@@ -112,6 +111,11 @@ public:
         }
 
     }
+    void Start() {
+        running = true;
+        pause = false;
+        start();
+    }
     void Pause() {
         pause = true;
     }
@@ -119,9 +123,7 @@ public:
         pause = false;
     }
     void Stop() {
-        Pause();
         running = false;
-        quit();
     }
 
 signals:
@@ -148,7 +150,7 @@ public:
     QPushButton *stop_button = nullptr;
     QSlider *slider = nullptr;
 
-    SortThread *sort_thread;
+    SortThread *sort_thread = nullptr;
     std::vector<unsigned> random_arr;
 
 
@@ -164,38 +166,30 @@ public:
     }
 
     void Start() {
-        if (start == false) {
-            start = true;
-            Continue();
-            std::cout << static_cast<int>(sort_thread->sort_type) << std::endl;
-
-            sort_thread->SetArr(random_arr.begin(),random_arr.end());
-            sort_thread->start();
-        }
+        start = true;
+        pause = false;
+        start_pause_button->setText("暂停");
+        sort_thread->SetArr(random_arr.begin(),random_arr.end());
+        sort_thread->Start();
+        emit StartSig();
     }
 
     void Continue() {
-        if (pause == true) {
-            pause = false;
-            start_pause_button->setText("暂停");
-            emit ContinueSig();
-            sort_thread->Continue();
-        }
-
+        pause = false;
+        start_pause_button->setText("暂停");
+        emit ContinueSig();
+        sort_thread->Continue();
     }
     void Pause() {
-        if (pause == false) {
-            pause = true;
-            start_pause_button->setText("继续");
-            emit PauseSig();
-            sort_thread->Pause();
-        }
+        pause = true;
+        start_pause_button->setText("继续");
+        emit PauseSig();
+        sort_thread->Pause();
     }
     void Stop() {
         sort_thread->Stop();
         emit StopSig();
         start = false;
-        pause = true;
         start_pause_button->setText("开始");
     }
 
@@ -271,9 +265,14 @@ public:
     }
 
 
-    SortWindow() {
-        ConfigUI();
+    void ConfigThread() {
 
+        if (sort_thread) {
+            QObject::disconnect(sort_thread);
+            sort_thread->quit();
+            delete sort_thread;
+            sort_thread = nullptr;
+        }
         sort_thread = new SortThread();
         QObject::connect(sort_thread,&SortThread::UPUI,[=]{
             UPUI();
@@ -281,7 +280,10 @@ public:
         QObject::connect(sort_thread,&SortThread::Finish,[=]{
             emit FinishSig();
         });
-
+    }
+    SortWindow() {
+        ConfigUI();
+        ConfigThread();
 
 
         QObject::connect(slider,&QSlider::valueChanged,[=, this]{
