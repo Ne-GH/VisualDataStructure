@@ -14,6 +14,8 @@ find_package(Qt6 COMPONENTS
         Charts
         REQUIRED)
 
+find_package(jsoncpp REQUIRED)
+include_directories(${JSONCPP_INCLUDE_DIR})
 
 
 INCLUDE_DIRECTORIES(Graphics VisualStructure MSTL Setting AboutDialog)
@@ -58,6 +60,7 @@ target_link_libraries(VisualDataStructure
         Qt::Gui
         Qt::Widgets
         Qt::Charts
+        jsoncpp
         )
 
 set(VERSION "1.0")

@@ -8,9 +8,6 @@
 #include <QColorDialog>
 #include <QPushButton>
 #include <filesystem>
-#include <QJsonObject>
-#include <QJsonDocument>
-#include <QFile>
 
 
 
@@ -34,24 +31,17 @@ Setting::Setting(QWidget *parent) : QDialog(parent) ,ui(new Ui::Setting) {
     QObject::connect(ui->listWidget,&QListWidget::itemSelectionChanged,[&]{
         switch (ui->listWidget->currentRow()) {
             case 0: {
-                QJsonObject tmp_json    ;
+
                 QColorDialog colorDialog;
                 QColor selected_color;
                 if (colorDialog.exec() == QColorDialog::Accepted) {
                     // 用户选择了颜色
                     selected_color = colorDialog.currentColor();
-                    tmp_json["color"] = selected_color.name();
                 } else {
                     // 用户没有选择颜色
                 }
 
-                for (auto obj : tmp_json) {
-                    qDebug() << obj;
-                }
-                if (!tmp_json.empty()) {
-                    qDebug() << "有配置信息未保存";
 
-                }
                 return ;
             }
 
@@ -82,56 +72,11 @@ void Setting::LoadSettingFile(std::string file_path) {
 
     if (!exists(file_path)) {
         qDebug() << "配置文件不存在";
-        // 创建JSON对象
-        QJsonObject jsonObject;
-        jsonObject["name"] = "张三";
-        QJsonDocument jsonDocument(jsonObject);
-        QFile file(file_path.c_str());
-        if (file.open(QIODevice::WriteOnly)) {
-            file.write(jsonDocument.toJson());
-            file.close();
-            qDebug() << "JSON文件已成功创建并保存。";
-        }
-        else {
-            qDebug() << "无法创建或保存JSON文件。";
-        }
+        // TODO 创建默认JSON配置文件
         return;
     }
 
-    // 打开JSON文件
-    QFile file(file_path.c_str());
-    if (!file.open(QIODevice::ReadOnly)) {
-        qDebug() << "无法打开JSON文件。";
-        return;
-    }
-
-    // 读取JSON数据
-    QByteArray jsonData = file.readAll();
-    file.close();
-
-    // 解析JSON数据
-    QJsonDocument jsonDocument = QJsonDocument::fromJson(jsonData);
-    if (jsonDocument.isNull()) {
-        qDebug() << "无法解析JSON数据。";
-    }
-
-    // 将JSON数据转换为JSON对象
-    QJsonObject jsonObject = jsonDocument.object();
-
-    // 获取JSON数据并进行处理
-    QString name = jsonObject["name"].toString();
-    int age = jsonObject["age"].toInt();
-    QString city = jsonObject["city"].toString();
-
-    qDebug() << "姓名：" << name;
-    qDebug() << "年龄：" << age;
-    if (jsonObject.contains("city")) {
-        qDebug() << "城市：" << city;
-    }
-    else {
-        qDebug() << "2" ;
-    }
-
+    // TODO 加载配置文件
 
 
 
