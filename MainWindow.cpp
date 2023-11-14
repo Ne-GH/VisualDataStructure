@@ -113,15 +113,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ConnectSortAction(this,sort_window,sort_menu,SortType::STD_SORT,"std::sort");
 
 
-//    auto std_sort_action = new QAction("std::sort");
-//    sort_menu->addAction(std_sort_action);
-//
-
-//    QObject::connect(std_sort_action,&QAction::triggered,[=]{
-//        centralWidget()->setParent(nullptr);
-//        sort_window->SetSortType(SortType::STD_SORT);
-//        setCentralWidget(sort_window->window);
-//    });
     QObject::connect(sort_window,&SortWindow::StartSig,[=]{
         BarMessage("开始...");
     });
@@ -135,42 +126,6 @@ MainWindow::MainWindow(QWidget *parent) :
         BarMessage("完成...");
     });
 
-//    ConnectSortAction<&VisualSort::BubbleSort>(this,sort_window,sort_menu,"冒泡排序");
-
-//    QObject::connect(sort_window,&SortWindow::Start,[=]{
-//        BarMessage("排序中...");
-//    });
-//    QObject::connect(sort_window,&SortWindow::Pause,[=]{
-//        BarMessage("排序暂停...");
-//    });
-//    QObject::connect(sort_window,&SortWindow::Stop,[=]{
-//        BarMessage("排序停止...");
-//    });
-
-//    auto bubble_sort = new QAction("冒泡排序");
-//    sort_menu->addAction(bubble_sort);
-//    QObject::connect(bubble_sort,&QAction::triggered,[=]{
-//        centralWidget()->setParent(nullptr);
-//        setCentralWidget(sort_window->window);
-//        auto visual_sort = new VisualSort(sort_window);
-//////
-//        visual_sort->moveToThread(sort_window->sort_thread);
-//        QObject::connect(sort_window->sort_thread,&QThread::started,visual_sort,&VisualSort::BubbleSort);
-//        sort_window->sort_thread->start();
-//        QObject::connect(visual_sort,&VisualSort::UPUI,[=] mutable {
-//            visual_sort->UpUI();
-//        });
-//    });
-
-
-
-
-//    CONNECT_SORT("std::sort",StdSort);
-//    CONNECT_SORT("冒泡排序",BubbleSort);
-//    CONNECT_SORT("选择排序",SelectionSort);
-//    CONNECT_SORT("插入排序",InsertionSort);
-//    CONNECT_SORT("快速排序",QuickSort);
-//    CONNECT_SORT("归并排序",MergeSort);
 
 
 
