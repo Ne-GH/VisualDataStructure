@@ -47,7 +47,10 @@ AboutDialog::AboutDialog(QWidget *parent) :
     connect(ui->textBrowser, &QTextBrowser::anchorClicked, this, [=](const QUrl url) {
         QDesktopServices::openUrl(url);
     });
-    resize(400,300);
+    setMaximumWidth(400);
+    setMaximumHeight(450);
+    setMinimumWidth(400);
+    setMinimumHeight(450);
 }
 
 AboutDialog::~AboutDialog() {
