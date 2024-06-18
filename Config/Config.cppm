@@ -58,11 +58,13 @@ public:
 
             while (in >> line) {
                 auto split_pos = std::ranges::find(line.begin(), line.end(),split_char_);
+                if (split_pos == line.end())
+                    throw ConfigException("错误的配置文件格式: " + line);
+
                 auto key = std::string(line.begin(),split_pos++);
                 auto val = std::string(split_pos ,line.end());
                 config_map_.insert({key,val});
                 std::cout << key << ": " << val << std::endl;
-
             }
 
 
@@ -72,13 +74,15 @@ public:
         else {
             throw ConfigException("不支持的配置文件格式");
         }
-
-
-
-
-
     }
 
+
+    std::string operator[] (const std::string &key) const {
+        const auto pair = config_map_.find(key);
+        if (pair == config_map_.end())
+            throw ConfigException("找不到键值: " + key);
+        return pair->second;
+    }
 };
 
 
