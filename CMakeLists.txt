@@ -2,16 +2,17 @@ cmake_minimum_required(VERSION 3.28)
 project(VisualDataStructure)
 
 set(CMAKE_CXX_STANDARD 20)
-#[[set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
-set(CMAKE_AUTOUIC ON)]]
+set(CMAKE_AUTOUIC ON)
 
-#[[find_package(Qt6 COMPONENTS
+find_package(Qt6 COMPONENTS
         Core
         Gui
         Widgets
         Charts
-        REQUIRED)]]
+        REQUIRED)
+
 add_library(Module)
 target_sources(Module
         PUBLIC
@@ -26,9 +27,9 @@ target_sources(Module
 INCLUDE_DIRECTORIES(Graphics VisualStructure MSTL Setting AboutDialog)
 
 add_executable(VisualDataStructure main.cpp
-#        MainWindow.cpp MainWindow.h
+        MainWindow.cpp MainWindow.h
 
-   #[[     Graphics/GraphicsView.h
+        Graphics/GraphicsView.h
         Graphics/GraphicsScene.h
         Graphics/GraphicsItem.h
         Graphics/ArrowItem.h
@@ -58,20 +59,19 @@ add_executable(VisualDataStructure main.cpp
         AboutDialog/AboutDialog.ui
         Resource.qrc
         Macros.h
-]]
 )
 
 target_link_libraries(VisualDataStructure
-#[[        Qt::Core
+        Qt::Core
         Qt::Gui
         Qt::Widgets
-        Qt::Charts]]
+        Qt::Charts
         Module
 #        jsoncpp
         )
 
-#[[set(VERSION "1.0")
+set(VERSION "1.0")
 add_compile_definitions(VERSION="${VERSION}")
 
-set(CMAKE_BUILD_TYPE "Release")]]
+set(CMAKE_BUILD_TYPE "Release")
 

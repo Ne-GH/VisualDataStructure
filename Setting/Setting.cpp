@@ -8,7 +8,7 @@
 #include <QColorDialog>
 #include <QPushButton>
 #include <filesystem>
-
+import Config;
 
 
 /*******************************************************************************
@@ -25,6 +25,7 @@ QColor GetColor(QColor cur_color,QWidget *parent) {
 Setting::Setting(QWidget *parent) : QDialog(parent) ,ui(new Ui::Setting) {
     ui->setupUi(this);
 
+    Config::Config config("./config.txt");
 
 
 
