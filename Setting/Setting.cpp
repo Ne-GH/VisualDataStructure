@@ -25,39 +25,42 @@ QColor GetColor(QColor cur_color,QWidget *parent) {
 Setting::Setting(QWidget *parent) : QDialog(parent) ,ui(new Ui::Setting) {
     ui->setupUi(this);
 
-    ui->splitter->setStretchFactor(0,1);
-    ui->splitter->setStretchFactor(1,9);
-
-    QObject::connect(ui->listWidget,&QListWidget::itemSelectionChanged,[&]{
-        switch (ui->listWidget->currentRow()) {
-            case 0: {
-
-                QColorDialog colorDialog;
-                QColor selected_color;
-                if (colorDialog.exec() == QColorDialog::Accepted) {
-                    // 用户选择了颜色
-                    selected_color = colorDialog.currentColor();
-                } else {
-                    // 用户没有选择颜色
-                }
 
 
-                return ;
-            }
 
-        }
-    });
-
-
-    QObject::connect(ui->buttonBox->button(QDialogButtonBox::Ok),&QPushButton::clicked,[=]{
-
-        qDebug() << "1";
-    });
-
-    QObject::connect(ui->buttonBox->button(QDialogButtonBox::Cancel),&QPushButton::clicked,[=]{
-
-        qDebug() << "2";
-    });
+    // ui->splitter->setStretchFactor(0,1);
+    // ui->splitter->setStretchFactor(1,9);
+    //
+    // QObject::connect(ui->listWidget,&QListWidget::itemSelectionChanged,[&]{
+    //     switch (ui->listWidget->currentRow()) {
+    //         case 0: {
+    //
+    //             QColorDialog colorDialog;
+    //             QColor selected_color;
+    //             if (colorDialog.exec() == QColorDialog::Accepted) {
+    //                 // 用户选择了颜色
+    //                 selected_color = colorDialog.currentColor();
+    //             } else {
+    //                 // 用户没有选择颜色
+    //             }
+    //
+    //
+    //             return ;
+    //         }
+    //
+    //     }
+    // });
+    //
+    //
+    // QObject::connect(ui->buttonBox->button(QDialogButtonBox::Ok),&QPushButton::clicked,[=]{
+    //
+    //     qDebug() << "1";
+    // });
+    //
+    // QObject::connect(ui->buttonBox->button(QDialogButtonBox::Cancel),&QPushButton::clicked,[=]{
+    //
+    //     qDebug() << "2";
+    // });
 }
 
 Setting::~Setting() {
