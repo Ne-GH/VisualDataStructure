@@ -178,7 +178,7 @@ public:
     void Delete(GraphicsItem* item) override { }
     void Draw(GraphicsScene* scene) {  }
     void Updata(GraphicsItem*) {  }
-    GraphicsItem* Search(GraphicsItem* item) {  }
+    GraphicsItem* Search(GraphicsItem* item) { return nullptr; }
 
 private:
     void _AutoLayout(MSTL::TreeNode<GraphicsItem *>*root,int x,int y,std::vector<int> &widths,int deep) {

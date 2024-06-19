@@ -5,6 +5,9 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
+if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+       add_definitions(/utf-8)
+endif ()
 
 find_package(Qt6 COMPONENTS
         Core
@@ -73,5 +76,5 @@ target_link_libraries(VisualDataStructure
 set(VERSION "1.0")
 add_compile_definitions(VERSION="${VERSION}")
 
-set(CMAKE_BUILD_TYPE "Release")
+# set(CMAKE_BUILD_TYPE "Release")
 

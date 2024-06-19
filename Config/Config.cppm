@@ -39,27 +39,27 @@ public:
 
     explicit Config(std::filesystem::path path) : config_file_path_(std::move(path)){
         if (!std::filesystem::exists(config_file_path_)) {
-            throw ConfigException("配置文件不存在");
+            throw ConfigException("config file not found");
         }
         const auto file_extension = config_file_path_.extension();
         if (file_extension == ".xml") {
-            throw ConfigException("不支持的配置文件格式");
+            throw ConfigException("unsupport config file format");
         }
 
         if (file_extension == ".json") {
-            throw ConfigException("不支持的配置文件格式");
+            throw ConfigException("unsupport config file format");
         }
 
         if (file_extension == ".txt"){
             std::string line;
             std::ifstream in(config_file_path_);
             if (!in.is_open())
-                throw ConfigException("打开配置文件失败");
+                throw ConfigException("open config file is bad");
 
             while (in >> line) {
                 auto split_pos = std::ranges::find(line.begin(), line.end(),split_char_);
                 if (split_pos == line.end())
-                    throw ConfigException("错误的配置文件格式: " + line);
+                    throw ConfigException("config file format is error: " + line);
 
                 auto key = std::string(line.begin(),split_pos++);
                 auto val = std::string(split_pos ,line.end());

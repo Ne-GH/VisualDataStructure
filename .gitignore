@@ -32,6 +32,9 @@
 *.app
 
 .idea
+.vs/
+build/
+out/
 CMakeLists.txt.user
 cmake-build-debug
-/.clang-format
+.clang-format

@@ -114,7 +114,7 @@ public:
 
     void Draw(GraphicsScene* scene) {  }
     void Updata(GraphicsItem*) {  }
-    GraphicsItem* Search(GraphicsItem* item) {  }
+    GraphicsItem* Search(GraphicsItem* item) { return nullptr; }
 };
 
 
