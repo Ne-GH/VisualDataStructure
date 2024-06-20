@@ -6,8 +6,11 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
-       add_definitions(/utf-8)
+    add_definitions(/utf-8)
+	set(close_console_flag WIN32)
+	message("this is windows")
 endif ()
+
 
 find_package(Qt6 COMPONENTS
         Core
@@ -26,42 +29,44 @@ target_sources(Module
 #find_package(jsoncpp REQUIRED)
 #include_directories(${JSONCPP_INCLUDE_DIR})
 
-
 INCLUDE_DIRECTORIES(Graphics VisualStructure MSTL Setting AboutDialog)
 
-add_executable(VisualDataStructure main.cpp
-        MainWindow.cpp MainWindow.h
+add_executable(VisualDataStructure
+	${close_console_flag}
 
-        Graphics/GraphicsView.h
-        Graphics/GraphicsScene.h
-        Graphics/GraphicsItem.h
-        Graphics/ArrowItem.h
+	main.cpp
+	MainWindow.cpp MainWindow.h
 
-        VisualStructure/VisualStructureBase.hpp
-        VisualStructure/VisualArray.hpp
-        VisualStructure/VisualStack.hpp
-        VisualStructure/VisualQueue.hpp
-        VisualStructure/VisualList.hpp
-        VisualStructure/VisualTree.hpp
-        VisualStructure/VisualSort.h
+	Graphics/GraphicsView.h
+	Graphics/GraphicsScene.h
+	Graphics/GraphicsItem.h
+	Graphics/ArrowItem.h
 
-        MSTL/Array.hpp
-        MSTL/BinaryTree.hpp
-        MSTL/Find.hpp
-        MSTL/List.hpp
-        MSTL/Map.hpp
-        MSTL/Queue.hpp
-        MSTL/Stack.hpp
-        MSTL/Sort.hpp
+	VisualStructure/VisualStructureBase.hpp
+	VisualStructure/VisualArray.hpp
+	VisualStructure/VisualStack.hpp
+	VisualStructure/VisualQueue.hpp
+	VisualStructure/VisualList.hpp
+	VisualStructure/VisualTree.hpp
+	VisualStructure/VisualSort.h
 
-        Setting/Setting.h
-        Setting/Setting.cpp
+	MSTL/Array.hpp
+	MSTL/BinaryTree.hpp
+	MSTL/Find.hpp
+	MSTL/List.hpp
+	MSTL/Map.hpp
+	MSTL/Queue.hpp
+	MSTL/Stack.hpp
+	MSTL/Sort.hpp
 
-        AboutDialog/AboutDialog.cpp
-        AboutDialog/AboutDialog.h
-        AboutDialog/AboutDialog.ui
-        Resource.qrc
-        Macros.h
+	Setting/Setting.h
+	Setting/Setting.cpp
+
+	AboutDialog/AboutDialog.cpp
+	AboutDialog/AboutDialog.h
+	AboutDialog/AboutDialog.ui
+	Resource.qrc
+	Macros.h
 )
 
 target_link_libraries(VisualDataStructure

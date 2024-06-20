@@ -31,10 +31,13 @@
 *.out
 *.app
 
-.idea
+.idea/
 .vs/
 build/
 out/
 CMakeLists.txt.user
 cmake-build-debug
 .clang-format
+CMakePresets.json
+CMakeUserPresets.json
+vc140.pdb
