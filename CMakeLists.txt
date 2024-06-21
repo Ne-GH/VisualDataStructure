@@ -65,6 +65,9 @@ add_executable(VisualDataStructure
 	AboutDialog/AboutDialog.cpp
 	AboutDialog/AboutDialog.h
 	AboutDialog/AboutDialog.ui
+
+	Config/Interpreter.cpp
+
 	Resource.qrc
 	Macros.h
 )

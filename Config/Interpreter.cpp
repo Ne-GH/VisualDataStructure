@@ -5,7 +5,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
+#include <string>
+#include <fstream>
+#include <filesystem>
+#include <iterator>
 
 /*****************************************************************************
  * BNF 如下：
@@ -128,27 +131,9 @@ void Print(char *begin, char *end) {
 /*****************************************************************************
  * 测试函数,用来从文本读取代码文本,返回的char *由malloc获取，使用完毕应当调用free释放
  ******************************************************************************/
-char *ReadFileToBuf(const char *path) {
-
-    FILE *file = fopen(path, "r");
-
-    if (file == NULL)
-        return NULL;
-
-    fseek(file, 0, SEEK_END);
-    long len = ftell(file);
-    if (len == -1L) {
-        return NULL;
-    }
-    char *buf = malloc(len + 1);
-    if (buf == NULL)
-        return NULL;
-    rewind(file);
-    len = fread(buf, 1, len, file);
-    buf[len] = '\0';
-
-    fclose(file);
-    return buf;
+std::string ReadFileToBuf(const std::filesystem::path &path) { 
+    std::ifstream in(path);
+    return std::string ((std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());
 }
 
 /*****************************************************************************
@@ -158,7 +143,7 @@ char *ReadFileToBuf(const char *path) {
  *（该指针为malloc的指针，使用后需要释放）
  ******************************************************************************/
 char *RangePCharToPChar(char *begin, char *end) {
-    char *ret = malloc(end - begin + 1);
+    char *ret = (char *)malloc(end - begin + 1);
     if (ret == NULL)
         return NULL;
     strncpy(ret, begin, end - begin);
@@ -529,7 +514,7 @@ void IgnoreOneLine() {
  * 参数3：右侧操作数
  * 结果：如果left_val op right_val 的结果为真，返回1。否则返回0
  ******************************************************************************/
-int CheckByTwoValue(int left_val, SymbolsId op, int right_val) {
+int CheckByTwoValue(int left_val, int op, int right_val) {
     int result = 0;
     switch (op) {
     case LT: // <
@@ -708,42 +693,11 @@ void Statement(void) {
         // 因为cur_symbol在MatchAllArg的时候已经更改，函数地址丢失，无法正常调用
         int (*func)() = ((int (*)())symbols[cur_symbol.id].val);
         MatchAllArg();
-        int ret = func(args[0].val, args[1].val, args[2].val, args[3].val, args[4].val, args[5].val);
+        // TODO 函数调用问题
+        // int ret = func(args[0].val, args[1].val, args[2].val, args[3].val, args[4].val, args[5].val);
         FreeArgsMemory();
         MatchById(SEMICOLON);
 
-
-        // switch (cur_symbol.id) {
-        // case FUNC1: {
-        //	MatchById(LLB);
-        //	Symbol arg1 = MatchByType(Number);
-        //	MatchById(COMMA);
-        //	Symbol arg2 = MatchByType(Number);
-        //	MatchById(RLB);
-        //	MatchById(SEMICOLON);
-        //	func1(arg1.val, arg2.val);
-        //	break;
-        // }
-        // case FUNC2: {
-        //	MatchById(LLB);
-        //	Symbol arg1 = MatchByType(Number);
-        //	MatchById(RLB);
-        //	MatchById(SEMICOLON);
-        //	func2(arg1.val);
-        //	break;
-        // }
-        // case FUNC3: {
-        //	MatchById(LLB);
-        //	Symbol arg1 = MatchByType(String);
-        //	MatchById(RLB);
-        //	MatchById(SEMICOLON);
-        //	char* buf = RangePCharToPChar(arg1.begin, arg1.end);
-        //	func3(buf);
-        //	free(buf);
-        // }
-        // default:
-        //	break;
-        // }
     }
 }
 
@@ -796,48 +750,51 @@ void AnalyseSliderVale(char *pstr, int val) {
 /*****************************************************************************
  * 作用：初始化符号表中的关键字,设置符号表中相应元素的类型为Keyword,id为相应SymbolsId,以及bgin和end用于获取hash
  ******************************************************************************/
-void InitKeywordsFromSymbols() {
-#define INIT_KEY_SYMBOLS(key, str, len)                                                                                \
-    symbols[key].type = Keyword;                                                                                       \
-    symbols[key].id = IF;                                                                                              \
-    symbols[key].begin = &str[0];                                                                                      \
-    symbols[key].end = symbols[key].begin + len;
-
-    INIT_KEY_SYMBOLS(IF, "if", 2);
-    INIT_KEY_SYMBOLS(IF, "fi", 2);
-    INIT_KEY_SYMBOLS(VAL, "VAL", 3);
-    INIT_KEY_SYMBOLS(ELIF, "elif", 4);
-    INIT_KEY_SYMBOLS(ELSE, "else", 4);
-#undef INIT_KEY_WORDS
-}
+// TODO ,const char *   ==>   char *  error
+//void InitKeywordsFromSymbols() {
+//#define INIT_KEY_SYMBOLS(key, str, len)                                                                                \
+//    symbols[key].type = Keyword;                                                                                       \
+//    symbols[key].id = IF;                                                                                              \
+//    symbols[key].begin = &str[0];                                                                                      \
+//    symbols[key].end = symbols[key].begin + len;
+//
+//    INIT_KEY_SYMBOLS(IF, "if", 2);
+//    INIT_KEY_SYMBOLS(IF, "fi", 2);
+//    INIT_KEY_SYMBOLS(VAL, "VAL", 3);
+//    INIT_KEY_SYMBOLS(ELIF, "elif", 4);
+//    INIT_KEY_SYMBOLS(ELSE, "else", 4);
+//#undef INIT_KEY_WORDS
+//}
 
 /*****************************************************************************
  * 作用：初始化符号表中的函数，设置符号表中相应元素的类型为Functional,id为相应SymbolsId,以及begin和end用于获取hash
  ******************************************************************************/
-void InitFunctionalFromSymbols() {
-#define INIT_FUNCTIONAL_SYMBOLS(key, str, len)                                                                         \
-    symbols[key].type = Functional;                                                                                    \
-    symbols[key].id = key;                                                                                             \
-    symbols[key].begin = &#str[0];                                                                                     \
-    symbols[key].end = symbols[key].begin + len;                                                                       \
-    symbols[key].val = (int)&str;
-
-    INIT_FUNCTIONAL_SYMBOLS(FUNC1, func1, 5);
-    INIT_FUNCTIONAL_SYMBOLS(FUNC2, func2, 5);
-    INIT_FUNCTIONAL_SYMBOLS(FUNC3, func3, 5);
-    INIT_FUNCTIONAL_SYMBOLS(PRINTPOINTER, printPointer, 12);
-
-#undef INIT_FUNCIONAL_SYMBOLS
-}
+// TODO ,const char *   ==>   char *  error
+//void InitFunctionalFromSymbols() {
+//#define INIT_FUNCTIONAL_SYMBOLS(key, str, len)                                                                         \
+//    symbols[key].type = Functional;                                                                                    \
+//    symbols[key].id = key;                                                                                             \
+//    symbols[key].begin = &#str[0];                                                                                     \
+//    symbols[key].end = symbols[key].begin + len;                                                                       \
+//    symbols[key].val = (int)&str;
+//
+//    INIT_FUNCTIONAL_SYMBOLS(FUNC1, func1, 5);
+//    INIT_FUNCTIONAL_SYMBOLS(FUNC2, func2, 5);
+//    INIT_FUNCTIONAL_SYMBOLS(FUNC3, func3, 5);
+//    INIT_FUNCTIONAL_SYMBOLS(PRINTPOINTER, printPointer, 12);
+//
+//#undef INIT_FUNCIONAL_SYMBOLS
+//}
 
 /*****************************************************************************
  * 作用：初始化符号表
  *      调用 InitKeywordsFromSymbos 初始化符号表中的关键字，
  *      调用 InitFunctionalFromSymbols 初始化符号表中的函数
  ******************************************************************************/
+// TODO
 void InitSymbol() {
-    InitKeywordsFromSymbols();
-    InitFunctionalFromSymbols();
+    //InitKeywordsFromSymbols();
+    //InitFunctionalFromSymbols();
 }
 
 
@@ -847,12 +804,12 @@ int main(int argc, char *argv[]) {
     InitSymbol();
 
     for (int i = 0; i < 6; ++i) {
-        char *command = ReadFileToBuf("./command.txt");
+        auto command = ReadFileToBuf("./command.txt");
 
         int val = i;
         printf("val is %d\n", val);
-        AnalyseSliderVale(command, val);
-        free(command);
+        AnalyseSliderVale(command.data(), val);
+        free(command.data());
 
         for (long long tmp = 0; tmp < 10000000000; ++tmp)
             ;
