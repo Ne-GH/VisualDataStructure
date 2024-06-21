@@ -1,0 +1,48 @@
+printPointer (1); 
+
+
+if (1<=VAL)
+	func2(1);
+	func2(1);
+	func2(1);
+elif(VAL<=4&& VAL >=3)
+	func3("4>=VAL>=3");
+elif(VAL<=2)
+	func2(2);
+	func2(2);
+else
+	func3("ÆäËû");
+	func3("ÆäËû");
+	func3("ÆäËû");
+fi
+if (VAL < 5 && VAL < 4 && VAL < 3)
+	func3("3 check");
+	func3("3 check");
+	func3("3 check");
+	func3("3 check");
+else 
+	func3("err");
+	func3("err");
+	func3("err");
+	func3("err");
+fi
+
+func3("line is 14");
+if(VAL>1&&VAL<3)
+	func3("VAL > 1 && VAL <= 3");
+	func3("VAL > 1 && VAL <= 3");
+	func3("VAL > 1 && VAL <= 3");
+elif (VAL == 3)
+	func3("VAL == 3");
+	func3("VAL == 3");
+	func3("VAL == 3");
+	func3("VAL == 3");
+else 
+	func3("ÆäËû2");
+	func3("ÆäËû2");
+	func3("ÆäËû2");
+fi
+
+func3("line is 20");
+func3("line is 20");
+func3("line is 20");

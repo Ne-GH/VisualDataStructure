@@ -16,6 +16,11 @@ module;
 export module Config;
 
 
+void CreateDefaultConfigFile(std::filesystem::path default_file_path) { 
+    std::ofstream out(default_file_path);
+    out << "color=RED";
+}
+
 export NAMESPACE_BEGIN(Config)
 class ConfigException final : public std::exception {
     std::string message_;
@@ -39,7 +44,7 @@ public:
 
     explicit Config(std::filesystem::path path) : config_file_path_(std::move(path)){
         if (!std::filesystem::exists(config_file_path_)) {
-            throw ConfigException("config file not found");
+            CreateDefaultConfigFile(config_file_path_);
         }
         const auto file_extension = config_file_path_.extension();
         if (file_extension == ".xml") {
@@ -55,7 +60,7 @@ public:
             std::ifstream in(config_file_path_);
             if (!in.is_open())
                 throw ConfigException("open config file is bad");
-
+            
             while (in >> line) {
                 auto split_pos = std::ranges::find(line.begin(), line.end(),split_char_);
                 if (split_pos == line.end())
@@ -66,9 +71,6 @@ public:
                 config_map_.insert({key,val});
                 std::cout << key << ": " << val << std::endl;
             }
-
-
-
         }
 
         else {
