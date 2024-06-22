@@ -16,7 +16,7 @@ module;
 export module Config;
 
 
-void CreateDefaultConfigFile(std::filesystem::path default_file_path) { 
+void CreateDefaultConfigFile(const std::filesystem::path& default_file_path) {
     std::ofstream out(default_file_path);
     out << "color=RED";
 }
