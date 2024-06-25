@@ -66,10 +66,8 @@ add_executable(VisualDataStructure
 	AboutDialog/AboutDialog.h
 	AboutDialog/AboutDialog.ui
 
-	Config/Interpreter.cpp
-
 	Resource.qrc
-	Macros.h
+		GlobalSet.h
 )
 
 target_link_libraries(VisualDataStructure

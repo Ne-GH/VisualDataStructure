@@ -2,8 +2,8 @@
  * Auther : yongheng
  * Date : 2022/10/18 13:59
 *********************************************************************/
-#ifndef MSTL_MAP_HPP
-#define MSTL_MAP_HPP
+#ifndef MSTLmap__HPP
+#define MSTLmap__HPP
 
 #include "BinaryTree.hpp"
 
@@ -12,21 +12,21 @@ namespace MSTL {
 template<typename KEY,typename VAL>
 class Pair{
 public:
-    KEY _key;
-    VAL _val;
+    KEY key_;
+    VAL val_;
 
     friend std::ostream & operator << (std::ostream &out,Pair pair){
-        std::cout << pair._key << ":" << pair._val;
+        std::cout << pair.key_ << ":" << pair.val_;
         return out;
     }
     Pair(){
-        _key = _val = 0;
+        key_ = val_ = 0;
     }
-    Pair(KEY key,VAL val) : _key(key),_val(val){  }
+    Pair(KEY key,VAL val) : key_(key),val_(val){  }
 
 
     bool operator < (Pair r){
-        if(this->_key < r._key){
+        if(this->key_ < r.key_){
             return true;
         }
         return false;
@@ -35,7 +35,7 @@ public:
         return !(*this < r);
     }
     bool operator == (Pair r){
-        if(this->_key == r._key){
+        if(this->key_ == r.key_){
             return true;
         }
         return false;
@@ -50,7 +50,7 @@ template<typename KEY,typename VAL>
 class Map{
 private:
 
-    BinaryTree<Pair<KEY,VAL>> _map;
+    BinaryTree<Pair<KEY,VAL>> map_;
 public:
 
     Map(){
@@ -60,32 +60,32 @@ public:
 
     void Insert(KEY key,VAL val){
         auto pair = Pair<KEY,VAL>(key,val);
-        _map.Insert(pair);
+        map_.Insert(pair);
     }
 
     VAL& operator [](KEY key){
         auto pair = Pair<KEY,VAL>();
-        pair._key = key;
-        auto p = _map.Search(pair);
+        pair.key_ = key;
+        auto p = map_.Search(pair);
         if(p == nullptr){
             VAL val = VAL();
-            _map.Insert(Pair<KEY,VAL>(key,val));
-            p = _map.Search(pair);
-            return p->_val._val;
+            map_.Insert(Pair<KEY,VAL>(key,val));
+            p = map_.Search(pair);
+            return p->val_.val_;
         }
         else{
-            return p->_val._val;
+            return p->val_.val_;
         }
 
     }
     void Delete(KEY key){
         Pair<KEY,VAL> pair(key,0);
-        _map.Delete(pair);
+        map_.Delete(pair);
     }
     void Draw(){
-        _map.Draw();
+        map_.Draw();
     }
 
 };
 }
-#endif //DATASTRUCTURE_MAP_H
+#endif //DATASTRUCTUREmap__H

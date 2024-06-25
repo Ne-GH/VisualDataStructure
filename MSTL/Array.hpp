@@ -10,139 +10,137 @@
 namespace MSTL{
 template<typename T>
 class Arrary{
-private:
 
     class iterator {
-        T *it;
+        T *it_;
     public:
-        iterator(T *p) {
-            it = p;
+        explicit iterator(T *p) {
+            it_ = p;
         }
         T &operator *() {
-            return *it;
+            return *it_;
         }
         bool operator != (const iterator & that) {
-            return this->it != that.it;
+            return this->it_ != that.it_;
         }
         size_t operator - (const iterator &that) {
-            return it - that.it;
+            return it_ - that.it_;
         }
         iterator & operator ++ (){
-            ++it;
+            ++it_;
             return *this;
         }
-
     };
 
 
-    T *_arr_address;
-    size_t _memory_size = 10;
-    size_t _data_len = 0;
+    T *arr_;
+    size_t memory_size_ = 10;
+    size_t data_len_ = 0;
 
-    void Realloc(size_t new_memory_size) {
-        _arr_address = (T *)::realloc((void *)_arr_address,new_memory_size*sizeof(T));
-        if (_arr_address == nullptr) {
+    void realloc(const size_t newmemory_size_) {
+        arr_ = static_cast<T *>(std::realloc(arr_,newmemory_size_*sizeof(T)));
+        if (arr_ == nullptr) {
             throw std::bad_alloc();
         }
     }
     size_t ReallocUpSize() {
-        _memory_size = _memory_size*3/2;
-        return _memory_size;
+        memory_size_ = memory_size_*3/2;
+        return memory_size_;
     }
     size_t ReallocDownSize() {
-        _memory_size = _memory_size*2/3;
-        return _memory_size;
+        memory_size_ = memory_size_*2/3;
+        return memory_size_;
     }
     void ReallocUp() {
-        if (_data_len == _memory_size) {
-            Realloc(ReallocUpSize());
+        if (data_len_ == memory_size_) {
+            realloc(ReallocUpSize());
         }
     }
     void ReallocDown() {
-        if (_data_len <= _memory_size/2) {
-            Realloc(ReallocDownSize());
+        if (data_len_ <= memory_size_/2) {
+            realloc(ReallocDownSize());
         }
     }
 
 public:
 
     Arrary(){
-        _arr_address = (T *)::malloc(_memory_size*sizeof(T));
+        arr_ = new T[memory_size_];
     }
     ~Arrary(){
-        ::free(_arr_address);
+        ::free(arr_);
     }
 
     void PushBack(T val){
         ReallocUp();
-        _arr_address[_data_len++] = val;
+        arr_[data_len_++] = val;
     }
     T PopBack() {
-        T pop_val = _arr_address[_data_len-1];
-        _data_len --;
+        T pop_val = arr_[data_len_-1];
+        data_len_ --;
         ReallocDown();
         return pop_val;
     }
     T FrontBack() {
-        if (_data_len == 0) {
+        if (data_len_ == 0) {
             std::cerr << "队列为空,不能进行出队" << std::endl;
             exit(-1);
         }
-        T front_val = _arr_address[0];
-        for (int i = 0;i < _data_len-1; ++i) {
-            _arr_address[i] = _arr_address[i+1];
+        T front_val = arr_[0];
+        for (int i = 0;i < data_len_-1; ++i) {
+            arr_[i] = arr_[i+1];
         }
-        _data_len --;
+        data_len_ --;
         ReallocDown();
         return front_val;
     }
     iterator Delete(iterator del_addr) {
-        size_t offset = del_addr - iterator(_arr_address);
-        while (offset+1 < _data_len) {
-            _arr_address[offset] = _arr_address[offset + 1];
+        size_t offset = del_addr - iterator(arr_);
+        while (offset+1 < data_len_) {
+            arr_[offset] = arr_[offset + 1];
             ++offset;
         }
-        _data_len --;
+        data_len_ --;
         ReallocDownSize();
-        if (offset > _data_len) {
+        if (offset > data_len_) {
             return end();
         }
         else {
-            return iterator(_arr_address + offset);
+            return iterator(arr_ + offset);
         }
     }
     /*******************************************************************************
      * 按照下标进行删除
     *******************************************************************************/
     void Delete(size_t pos) {
-        if (pos < 0 || pos >= _data_len) {
+        if (pos < 0 || pos >= data_len_) {
             std::cerr << "bad pos" << std::endl;
         }
-        for (int i = pos;i < _data_len-1; ++i) {
-            _arr_address[pos] = _arr_address[pos+1];
+        for (int i = pos;i < data_len_-1; ++i) {
+            arr_[pos] = arr_[pos+1];
         }
-        _data_len --;
+        data_len_--;
         ReallocDownSize();
-        return;
     }
-    size_t Size() {
-        return _data_len;
+    [[nodiscard("get size not use")]]
+    size_t size() const {
+        return data_len_;
     }
     iterator begin() {
-        return iterator(_arr_address);
+        return iterator(arr_);
     }
     iterator end() {
-        return iterator(_arr_address + _data_len);
+        return iterator(arr_ + data_len_);
     }
 
     T *GetBegin() {
-        return _arr_address;
+        return arr_;
     }
     T *GetEnd() {
-        return _arr_address + _data_len;
+        return arr_ + data_len_;
     }
     T operator[] (size_t offset) {
-        return _arr_address[offset];
+        return arr_[offset];
     }
 
 };  // class MSTL::Array

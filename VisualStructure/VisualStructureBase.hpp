@@ -12,7 +12,7 @@
 template <typename T>
 class VisualStructureBase {
 protected:
-    T _val;
+    T val_;
 public:
     virtual void Draw(GraphicsScene*) = 0;
     virtual void Clear(GraphicsScene*) = 0;

@@ -22,8 +22,8 @@ class VisualArray : public QObject, public VisualStructureBase<MSTL::Arrary<Grap
 
 private:
     GraphicsScene *_scene;
-    int _x = 0;
-    int _y = 0;
+    int x_ = 0;
+    int y_ = 0;
 public:
     VisualArray() = default;
     ~VisualArray() = default;
@@ -31,8 +31,8 @@ public:
         int scene_width = _scene->width();
         int scene_height = _scene->height();
 
-        _y = scene_height * 0.3;
-        _x = scene_width / 2;
+        y_ = scene_height * 0.3;
+        x_ = scene_width / 2;
     }
 
 
@@ -45,24 +45,24 @@ public:
     }
     // pos是删除元素的下标
     void ReMove() {
-        for (int i = 1;i < _val.Size(); ++i) {
-            auto [x,y] = _val[i-1]->GetPos();
-            auto [w,h] = _val[i-1]->GetWH();
-            _val[i]->SetPos(x+w,y);
+        for (int i = 1;i < val_.size(); ++i) {
+            auto [x,y] = val_[i-1]->GetPos();
+            auto [w,h] = val_[i-1]->GetWH();
+            val_[i]->SetPos(x+w,y);
         }
         _scene->update();
     }
     void Remove(QGraphicsItem *item) {
-        for (auto it = _val.begin();it != _val.end(); ++it) {
+        for (auto it = val_.begin();it != val_.end(); ++it) {
             if (*it == item) {
-                _val.Delete(it);
+                val_.Delete(it);
                 break;
             }
         }
         _scene->removeItem(item);
         delete item;
 
-        for (auto p : _val) {
+        for (auto p : val_) {
             auto [x,y] = p->GetPos();
             std::cout << x << " " << y << std::endl;
         }
@@ -71,43 +71,43 @@ public:
     }
     void Insert(GraphicsItem* item) {
         QObject::connect(item,&GraphicsItem::LeftSelected,[=,this](auto pitem){
-            for (auto it : _val) {
+            for (auto it : val_) {
                 it->setSelected(true);
             }
-//            std::cout << _val.size() << std::endl;
+//            std::cout << val_.size() << std::endl;
 //            std::cout << x << std::endl;
         });
         QObject::connect(item,&GraphicsItem::RightSelected,[=,this](auto pitem){
             Remove(pitem);
         });
         _scene->addItem(item);
-        this->_val.PushBack(item);
+        this->val_.PushBack(item);
         item->InputVal();
 
     }
     // TODO int => T
     void Insert(int val) {
         auto p = new GraphicsItem(0,0,100,100);
-        int install_x,install_y;
-        if (_val.Size() == 0) {
-            install_x = _x;
-            install_y = _y;
+        int installx_,instally_;
+        if (val_.size() == 0) {
+            installx_ = x_;
+            instally_ = y_;
         }
         else {
-            std::tie(install_x,install_y) = _val[_val.Size()-1]->GetPos();
-            auto [w,h] = _val[_val.Size()-1]->GetWH();
-            install_x += w;
+            std::tie(installx_,instally_) = val_[val_.size()-1]->GetPos();
+            auto [w,h] = val_[val_.size()-1]->GetWH();
+            installx_ += w;
         }
 
-        p->SetPos(install_x,install_y);
+        p->SetPos(installx_,instally_);
         p->SetVal(val);
         Insert(p);
     }
 
     void Delete(GraphicsItem* item) {
-        for (auto it = _val.begin();it != _val.end(); ) {
+        for (auto it = val_.begin();it != val_.end(); ) {
             if (*it == item) {
-                it = _val.Delete(it);
+                it = val_.Delete(it);
             }
             else {
                  ++it;

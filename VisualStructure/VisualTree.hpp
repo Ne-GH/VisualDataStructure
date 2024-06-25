@@ -85,24 +85,24 @@ public:
         _lines.clear();
     }
     void CreateAllArrow() {
-        for (auto node : _val) {
-            if (node->_parent) {
-                auto arrow = new ArrowItem(node->_parent->_val,node->_val);
+        for (auto node : val_) {
+            if (node->parent_) {
+                auto arrow = new ArrowItem(node->parent_->val_,node->val_);
                 _scene->addItem(arrow);
-                _lines.push_back(TreeLine(node->_parent->_val,node->_val,arrow));
-                std::cout << node->_val->GetVal() << " " << node->_parent->_val->GetVal() << std::endl;
+                _lines.push_back(TreeLine(node->parent_->val_,node->val_,arrow));
+                std::cout << node->val_->GetVal() << " " << node->parent_->val_->GetVal() << std::endl;
             }
 //
-//            if (node->_left) {
-//                auto arrow = new ArrowItem(node->_val,node->_left->_val);
+//            if (node->left_) {
+//                auto arrow = new ArrowItem(node->val_,node->left_->val_);
 //                _scene->addItem(arrow);
-//                _lines.push_back(TreeLine(node->_val,node->_left->_val,arrow));
+//                _lines.push_back(TreeLine(node->val_,node->left_->val_,arrow));
 //            }
 //
-//            if (node->_right) {
-//                auto arrow = new ArrowItem(node->_val,node->_right->_val);
+//            if (node->right_) {
+//                auto arrow = new ArrowItem(node->val_,node->right_->val_);
 //                _scene->addItem(arrow);
-//                _lines.push_back(TreeLine(node->_val,node->_right->_val,arrow));
+//                _lines.push_back(TreeLine(node->val_,node->right_->val_,arrow));
 //            }
         }
     }
@@ -126,7 +126,7 @@ public:
         RemoveAllArrow();
         _scene->removeItem(item);
         auto node = MSTL::TreeNode<GraphicsItem *>(dynamic_cast<GraphicsItem *>(item));
-        _val.Delete(&node);
+        val_.Delete(&node);
         CreateAllArrow();
         AutoLayout();
 
@@ -140,16 +140,16 @@ public:
         item->InputVal();
         QObject::connect(item,&GraphicsItem::InputFish,[=] () mutable {
             RemoveAllArrow();
-            auto p = this->_val.Insert(item);
-            std::cout << "当前高度: " << _val.GetDeep() << " "
-                      <<   "当前宽度: " << _val.GetWidth() << std::endl;
+            auto p = this->val_.Insert(item);
+            std::cout << "当前高度: " << val_.GetDeep() << " "
+                      <<   "当前宽度: " << val_.GetWidth() << std::endl;
             // 只有root ,无需绘制arrow
-            if (p->_parent == nullptr)
+            if (p->parent_ == nullptr)
                 return;
 
             CreateAllArrow();
-//            auto arrow = new ArrowItem(p->_parent->_val,item);
-//            auto line = TreeLine(p->_parent->_val,item,arrow);
+//            auto arrow = new ArrowItem(p->parent_->val_,item);
+//            auto line = TreeLine(p->parent_->val_,item,arrow);
 //            _lines.push_back(line);
 //            _scene->addItem(arrow);
 
@@ -166,13 +166,13 @@ public:
     }
 
     void AutoLayout() {
-        int deep = _val.GetDeep();
+        int deep = val_.GetDeep();
         std::vector<int> widths(deep+1);
         widths[deep] = 50;
         for (int i = deep-1;i > 0; --i) {
             widths[i] = 2 * widths[i+1] ;       // + 2 * 2 * 50;
         }
-        _AutoLayout(_val.GetRoot(),100,100,widths,1);
+        _AutoLayout(val_.GetRoot(),100,100,widths,1);
     }
 
     void Delete(GraphicsItem* item) override { }
@@ -185,12 +185,12 @@ private:
         if (root == nullptr) {
             return;
         }
-        root->_val->SetPos(x,y);
-        if (root->_left) {
-            _AutoLayout(root->_left,x - widths[deep], y + 100*deep,widths,deep+1);
+        root->val_->SetPos(x,y);
+        if (root->left_) {
+            _AutoLayout(root->left_,x - widths[deep], y + 100*deep,widths,deep+1);
         }
-        if (root->_right) {
-            _AutoLayout(root->_right,x + widths[deep],y + 100*deep,widths,deep+1);
+        if (root->right_) {
+            _AutoLayout(root->right_,x + widths[deep],y + 100*deep,widths,deep+1);
         }
     }
 };

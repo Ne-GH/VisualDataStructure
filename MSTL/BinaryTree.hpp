@@ -16,34 +16,34 @@ namespace MSTL{
 template<typename T>
 struct TreeNode {
 public:
-    TreeNode *_parent = nullptr;
+    TreeNode *parent_ = nullptr;
 
-    TreeNode *_left = nullptr;
-    TreeNode *_right = nullptr;
-    bool _modify_flag = false;
-    int _height = 0;
-    T _val = 0;
+    TreeNode *left_ = nullptr;
+    TreeNode *right_ = nullptr;
+    bool modify_flag_ = false;
+    int height_ = 0;
+    T val_ = 0;
     TreeNode() {  }
     TreeNode(T val) {
-        _val = val;
-        _height = 1;
+        val_ = val;
+        height_ = 1;
     }
     friend std::ostream & operator << (std::ostream &out,TreeNode node){
-        out << node._val;
+        out << node.val_;
         return out;
     }
     friend std::ostream & operator << (std::ostream &out,TreeNode *pnode){
-        out << pnode->_val;
+        out << pnode->val_;
         return out;
     }
     ~TreeNode() {
-        _parent = nullptr;
-        _left = _right = nullptr;
-        _modify_flag = false;
-//        if (_val != nullptr) {
-//            delete _val;
+        parent_ = nullptr;
+        left_ = right_ = nullptr;
+        modify_flag_ = false;
+//        if (val_ != nullptr) {
+//            delete val_;
 //        }
-        _val = nullptr;
+        val_ = nullptr;
     }
 
 };
@@ -54,10 +54,10 @@ TreeNode<T> *Build(int left,int right,std::vector<T>& vec){
     int mid = (left + right) >> 1;
     TreeNode<T> *root = new TreeNode<T>(vec[mid]);
     if(left <= mid - 1){
-        root->_left = Build(left,mid - 1,vec);
+        root->left_ = Build(left,mid - 1,vec);
     }
     if(mid + 1 <= right){
-        root->_right = Build(mid + 1,right,vec);
+        root->right_ = Build(mid + 1,right,vec);
     }
     return root;
 }
@@ -66,7 +66,7 @@ TreeNode<T> *Build(int left,int right,std::vector<T>& vec){
 template <typename T>
 auto GetVal(T node) {
     if constexpr (std::is_same_v<T,TreeNode<GraphicsItem *> *>) {
-        return node->_val->GetVal();
+        return node->val_->GetVal();
 
     }
     else if constexpr (std::is_same_v<T,GraphicsItem *>) {
@@ -84,43 +84,43 @@ auto GetVal(T node) {
 
 template <typename T>
 TreeNode<T>* RotateLeft (TreeNode<T> *root) {
-    auto tmp = root->_right;
-    root->_right = tmp->_left;
-    if (tmp->_left) {
-        tmp->_left->_parent = root;
+    auto tmp = root->right_;
+    root->right_ = tmp->left_;
+    if (tmp->left_) {
+        tmp->left_->parent_ = root;
     }
-    tmp->_left = root;
-    tmp->_parent = root->_parent;
-    root->_parent = tmp;
-    root->_height = _GetDeep(root);
-    tmp->_height = _GetDeep(tmp);
+    tmp->left_ = root;
+    tmp->parent_ = root->parent_;
+    root->parent_ = tmp;
+    root->height_ = GetDeep_(root);
+    tmp->height_ = GetDeep_(tmp);
     return tmp;
 }
 
 template<typename T>
 TreeNode<T> *RotateRight(TreeNode<T>* root) {
-    auto tmp = root->_left;
-    root->_left = tmp->_right;
-    if (tmp->_right) {
-        tmp->_right->_parent = root;
+    auto tmp = root->left_;
+    root->left_ = tmp->right_;
+    if (tmp->right_) {
+        tmp->right_->parent_ = root;
     }
-    tmp->_right = root;
-    tmp->_parent = root->_parent;
-    root->_parent = tmp;
-    root->_height = _GetDeep(root);
-    tmp->_height = _GetDeep(tmp);
+    tmp->right_ = root;
+    tmp->parent_ = root->parent_;
+    root->parent_ = tmp;
+    root->height_ = GetDeep_(root);
+    tmp->height_ = GetDeep_(tmp);
     return tmp;
 }
 
 template<typename T>
 TreeNode<T> *RotateLeftRight(TreeNode<T>* root) {
-    root->_left = RotateLeft(root->_left);
+    root->left_ = RotateLeft(root->left_);
     return RotateRight(root);
 }
 
 template<typename T>
 TreeNode<T> *RotateRightLeft(TreeNode<T>* root) {
-    root->_left = RotateRight(root->_left);
+    root->left_ = RotateRight(root->left_);
     return RotateLeft(root);
 }
 
@@ -128,17 +128,17 @@ TreeNode<T> *RotateRightLeft(TreeNode<T>* root) {
 template<typename T>
 TreeNode<T>* insert(TreeNode<T> *parent,TreeNode<T> *root,TreeNode<T> *data) {
     if (root == nullptr) {
-        data->_parent = parent;
+        data->parent_ = parent;
 //        if (parent) {
-//            parent->_modify_flag = true;
+//            parent->modify_flag_ = true;
 //        }
         return data;
     }
     // 插入到左子树
     if (GetVal(data) < GetVal(root)) {
-        root->_left = insert(root,root->_left,data);
-        root->_height = _GetDeep(root);
-        if (_GetDeep(root->_left) - _GetDeep(root->_right) == 2) {
+        root->left_ = insert(root,root->left_,data);
+        root->height_ = GetDeep_(root);
+        if (GetDeep_(root->left_) - GetDeep_(root->right_) == 2) {
             if(GetVal(data) < GetVal(root)) {
                 root = RotateRight(root);
             }
@@ -149,10 +149,10 @@ TreeNode<T>* insert(TreeNode<T> *parent,TreeNode<T> *root,TreeNode<T> *data) {
     }
         // >= 插入到右子树
     else {
-        root->_right = insert(root,root->_right,data);
-        root->_height = _GetDeep(root);
+        root->right_ = insert(root,root->right_,data);
+        root->height_ = GetDeep_(root);
 
-        if (_GetDeep(root->_left) - _GetDeep(root->_right) == -2) {
+        if (GetDeep_(root->left_) - GetDeep_(root->right_) == -2) {
             if (GetVal(data) > GetVal(root)) {
                 root = RotateLeft(root);
             }
@@ -169,7 +169,7 @@ TreeNode<T>* insert(TreeNode<T> *parent,TreeNode<T> *root,TreeNode<T> *data) {
 *******************************************************************************/
 template<typename T,bool mode = true>
 class BinaryTree {
-    TreeNode<T> *_root = nullptr;
+    TreeNode<T> *root_ = nullptr;
     class iterator {
     public:
         iterator(TreeNode<T>* root) {
@@ -183,7 +183,7 @@ class BinaryTree {
         TreeNode<T>* operator++() {
             TreeNode<T>* node = traversalStack.top();
             traversalStack.pop();
-            fillStack(node->_right);
+            fillStack(node->right_);
             return node;
         }
 
@@ -197,28 +197,28 @@ class BinaryTree {
         void fillStack(TreeNode<T>* node) {
             while (node) {
                 traversalStack.push(node);
-                node = node->_left;
+                node = node->left_;
             }
         }
     };
 public:
     BinaryTree() {  }
     BinaryTree(T data){
-        _root = new TreeNode<T>(data);
+        root_ = new TreeNode<T>(data);
     }
     TreeNode<T> *GetRoot() {
-        return _root;
+        return root_;
     }
 
     TreeNode<T>* Insert(T data){
-        if(_root == nullptr){
-            _root = new TreeNode<T>(data);
-            return _root;
+        if(root_ == nullptr){
+            root_ = new TreeNode<T>(data);
+            return root_;
         }
         else{
-//            return _Insert(_root,data);
+//            return _Insert(root_,data);
             TreeNode<T> *node = new TreeNode<T>(data);
-            _root = insert(_root->_parent,_root,node);
+            root_ = insert(root_->parent_,root_,node);
             return node;
         }
     }
@@ -229,30 +229,30 @@ public:
      * 从给定的root出发,删除参数2中指定的节点
     *******************************************************************************/
     void Delete(TreeNode<T> *delete_node) {
-        if (_root == nullptr) {
+        if (root_ == nullptr) {
             return ;
         }
-        _Delete(_root,delete_node);
+        Delete_(root_,delete_node);
     }
     TreeNode<T>* Search(T data){
-        return _Search(_root,data);
+        return _Search(root_,data);
     }
     int GetDeep(){
-        return _GetDeep(_root);
+        return GetDeep_(root_);
     }
     int GetWidth() {
-        if(_root == nullptr) 
+        if(root_ == nullptr) 
             return 0;
         int max = 0; //树的最大宽度 
         std::queue<TreeNode<T> *> que;
-        que.push(_root);
+        que.push(root_);
         while(!que.empty()){
             int width = que.size(); //本层宽度 
             for(int i = 0;i < width;i++){
                 TreeNode<T>* tmp = que.front();
                 que.pop();
-                if(tmp->_left) que.push(tmp->_left);
-                if(tmp->_right) que.push(tmp->_right);
+                if(tmp->left_) que.push(tmp->left_);
+                if(tmp->right_) que.push(tmp->right_);
             }
             max = max > width ? max : width; //宽度更新 
         }
@@ -260,17 +260,17 @@ public:
     }
 
     void Destroy(){
-        _Destroy(_root);
-        _root = nullptr;
+        Destroy_(root_);
+        root_ = nullptr;
     }
     ~BinaryTree(){
         Destroy();
     }
     bool Empty() {
-        return _root == nullptr;
+        return root_ == nullptr;
     }
     auto begin() {
-        return iterator(_root);
+        return iterator(root_);
 
     }
     auto end() {
@@ -285,83 +285,83 @@ inline int MAX(int a,int b){
     return a > b ? a : b;
 }
 template<typename T>
-int _GetDeep(TreeNode<T> *root){
+int GetDeep_(TreeNode<T> *root){
     if(root == nullptr)
         return 0;
-    return MAX(_GetDeep(root->_left), _GetDeep(root->_right)) + 1;
+    return MAX(GetDeep_(root->left_), GetDeep_(root->right_)) + 1;
 }
 
 /* 带头节点一起销毁 */
 template<typename T>
-void _Destroy(TreeNode<T> *root){
+void Destroy_(TreeNode<T> *root){
 
     if(root == nullptr){
         return;
     }
-    _Destroy(root->_left);
-    _Destroy(root->_right);
+    Destroy_(root->left_);
+    Destroy_(root->right_);
     return;
 }
 template<typename T>
 TreeNode<T>* _Search(TreeNode<T> *root,T data){
     if(root == nullptr)
         return nullptr;
-    if(root->_val == data){
+    if(root->val_ == data){
         return root;
     }
-    else if(root->_val > data){
-        return _Search(root->_left,data);
+    else if(root->val_ > data){
+        return _Search(root->left_,data);
     }
     else {
-        return _Search(root->_right,data);
+        return _Search(root->right_,data);
     }
 }
 template <typename T>
-TreeNode<T> *_Delete(TreeNode<T> *root,TreeNode<T> *delete_node) {
+TreeNode<T> *Delete_(TreeNode<T> *root,TreeNode<T> *delete_node) {
     if (root == nullptr) {
         return nullptr;
     }
 
-    if (root->_val == delete_node->_val) {
-        if (root->_left == nullptr) {
-            TreeNode<T> *new_root = root->_right;
-            if (new_root != nullptr) {
-                new_root->_parent = root->_parent;
-                if (new_root->_parent != nullptr) {
-                    new_root->_parent->_modify_flag = true;
+    if (root->val_ == delete_node->val_) {
+        if (root->left_ == nullptr) {
+            TreeNode<T> *newroot_ = root->right_;
+            if (newroot_ != nullptr) {
+                newroot_->parent_ = root->parent_;
+                if (newroot_->parent_ != nullptr) {
+                    newroot_->parent_->modify_flag_ = true;
                 }
             }
             delete root;
-            return new_root;
+            return newroot_;
         }
-        else if (root->_right == nullptr) {
-            TreeNode<T> *new_root = root->_left;
-            if (new_root != nullptr) {
-                new_root->_parent = root->_parent;
-                if (new_root->_parent != nullptr) {
-                    new_root->_parent->_modify_flag = true;
+        else if (root->right_ == nullptr) {
+            TreeNode<T> *newroot_ = root->left_;
+            if (newroot_ != nullptr) {
+                newroot_->parent_ = root->parent_;
+                if (newroot_->parent_ != nullptr) {
+                    newroot_->parent_->modify_flag_ = true;
                 }
             }
             delete root;
-            return new_root;
+            return newroot_;
         }
         else {
             // 找到右边的最小值
-            TreeNode<T> *min_right = root->_right;
-            while (min_right->_left) {
-                min_right = min_right->_left;
+            TreeNode<T> *minright_ = root->right_;
+            while (minright_->left_) {
+                minright_ = minright_->left_;
             }
             // 将最小值赋值给root,并去右子树删除该最小值
-            root->_val = min_right->_val;
-            root->_modify_flag = true;
-            root->_right = _Delete(root->_right, min_right);
+            root->val_ = minright_->val_;
+            root->modify_flag_ = true;
+            root->right_ = Delete_(root->right_, minright_);
         }
     }
-    else if (root->_val->GetVal() > delete_node->_val->GetVal()) {
-        root->_left = _Delete(root->_left, delete_node);
+    else if (root->val_->GetVal() > delete_node->val_->GetVal()) {
+        root->left_ = Delete_(root->left_, delete_node);
     }
     else {
-        root->_right = _Delete(root->_right, delete_node);
+        root->right_ = Delete_(root->right_, delete_node);
     }
     return root;
 }

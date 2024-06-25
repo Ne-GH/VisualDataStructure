@@ -2,8 +2,8 @@
  * Auther : yongheng
  * Date : 2022/10/18 12:45
 *********************************************************************/
-#ifndef MSTL_QUEUE_HPP
-#define MSTL_QUEUE_HPP
+#ifndef MSTLqueue__HPP
+#define MSTLqueue__HPP
 
 #include <iostream>
 #include "Array.hpp"
@@ -14,7 +14,7 @@ namespace MSTL {
 
 template<typename T>
 class Queue {
-    MSTL::Arrary<T> _queue;
+    MSTL::Arrary<T> queue_;
 
     class iterator {
         T *it;
@@ -41,32 +41,32 @@ class Queue {
 public:
 
     void Push(T val) {
-        _queue.PushBack(val);
+        queue_.PushBack(val);
     }
 
     T Front() {
-        return *_queue.begin();
+        return *queue_.begin();
     }
 
     T Pop(){
-        return _queue.FrontBack();
+        return queue_.FrontBack();
     }
 
     size_t Size(){
-        return _queue.Size();
+        return queue_.size();
     }
 
     void Clear() {
-        _queue.Clear();
+        queue_.Clear();
     }
     iterator begin() {
-        return iterator(_queue.GetBegin());
+        return iterator(queue_.GetBegin());
     }
     iterator end() {
-        return iterator(_queue.GetEnd());
+        return iterator(queue_.GetEnd());
     }
     T operator[] (size_t offset) {
-        return _queue.GetBegin()[offset];
+        return queue_.GetBegin()[offset];
     }
 };
 
