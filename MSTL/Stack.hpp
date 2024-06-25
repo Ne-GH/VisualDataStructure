@@ -3,8 +3,8 @@
 *    Create By yongheng
 */
 
-#ifndef MSTL_STACK_HPP
-#define MSTL_STACK_HPP
+#ifndef MSTLstack__HPP
+#define MSTLstack__HPP
 
 #include <iostream>
 #include "Array.hpp"
@@ -14,7 +14,7 @@ namespace MSTL {
 template<typename T>
 class Stack{
 private:
-    Arrary<T> _stack;
+    Arrary<T> stack_;
     class iterator {
         T *it;
     public:
@@ -39,25 +39,25 @@ private:
 public:
     
     void Push(T data){
-        _stack.PushBack(data);
+        stack_.PushBack(data);
     }
     T Pop() {
-        return _stack.PopBack();
+        return stack_.PopBack();
     }
     size_t Size(){
-        return _stack.Size();
+        return stack_.size();
     }
     T Top(){
-        return _stack[_stack.Size()-1];
+        return stack_[stack_.Size()-1];
     }
     iterator begin() {
-        return iterator(_stack.GetBegin());
+        return iterator(stack_.GetBegin());
     }
     iterator end() {
-        return iterator(_stack.GetEnd());
+        return iterator(stack_.GetEnd());
     }
     T operator[] (size_t offset) {
-        return _stack.GetBegin()[offset];
+        return stack_.GetBegin()[offset];
     }
 };
 

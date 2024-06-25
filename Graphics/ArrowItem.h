@@ -13,14 +13,16 @@
 #include <QLineF>
 #include "GraphicsItem.h"
 
-class ArrowItem : public QGraphicsLineItem
-{
+class ArrowItem : public QGraphicsLineItem {
+    GraphicsItem *start_item_;
+    GraphicsItem *end_item_;
+    QPolygonF arrow_head_;
 public:
 
     //构造函数(两个item参数)
     ArrowItem(GraphicsItem *startI,GraphicsItem *endI,QGraphicsItem *parent = nullptr) {
-        m_pendItem = startI; //起点item
-        m_pStartItem = endI; //终点item
+       end_item_ = startI; //起点item
+        start_item_ = endI; //终点item
         this->setZValue(-1); //目的：让箭头后置
         setFlag(QGraphicsItem::ItemIsSelectable);
         setPen(QPen(Qt::black, 2, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
@@ -42,9 +44,9 @@ public:
         painter->setRenderHint(QPainter::Antialiasing); // 开启抗锯齿
 
         painter->setBrush(Qt::black);
-        qreal arrowsize = 10;
-        auto [sx,sy] = m_pStartItem->GetPos();
-        auto [ex,ey] = m_pendItem->GetPos();
+        constexpr  qreal arrow_size = 10;
+        auto [sx,sy] = start_item_->GetPos();
+        auto [ex,ey] = end_item_->GetPos();
         QPointF spos(sx,sy),epos(ex,ey);
 
         QPointF lineStart(spos);
@@ -61,28 +63,24 @@ public:
         setLine(arrow);
 
         double angle = std::atan2(-line().dy(),line().dx()); //反正切 [-PI,PI]
-        QPointF arrowP1 = line().p1() +
-                          QPointF(sin(angle + M_PI / 3) * arrowsize, //计算对边
-                                  cos(angle + M_PI / 3) * arrowsize); //计算临边
-        QPointF arrowP2 = line().p1() +
-                          QPointF(sin(angle + M_PI - M_PI / 3) * arrowsize,
-                                  cos(angle + M_PI - M_PI / 3) * arrowsize);
+        QPointF arrow1 = line().p1() +
+                          QPointF(sin(angle + M_PI / 3) * arrow_size, //计算对边
+                                  cos(angle + M_PI / 3) * arrow_size); //计算临边
+        QPointF arrow2 = line().p1() +
+                          QPointF(sin(angle + M_PI - M_PI / 3) * arrow_size,
+                                  cos(angle + M_PI - M_PI / 3) * arrow_size);
 
-        arrowHead.clear();
-        arrowHead<<line().p1() << arrowP1 << arrowP2;
+        arrow_head_.clear();
+        arrow_head_ << line().p1() << arrow1 << arrow2;
 
         painter->drawLine(line());
-        painter->drawPolygon(arrowHead);
+        painter->drawPolygon(arrow_head_);
     }
     void SetDestination(GraphicsItem * new_dest) {
-        m_pendItem = new_dest;
+       end_item_ = new_dest;
     }
 
 
-private:
-    GraphicsItem *m_pStartItem;
-    GraphicsItem *m_pendItem;
-    QPolygonF arrowHead;
 
 };
 

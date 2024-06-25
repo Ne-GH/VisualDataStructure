@@ -40,10 +40,10 @@ public:
 
     // pos是删除元素的下标
     void ReMove() {
-        for (int i = 1;i < _val.Size(); ++i) {
-            auto [x,y] = _val[i-1]->GetPos();
-            auto [w,h] = _val[i-1]->GetWH();
-            _val[i]->SetPos(x+w,y);
+        for (int i = 1;i < val_.Size(); ++i) {
+            auto [x,y] = val_[i-1]->GetPos();
+            auto [w,h] = val_[i-1]->GetWH();
+            val_[i]->SetPos(x+w,y);
         }
         _scene->update();
     }
@@ -53,12 +53,12 @@ public:
      * Stack,删除的时候只需要删除最后一个元素即可,无需处理参数以及其余元素
     *******************************************************************************/
     void Remove(QGraphicsItem *item) {
-        auto remove_item = _val.Pop();
+        auto remove_item = val_.Pop();
 
         _scene->removeItem(remove_item);
         delete remove_item;
 
-//        for (auto p : _val) {
+//        for (auto p : val_) {
 //            auto [x,y] = p->GetPos();
 //            std::cout << x << " " << y << std::endl;
 //        }
@@ -68,30 +68,30 @@ public:
     // 插入 TODO
     void Insert(GraphicsItem* item) {
         QObject::connect(item,&GraphicsItem::LeftSelected,[=,this](auto pitem){
-            for (auto it : _val) {
+            for (auto it : val_) {
                 it->setSelected(true);
             }
-//            std::cout << _val.size() << std::endl;
+//            std::cout << val_.size() << std::endl;
 //            std::cout << x << std::endl;
         });
         QObject::connect(item,&GraphicsItem::RightSelected,[=,this](auto pitem){
             Remove(pitem);
         });
         _scene->addItem(item);
-        this->_val.Push(item);
+        this->val_.Push(item);
         item->InputVal();
 
     }
     void Insert(int val) {
         auto p = new GraphicsItem(0,0,100,100);
         int install_x,install_y;
-        if (_val.Size() == 0) {
+        if (val_.Size() == 0) {
             install_x = _x;
             install_y = _y;
         }
         else {
-            std::tie(install_x,install_y) = _val[_val.Size()-1]->GetPos();
-            auto [w,h] = _val[_val.Size()-1]->GetWH();
+            std::tie(install_x,install_y) = val_[val_.Size()-1]->GetPos();
+            auto [w,h] = val_[val_.Size()-1]->GetWH();
             install_x += w;
         }
 
@@ -102,9 +102,9 @@ public:
     // 删除 TODO
     void Delete(GraphicsItem* item) {
 
-//        for (auto it = _val.begin();it != _val.end(); ) {
+//        for (auto it = val_.begin();it != val_.end(); ) {
 //            if (*it == item) {
-//                it = _val.Delete(it);
+//                it = val_.Delete(it);
 //            }
 //            else {
 //                ++it;

@@ -19,65 +19,70 @@
 #include <QGraphicsSceneContextMenuEvent>
 
 
-class GraphicsItem :public QObject ,public QGraphicsItem {
+class GraphicsItem : public QObject ,public QGraphicsItem {
     Q_OBJECT
-public:
 
     enum ItemType {
         Rect,
         Ellipse
     };
 
-    GraphicsItem(QGraphicsItem *parent = nullptr) : QGraphicsItem(parent) { // 画笔 - 边框色
-        _points.resize(4);
+    ItemType item_type_;
+    std::vector<int> points_;
+    int val_;   // TODO ,仅为数字类型,之后尝试是否为改为T
+public:
+
+
+    explicit GraphicsItem(QGraphicsItem *parent = nullptr) : QGraphicsItem(parent) { // 画笔 - 边框色
+        points_.resize(4);
         setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable);
         setFlag(QGraphicsItem::ItemSendsScenePositionChanges, true);
     }
-    GraphicsItem(int val) : GraphicsItem() {
+    explicit GraphicsItem(int val) : GraphicsItem() {
         SetVal(val);
     }
 
     GraphicsItem(int pos_x,int pos_y,int item_w,int item_h,ItemType item_type = Rect) : GraphicsItem(){
-        _points.resize(4);
-        _points[0] = pos_x;
-        _points[1] = pos_y;
-        _points[2] = item_w;
-        _points[3] = item_h;
-        _item_type = item_type;
+        points_.resize(4);
+        points_[0] = pos_x;
+        points_[1] = pos_y;
+        points_[2] = item_w;
+        points_[3] = item_h;
+        item_type_ = item_type;
     }
 
     ~GraphicsItem() {  }
 
     void SetItemType(ItemType item_type) {
-        _item_type = item_type;
+        item_type_ = item_type;
     }
 
     // 矩形
     // 以新坐标为中心，新宽高进行绘制
     void SetPos(int pos_x,int pos_y,int item_w,int item_h) {
-        _points[0] = pos_x - item_w/2;
-        _points[1] = pos_y - item_h/2;
-        _points[2] = item_w;
-        _points[3] = item_h;
+        points_[0] = pos_x - item_w/2;
+        points_[1] = pos_y - item_h/2;
+        points_[2] = item_w;
+        points_[3] = item_h;
     }
 
 
     // 修改宽高之后会以原有坐标为中心进行绘制
     void SetWH(int w,int h) {
-        _points[2] = w;
-        _points[3] = h;
-        SetPos(_points[0],_points[1],_points[2],_points[3]);
+        points_[2] = w;
+        points_[3] = h;
+        SetPos(points_[0],points_[1],points_[2],points_[3]);
     }
     // 修改坐标后，以新坐标为中心，原有宽高进行绘制
     void SetPos(int pos_x,int pos_y) {
-        setPos(QPointF(pos_x - _points[2]/2,pos_y - _points[3]/2));
+        setPos(QPointF(pos_x - points_[2]/2,pos_y - points_[3]/2));
     }
     // TODO ,int ==> T
     void SetVal(int val) {
-        _val = val;
+        val_ = val;
     }
     int GetVal() {
-        return _val;
+        return val_;
     }
     void InputVal(int val) {
         SetVal(val);
@@ -106,7 +111,7 @@ public:
     }
     // 返回Item的中心坐标
     std::tuple<int,int> GetPos() {
-//      return {_points[0]+_points[2]/2,_points[1]+_points[3]/2};
+//      return {points_[0]+points_[2]/2,points_[1]+points_[3]/2};
         QPointF scene_pos = this->scenePos() + boundingRect().center();
         int x =  scene_pos.x();
         int y =  scene_pos.y();
@@ -114,11 +119,11 @@ public:
     }
     // 返回Item的宽高
     std::tuple<int,int> GetWH() {
-        return {_points[2],_points[3]};
+        return {points_[2],points_[3]};
     }
 protected:
     QRectF boundingRect() const override {
-        return QRectF(_points[0],_points[1],_points[2],_points[3]);
+        return QRectF(points_[0],points_[1],points_[2],points_[3]);
     }
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override {
         painter->setRenderHint(QPainter::Antialiasing);
@@ -138,13 +143,13 @@ protected:
         painter->setPen(pen);
         QColor color = "#00aaff";
         painter->setBrush(color);
-        if (_item_type == Rect) {
-            painter->drawRect(QRectF(_points[0],_points[1],_points[2],_points[3]));
+        if (item_type_ == Rect) {
+            painter->drawRect(QRectF(points_[0],points_[1],points_[2],points_[3]));
         }
-        else if (_item_type == Ellipse){
+        else if (item_type_ == Ellipse){
             painter->drawEllipse(boundingRect());
         }
-        painter->drawText(boundingRect(), Qt::AlignCenter, std::to_string(_val).c_str());
+        painter->drawText(boundingRect(), Qt::AlignCenter, std::to_string(val_).c_str());
     }
     void mousePressEvent(QGraphicsSceneMouseEvent *event) {
         if (event->button() == Qt::LeftButton) {
@@ -177,9 +182,5 @@ signals:
     void RightSelected(GraphicsItem *item);
     void InputFish();
 
-private:
-    ItemType _item_type;
-    std::vector<int> _points;
-    int _val;   // TODO ,仅为数字类型,之后尝试是否为改为T
 };
 #endif // _GRAPHICSITEM_H_

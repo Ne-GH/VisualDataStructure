@@ -16,13 +16,13 @@
 
 class GraphicsScene : public QGraphicsScene {
     Q_OBJECT
+
+    QRectF selection_rect_;
+    bool show_rect_ = false;
 signals:
     void MenuAdd();
     void MenuDel(QGraphicsItem *);
 
-private:
-    QRectF selectionRect_;
-    bool _showRect = false;
 protected:
 //     重写contextMenuEvent函数处理右键菜单事件
     void contextMenuEvent(QGraphicsSceneContextMenuEvent *event) override {
@@ -50,22 +50,22 @@ protected:
         }
     }
     void mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event) override {
-        selectionRect_.setTopLeft(event->scenePos());
-        selectionRect_.setSize(QSizeF());
-        _showRect = true;
+        selection_rect_.setTopLeft(event->scenePos());
+        selection_rect_.setSize(QSizeF());
+        show_rect_ = true;
         QGraphicsScene::mousePressEvent(event);
 
     }
 //    void mousePressEvent(QGraphicsSceneMouseEvent* event) override {
 //    }
     void mouseMoveEvent(QGraphicsSceneMouseEvent* event) override {
-//        selectionRect_.setTopLeft(event->scenePos());
-//        selectionRect_.setSize(QSizeF());
+//        selection_rect_.setTopLeft(event->scenePos());
+//        selection_rect_.setSize(QSizeF());
 
         if (event->buttons() & Qt::LeftButton) {
-            if (_showRect == true) {
+            if (show_rect_ == true) {
                 QPointF currentPos = event->scenePos();
-                selectionRect_.setBottomRight(currentPos);
+                selection_rect_.setBottomRight(currentPos);
             }
             update();
         }
@@ -86,12 +86,12 @@ protected:
     void mouseReleaseEvent(QGraphicsSceneMouseEvent* event) override {
         if (event->button() == Qt::LeftButton) {
             // 遍历场景中的项并检查是否与选择矩形相交
-            QList<QGraphicsItem*> itemsInRect = items(selectionRect_);
+            QList<QGraphicsItem*> itemsInRect = items(selection_rect_);
             for (QGraphicsItem* item : itemsInRect) {
                 item->setSelected(true);
-                _showRect = false;
+                show_rect_ = false;
             }
-            selectionRect_ = QRectF();
+            selection_rect_ = QRectF();
             update();
         }
         QGraphicsScene::mouseReleaseEvent(event);
@@ -101,10 +101,10 @@ protected:
         QGraphicsScene::drawBackground(painter, rect);
 
         // 绘制选择矩形
-        if (!selectionRect_.isNull()) {
+        if (!selection_rect_.isNull()) {
             painter->setPen(QPen(Qt::blue));
             painter->setBrush(QBrush(Qt::blue, static_cast<Qt::BrushStyle>(Qt::transparent)));
-            painter->drawRect(selectionRect_);
+            painter->drawRect(selection_rect_);
         }
     }
 public:

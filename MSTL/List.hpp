@@ -9,21 +9,21 @@ template<typename T>
 class List{
 private:
 
-    class _Node{
+    class Node{
     public:
-        _Node() { }
-        _Node(T data):data(data) { }
+        Node() { }
+        Node(T data):data(data) { }
         T data;
-        _Node *_next;
+        Node *next;
     };
 
     class iterator {
-        _Node *it;
+        Node *it;
     public:
 
-        iterator(_Node *p) : it(p) {  }
+        iterator(Node *p) : it(p) {  }
         iterator &operator ++() {
-            it = it->_next;
+            it = it->next;
             return *this;
         }
         bool operator != (const iterator& that) {
@@ -36,10 +36,10 @@ private:
     };
 
 
-    size_t _list_len= 0;
+    size_t list_len_= 0;
 
-    _Node *_head;
-    _Node *_end;
+    Node *head_;
+    Node *end_;
 
     /*******************************************************************************
      * 会把构造函数中创建的head_node一并删除
@@ -47,11 +47,11 @@ private:
     void  _Clear(_Node *p) {
         if (p == nullptr)
             return;
-        else if (p->_next == nullptr) {
+        else if (p->next == nullptr) {
             delete p;
             return;
         }
-        _Clear(p->_next);
+        _Clear(p->next);
         delete p;
     }
 
@@ -59,50 +59,50 @@ public:
 
     List() {
         auto head_node = new _Node(0);
-        _head = _end = head_node;
-        _end->_next = nullptr;
-        _list_len = 0;
+        head_ = end_ = head_node;
+        end_->next = nullptr;
+        list_len_ = 0;
     }
 
     ~List(){
         Clear();
-        if (_head != nullptr)
-            delete _head;
-        _head = _end = nullptr;
-        _list_len = 0;
+        if (head_ != nullptr)
+            delete head_;
+        head_ = end_ = nullptr;
+        list_len_ = 0;
     }
 
     void PushBack(T data) {
-        auto node = new _Node(data);
-        _end->_next = node;
-        _end = node;
-        _end->_next = nullptr;
-        _list_len ++;
+        auto node = new Node(data);
+        end_->next = node;
+        end_ = node;
+        end_->next = nullptr;
+        list_len_ ++;
     }
 
     void Clear() {
-        _Clear(_head->_next);
-        _head->_next = nullptr;
-        _end = _head;
-        _list_len = 0;
+        _Clear(head_->next);
+        head_->next = nullptr;
+        end_ = head_;
+        list_len_ = 0;
     }
 
     /*******************************************************************************
      * 插入一个节点，使之下标成为insert_pos
     *******************************************************************************/
     void Insert(size_t insert_pos,T data){
-        if(insert_pos < 0 || insert_pos > _list_len+1){
+        if(insert_pos < 0 || insert_pos > list_len_+1){
             std::cerr << "pos: " << insert_pos << "is error" << std::endl;
             return;
         }
-        auto tmp = _head;
+        auto tmp = head_;
         int pos = 0;
         while (pos++ < insert_pos) {
-            tmp = tmp->_next;
+            tmp = tmp->next;
         }
-        tmp->_next = _end = new _Node(data);
-        _end->_next = nullptr;
-        _list_len ++;
+        tmp->next = end_ = new Node(data);
+        end_->next = nullptr;
+        list_len_ ++;
     }
 
 
@@ -110,39 +110,39 @@ public:
      * delete 的参数和Insert的参数对应，删除下标为x的元素,下标从0开始
     *******************************************************************************/
     void Delete(size_t del_pos){
-        if (del_pos < 0 || del_pos >= _list_len) {
+        if (del_pos < 0 || del_pos >= list_len_) {
             std::cerr << "pos: " << del_pos << "is error" << std::endl;
             return;
         }
         int pos = 0;
-        auto tmp = _head;
-        auto cur = _head->_next;
+        auto tmp = head_;
+        auto cur = head_->next;
         while (pos ++ < del_pos) {
             tmp = cur;
-            cur = cur->_next;
+            cur = cur->next;
         }
-        tmp->_next = tmp->_next->_next;
+        tmp->next = tmp->next->next;
         delete cur;
 
-        if (_list_len == pos) {
-            _end = tmp;
-            _end->_next = nullptr;
+        if (list_len_ == pos) {
+            end_ = tmp;
+            end_->next = nullptr;
         }
-        _list_len --;
+        list_len_ --;
 
     }
 
 
     // head 和 end一定不为空，因为创建了head_node
     iterator begin(){
-        return iterator(_head->_next);
+        return iterator(head_->next);
     }
     iterator end(){
-        return iterator(_end->_next);
+        return iterator(end_->next);
     }
 
     size_t Size(){
-        return _list_len;
+        return list_len_;
     }
     
 };

@@ -11,11 +11,10 @@
 #include <QWheelEvent>
 #include <QScrollBar>
 class GraphicsView : public QGraphicsView {
-    int scale_m = 1;
+    int scale_ = 1;//图形原始比例
 protected:
     GraphicsView() {
         setDragMode(QGraphicsView::NoDrag);//(QGraphicsView::RubberBandDrag);//QGraphicsView::ScrollHandDrag
-        scale_m = 1;//图形原始比例
         setStyleSheet("padding: 0px; border: 0px;");//无边框
         setMouseTracking(true);//跟踪鼠标位置
         setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);//隐藏水平条
@@ -55,10 +54,10 @@ protected:
         }
 
         // 将scene坐标转换为放大缩小后的坐标;
-        QPointF viewPoint = this->transform().map(scenePos);
+        QPointF view_point = this->transform().map(scenePos);
         // 通过滚动条控制view放大缩小后的展示scene的位置;
-        horizontalScrollBar()->setValue(int(viewPoint.x() - viewWidth * hScale));
-        verticalScrollBar()->setValue(int(viewPoint.y() - viewHeight * vScale));
+        horizontalScrollBar()->setValue(int(view_point.x() - viewWidth * hScale));
+        verticalScrollBar()->setValue(int(view_point.y() - viewHeight * vScale));
 
     }
 
@@ -67,7 +66,7 @@ protected:
 public:
     GraphicsView(QWidget *parent = nullptr) : QGraphicsView(parent) {
         setDragMode(QGraphicsView::ScrollHandDrag);
-        scale_m = 1;//图形原始比例
+        scale_ = 1;//图形原始比例
         setStyleSheet("padding: 0px; border: 0px;");//无边框
         setMouseTracking(true);//跟踪鼠标位置
         setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);//隐藏水平条

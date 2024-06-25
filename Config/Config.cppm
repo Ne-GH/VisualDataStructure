@@ -12,7 +12,7 @@ module;
 #include <iostream>
 #include <map>
 #include <utility>
-#include "../Macros.h"
+#include "../GlobalSet.h"
 export module Config;
 
 
